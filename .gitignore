@@ -1,0 +1,11 @@
+.DS_Store
+build/
+reference/
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.xdv

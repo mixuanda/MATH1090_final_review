@@ -1,0 +1,47 @@
+\documentclass[11pt,openany,fontset=none]{ctexbook}
+
+\input{tex/preamble}
+
+\title{MATH1090 Final Exam Review Notes}
+\author{Based on MATH1090/1098 lecture notes, worksheets, homework, midterm solution, and set theory references}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\chapter*{使用说明}
+\addcontentsline{toc}{chapter}{使用说明}
+
+这份讲义的目标是成为期末复习用的 textbook-like review note。正文用中文解释，数学术语保留英文，例如 proposition, predicate, function, equivalence relation, Dedekind cut, supremum, Cauchy sequence, cardinality, group。每一道来自 Lecture Notes, worksheet, homework, and midterm 的题目都应当有独立题目条目、完整的 Solution，以及说明关键想法的 Explanation。
+
+本讲义的证明写法遵循两个原则。第一，所有结论都要由 definition, axiom, theorem, or previously proved statement 推出，不使用跳步式断言。第二，Solution 负责给出形式化推导，Explanation 负责说明为什么要这样选择证明路线，特别是在 quotient construction, supremum, Dedekind cut, limit, and cardinality arguments 中说明关键难点。
+
+\mainmatter
+
+\input{tex/chapter01_logic}
+\input{tex/chapter02_sets_functions_relations}
+\input{tex/chapter03_integers_rationals}
+\input{tex/chapter04_reals_dedekind}
+\input{tex/chapter05_limits_continuity}
+\input{tex/chapter06_big_sets}
+\input{tex/chapter07_structure}
+\input{tex/midterm_review}
+
+\backmatter
+
+\chapter{Final Review Checklist}
+
+\begin{enumerate}[label=\arabic*.]
+  \item Logic: 能够把 English statements 翻译成 propositional 或 predicate formulas，并用 truth table, direct proof, contrapositive, contradiction, and induction 完成证明。
+  \item Sets and functions: 能够用 element chasing 证明 set equality, subset inclusion, image/preimage identities, injectivity, surjectivity, and bijectivity。
+  \item Relations and quotient constructions: 能够验证 equivalence relation, partial order, equivalence class, and well-defined operation。
+  \item Number systems: 能够从 Peano axioms 出发构造 \(\N,\Z,\Q\)，并解释 recursive definitions, representatives, and arithmetic laws。
+  \item Real numbers: 能够使用 order, bound, supremum, Dedekind cut, decimal expansion, and Cauchy sequence 的定义完成证明。
+  \item Limits: 能够将 \(\varepsilon\)-\(N\) and \(\varepsilon\)-\(\delta\) definitions 展开成完整的 inequality proof。
+  \item Big sets and structure: 能够使用 bijection, injection, Cantor's theorem, Cantor-Bernstein theorem, Axiom of Choice, Zorn's Lemma, well-ordering, monoid, group, and homomorphism 组织证明。
+\end{enumerate}
+
+\end{document}

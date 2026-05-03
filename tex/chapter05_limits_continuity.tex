@@ -1,0 +1,722 @@
+\chapter{Limits and Continuity}
+
+本章讨论 sequence limit 和 function limit。两者都在描述“靠近”：sequence limit
+说的是当 \(n\) 足够大时，\(x_n\) 靠近 \(L\)；function limit 说的是当
+\(x\) 足够靠近 \(a\) 但不等于 \(a\) 时，\(f(x)\) 靠近 \(L\)。本章的重点不是
+记住某个直观图像，而是把“足够靠近”翻译成可以检查的
+\(\varepsilon\)-\(N\) 或 \(\varepsilon\)-\(\delta\) inequality proof。
+
+\section{From Sequence Limits to Function Limits}
+
+对 sequence \((x_n)\)，
+\[
+  \lim_{n\to\infty}x_n=L
+\]
+的意思是
+\[
+  \forall \varepsilon>0,\ \exists N\in\N
+  \text{ such that } n\geq N \Longrightarrow |x_n-L|<\varepsilon.
+\]
+这里 \(\varepsilon\) 是允许的 output error，而 \(N\) 是从哪一项开始进入这个
+error bound。证明 sequence limit 时，通常先从
+\(|x_n-L|<\varepsilon\) 倒推需要 \(n\) 多大，再把这个要求写成一个合法的
+\(N\)。
+
+Function limit 的输入不是离散的 \(n=0,1,2,\ldots\)，而是实数 \(x\) 从
+一段 interval 内靠近某一点 \(a\)。因此 \(N\) 被替换成 \(\delta\)：\(\delta\)
+控制 input distance，\(\varepsilon\) 控制 output distance。
+
+\begin{definition}[function limit]
+设 \(I\) 是包含 \(a\) 的 open interval，且
+\[
+  f:I\setminus\{a\}\to\R.
+\]
+我们说
+\[
+  \lim_{x\to a}f(x)=L
+\]
+当且仅当
+\[
+  \forall \varepsilon>0,\ \exists \delta>0
+  \text{ such that }
+  0<|x-a|<\delta \Longrightarrow |f(x)-L|<\varepsilon.
+\]
+\end{definition}
+
+条件 \(0<|x-a|\) 的作用是排除 \(x=a\)。Function limit 关心的是
+\(x\) approaching \(a\) 时附近的 function values，而不是 \(f(a)\) 本身。
+因此一个 function 可以在 \(a\) 没有定义，但仍然在 \(a\) 有 limit。
+
+\section{First Epsilon-Delta Proofs}
+
+最基本的 \(\varepsilon\)-\(\delta\) proof 有固定格式。给定任意
+\(\varepsilon>0\)，我们要选择一个 \(\delta>0\)。选择 \(\delta\) 之前，
+先把 \(|f(x)-L|\) 改写成含有 \(|x-a|\) 的表达式。改写完成后，选择
+\(\delta\) 使得
+\[
+  0<|x-a|<\delta
+\]
+能够推出
+\[
+  |f(x)-L|<\varepsilon.
+\]
+
+例如
+\[
+  \lim_{x\to3}(2x+1)=7.
+\]
+因为
+\[
+  |(2x+1)-7|=|2x-6|=2|x-3|,
+\]
+所以只要让 \(|x-3|<\varepsilon/2\)，就能让 output error 小于
+\(\varepsilon\)。于是可以取 \(\delta=\varepsilon/2\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 57]
+已知
+\[
+  \lim_{x\to -2}(4x+3)=-5.
+\]
+当 \(\varepsilon=0.1\) 时，找出一个可用的 \(\delta\)。
+\end{exerciseblock}
+
+\begin{solution}
+这里
+\[
+  f(x)=4x+3,\qquad a=-2,\qquad L=-5.
+\]
+我们计算 output error：
+\[
+  |f(x)-L|
+  =
+  |(4x+3)-(-5)|
+  =
+  |4x+8|
+  =
+  4|x+2|.
+\]
+现在要求
+\[
+  |f(x)-L|<0.1.
+\]
+由上式可知，只要
+\[
+  4|x+2|<0.1,
+\]
+也就是
+\[
+  |x+2|<0.025,
+\]
+就满足要求。因此取
+\[
+  \delta=0.025.
+\]
+若 \(0<|x-(-2)|<\delta\)，即 \(0<|x+2|<0.025\)，则
+\[
+  |(4x+3)-(-5)|
+  =
+  4|x+2|
+  <
+  4(0.025)
+  =
+  0.1.
+\]
+所以 \(\delta=0.025\) 是一个符合 \(\varepsilon=0.1\) 的选择。
+\end{solution}
+
+\begin{explanation}
+这道题不是要求重新证明所有 \(\varepsilon>0\) 的情况，而是在已知 limit
+存在的背景下，为指定的 tolerance 找一个 input tolerance。线性函数的误差
+正好是 \(4|x+2|\)，所以 \(\delta\) 只需要把这个四倍关系抵消掉。任何
+\(0<\delta\leq 0.025\) 也都可以使用；选择最大这个数只是最直接。
+\end{explanation}
+
+\begin{example}[constant function]
+若 \(f(x)=c\)，则对任意 \(a\)，
+\[
+  \lim_{x\to a}c=c.
+\]
+给定 \(\varepsilon>0\)，可取 \(\delta=1\)。只要
+\(0<|x-a|<1\)，就有
+\[
+  |f(x)-c|=|c-c|=0<\varepsilon.
+\]
+\end{example}
+
+\begin{example}[a function with a hole]
+考虑
+\[
+  f:(0,\infty)\setminus\{2\}\to\R,\qquad
+  f(x)=\frac{x^2-4}{x-2}.
+\]
+当 \(x\neq2\) 时，
+\[
+  f(x)=\frac{(x-2)(x+2)}{x-2}=x+2.
+\]
+因此
+\[
+  \left|\frac{x^2-4}{x-2}-4\right|
+  =
+  |(x+2)-4|
+  =
+  |x-2|.
+\]
+给定 \(\varepsilon>0\)，取 \(\delta=\varepsilon\)。若
+\(0<|x-2|<\delta\)，则
+\[
+  \left|\frac{x^2-4}{x-2}-4\right|
+  =
+  |x-2|
+  <
+  \varepsilon.
+\]
+所以
+\[
+  \lim_{x\to2}\frac{x^2-4}{x-2}=4.
+\]
+这个例子说明 limit 不需要 \(f(2)\) 有定义。
+\end{example}
+
+\begin{exerciseblock}[Lecture Notes Exercise 58]
+证明
+\[
+  \lim_{x\to4}\sqrt{x}=2.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+函数 \(\sqrt{x}\) 的 natural domain 是 \(x\geq0\)。在 \(x\) 靠近 \(4\)
+时，相关的 \(x\) 都可以限制在正数范围内。给定 \(\varepsilon>0\)，我们先估计
+\[
+  |\sqrt{x}-2|.
+\]
+对 \(x\geq0\)，有
+\[
+  |\sqrt{x}-2|
+  =
+  \left|\frac{(\sqrt{x}-2)(\sqrt{x}+2)}{\sqrt{x}+2}\right|
+  =
+  \frac{|x-4|}{\sqrt{x}+2}.
+\]
+因为 \(\sqrt{x}+2\geq2\)，所以
+\[
+  |\sqrt{x}-2|
+  \leq
+  \frac{|x-4|}{2}.
+\]
+现在取
+\[
+  \delta=2\varepsilon.
+\]
+若 \(0<|x-4|<\delta\) 且 \(x\geq0\)，则
+\[
+  |\sqrt{x}-2|
+  =
+  \frac{|x-4|}{\sqrt{x}+2}
+  \leq
+  \frac{|x-4|}{2}
+  <
+  \frac{\delta}{2}
+  =
+  \varepsilon.
+\]
+因此
+\[
+  \lim_{x\to4}\sqrt{x}=2.
+\]
+\end{solution}
+
+\begin{explanation}
+困难点在于 \(\sqrt{x}-2\) 不直接含有 \(|x-4|\)。乘以 conjugate
+\(\sqrt{x}+2\) 后，分子变成 \(x-4\)，这正好连接到 input distance。
+分母 \(\sqrt{x}+2\) 不会接近 \(0\)；它至少是 \(2\)，所以可以用
+\(|x-4|/2\) 控制整个 error。这里不需要让 \(\delta\leq1\)，因为分母的下界
+已经由 \(x\geq0\) 给出。
+\end{explanation}
+
+\section{When Limits Do Not Exist}
+
+证明某个给定的 \(L\) 不是 limit，需要否定 \(\varepsilon\)-\(\delta\)
+definition：
+\[
+  \lim_{x\to a}f(x)\neq L
+\]
+等价于存在一个 \(\varepsilon>0\)，使得对每个 \(\delta>0\)，都能找到
+某个 \(x\) 满足
+\[
+  0<|x-a|<\delta
+  \quad\text{and}\quad
+  |f(x)-L|\geq\varepsilon.
+\]
+证明 limit does not exist 更强：我们要说明没有任何 \(L\in\R\) 能通过这个
+definition。常用方法是找两列靠近同一点的 inputs，但对应的 function values
+靠近不同的 numbers。
+
+\begin{example}
+定义
+\[
+  f(x)=\frac{|x|}{x}
+  =
+  \begin{cases}
+    1, & x>0,\\
+    -1, & x<0.
+  \end{cases}
+\]
+当 \(x\to0^+\) 时，function value 恒为 \(1\)；当 \(x\to0^-\) 时，
+function value 恒为 \(-1\)。任何一个 real number \(L\) 都不能同时让
+\(1\) 和 \(-1\) 在任意小的 tolerance 内都靠近它。因此
+\[
+  \lim_{x\to0}\frac{|x|}{x}
+\]
+does not exist。
+\end{example}
+
+\begin{exerciseblock}[Lecture Notes Exercise 59]
+设 \(f:\R\setminus\{0\}\to\R\) 由
+\[
+  f(x)=\sin(1/x)
+\]
+给出。证明 \(\lim_{x\to0}f(x)\) does not exist。
+\end{exerciseblock}
+
+\begin{solution}
+我们证明不存在 \(L\in\R\) 使得 \(\lim_{x\to0}\sin(1/x)=L\)。
+
+对每个 \(n\in\N\) 且 \(n\geq1\)，定义
+\[
+  x_n=\frac{1}{2\pi n+\pi/2},
+  \qquad
+  y_n=\frac{1}{2\pi n+3\pi/2}.
+\]
+由于分母趋向 \(+\infty\)，有
+\[
+  x_n\to0,\qquad y_n\to0.
+\]
+并且每一项都为正数，所以它们都属于 \(\R\setminus\{0\}\)。代入函数得到
+\[
+  f(x_n)=\sin(2\pi n+\pi/2)=1,
+  \qquad
+  f(y_n)=\sin(2\pi n+3\pi/2)=-1.
+\]
+
+现在假设某个 \(L\in\R\) 是 limit。取 \(\varepsilon=1\)。若
+\(\lim_{x\to0}f(x)=L\)，则存在 \(\delta>0\)，使得
+\[
+  0<|x|<\delta \Longrightarrow |\sin(1/x)-L|<1.
+\]
+因为 \(x_n\to0\) 且 \(y_n\to0\)，可以取足够大的 \(n\)，使得
+\[
+  0<x_n<\delta,\qquad 0<y_n<\delta.
+\]
+于是应当同时有
+\[
+  |1-L|<1,\qquad |-1-L|<1.
+\]
+但 triangle inequality 给出
+\[
+  2=|1-(-1)|
+  =
+  |(1-L)+(L+1)|
+  \leq
+  |1-L|+|L+1|
+  <
+  1+1
+  =
+  2,
+\]
+这推出 \(2<2\)，矛盾。因此不存在这样的 \(L\)，所以
+\[
+  \lim_{x\to0}\sin(1/x)
+\]
+does not exist。
+\end{solution}
+
+\begin{explanation}
+这道题的难点是 limit nonexistence 不能只说函数“震荡”。证明必须制造出
+definition 无法容纳的冲突。两列 inputs 都趋向 \(0\)，但 outputs 分别固定为
+\(1\) 和 \(-1\)。若同一个 \(L\) 是 limit，那么足够靠近 \(0\) 的这两类
+outputs 都必须落在半径 \(1\) 的 interval \((L-1,L+1)\) 中；这个 interval
+长度为 \(2\)，不能同时严格包含距离为 \(2\) 的两个端点 \(1\) 和 \(-1\)。
+\end{explanation}
+
+\section{Limit Laws}
+
+Limit laws 允许我们把已经证明过的 limits 组合起来。设
+\[
+  \lim_{x\to a}f(x)=L,\qquad
+  \lim_{x\to a}g(x)=M.
+\]
+则
+\[
+  \lim_{x\to a}(f(x)+g(x))=L+M,
+\]
+\[
+  \lim_{x\to a}(f(x)g(x))=LM,
+\]
+并且当 \(M\neq0\) 时，
+\[
+  \lim_{x\to a}\frac{f(x)}{g(x)}=\frac{L}{M}.
+\]
+
+Sum law 的 proof 使用 triangle inequality：
+\[
+  |(f(x)+g(x))-(L+M)|
+  \leq
+  |f(x)-L|+|g(x)-M|.
+\]
+给定 \(\varepsilon>0\)，分别用 \(\varepsilon/2\) 控制两项，再取两个
+\(\delta\) 的 minimum。
+
+Product law 需要一个额外步骤：先由 \(f(x)\to L\) 得到 \(f(x)\) 在 \(a\)
+附近 bounded。具体地，先让 \(|f(x)-L|<1\)，于是
+\[
+  |f(x)|\leq |L|+1.
+\]
+然后写
+\[
+  |f(x)g(x)-LM|
+  \leq
+  |f(x)|\,|g(x)-M|+|M|\,|f(x)-L|.
+\]
+第一项由 \(g(x)\to M\) 控制，第二项由 \(f(x)\to L\) 控制。
+
+Quotient law 的核心是 denominator。若 \(M\neq0\)，先让
+\[
+  |g(x)-M|<\frac{|M|}{2}.
+\]
+这推出
+\[
+  |g(x)|>\frac{|M|}{2},
+\]
+所以 \(g(x)\) 在 \(a\) 附近不会等于 \(0\)，且 \(1/g(x)\) 的大小可控。
+之后把 quotient 写成 product 来处理。
+
+\begin{exerciseblock}[Lecture Notes Exercise 60]
+找一对 functions，使得
+\[
+  \lim_{x\to a}f(x)
+  \quad\text{and}\quad
+  \lim_{x\to a}g(x)
+\]
+都不存在，但
+\[
+  \lim_{x\to a}(f(x)+g(x))
+\]
+存在。
+\end{exerciseblock}
+
+\begin{solution}
+取 \(a=0\)，定义在 \(\R\setminus\{0\}\) 上的 functions
+\[
+  f(x)=\frac{|x|}{x},
+  \qquad
+  g(x)=-\frac{|x|}{x}.
+\]
+也就是
+\[
+  f(x)=
+  \begin{cases}
+    1, & x>0,\\
+    -1, & x<0,
+  \end{cases}
+  \qquad
+  g(x)=
+  \begin{cases}
+    -1, & x>0,\\
+    1, & x<0.
+  \end{cases}
+\]
+
+先看 \(f\)。令
+\[
+  u_n=\frac1n,\qquad v_n=-\frac1n.
+\]
+则 \(u_n\to0\) 且 \(v_n\to0\)，但
+\[
+  f(u_n)=1,\qquad f(v_n)=-1.
+\]
+若某个 \(L\in\R\) 是 \(\lim_{x\to0}f(x)\)，那么取 \(\varepsilon=1\) 后，
+足够大的 \(n\) 会同时满足
+\[
+  |f(u_n)-L|<1,\qquad |f(v_n)-L|<1.
+\]
+这会给出
+\[
+  2=|f(u_n)-f(v_n)|
+  \leq
+  |f(u_n)-L|+|L-f(v_n)|
+  <
+  2,
+\]
+产生矛盾。因此 \(\lim_{x\to0}f(x)\) does not exist。
+
+对 \(g\)，同两列 inputs 给出
+\[
+  g(u_n)=-1,\qquad g(v_n)=1.
+\]
+如果 \(\lim_{x\to0}g(x)=M\)，取 \(\varepsilon=1\) 后同样会推出
+\[
+  2=|g(u_n)-g(v_n)|<2,
+\]
+这也是矛盾。因此 \(\lim_{x\to0}g(x)\) does not exist。
+
+但是对每个 \(x\neq0\)，
+\[
+  f(x)+g(x)=\frac{|x|}{x}-\frac{|x|}{x}=0.
+\]
+因此给定任意 \(\varepsilon>0\)，取 \(\delta=1\)。若
+\(0<|x|<\delta\)，则
+\[
+  |(f(x)+g(x))-0|=|0|=0<\varepsilon.
+\]
+所以
+\[
+  \lim_{x\to0}(f(x)+g(x))=0.
+\]
+\end{solution}
+
+\begin{explanation}
+这个例子说明 limit laws 不能反向使用。Sum law 的方向是：若两个 summands
+各自有 limit，则 sum 有 limit。反过来，sum 有 limit 并不强迫每个 summand
+都有 limit。这里 \(g=-f\) 把 \(f\) 的所有震荡完全抵消，所以 sum 变成
+constant zero。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 61]
+不用 limit laws，直接用 \(\varepsilon\)-\(\delta\) proof 计算并证明
+\[
+  \lim_{x\to0}\frac{x^2-4}{x-1}=4.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+令
+\[
+  h(x)=\frac{x^2-4}{x-1}.
+\]
+我们需要证明 \(\lim_{x\to0}h(x)=4\)。给定 \(\varepsilon>0\)，先计算
+error：
+\[
+  \left|\frac{x^2-4}{x-1}-4\right|
+  =
+  \left|\frac{x^2-4-4x+4}{x-1}\right|
+  =
+  \left|\frac{x(x-4)}{x-1}\right|.
+\]
+这里要同时控制 numerator 和 denominator。若 \(|x|<1/2\)，则
+\[
+  |x-1|\geq 1-|x|>1-\frac12=\frac12,
+\]
+并且
+\[
+  |x-4|\leq |x|+4<\frac12+4=\frac92.
+\]
+因此在 \(|x|<1/2\) 时，
+\[
+  \left|\frac{x(x-4)}{x-1}\right|
+  =
+  \frac{|x|\,|x-4|}{|x-1|}
+  <
+  \frac{|x|(9/2)}{1/2}
+  =
+  9|x|.
+\]
+现在取
+\[
+  \delta=\min\left\{\frac12,\frac{\varepsilon}{9}\right\}.
+\]
+若 \(0<|x-0|<\delta\)，则 \(|x|<1/2\)，所以上面的 estimate 可用，并且
+\[
+  \left|\frac{x^2-4}{x-1}-4\right|
+  <
+  9|x|
+  <
+  9\delta
+  \leq
+  \varepsilon.
+\]
+由 \(\varepsilon\)-\(\delta\) definition，
+\[
+  \lim_{x\to0}\frac{x^2-4}{x-1}=4.
+\]
+\end{solution}
+
+\begin{explanation}
+Rational function 的 direct proof 通常要先处理 denominator。这里
+\(x\to0\)，而 denominator \(x-1\) 靠近 \(-1\)，所以它不会接近 \(0\)。
+选择 \(\delta\leq1/2\) 的目的就是把 \(|x-1|\) 固定在大于 \(1/2\) 的范围。
+之后 numerator 中剩下一个 \(|x|\)，它会随 \(x\to0\) 变小；另一个因子
+\(|x-4|\) 在小 interval 内被 \(9/2\) 控制。于是整个 error 被 \(9|x|\)
+控制，再用 \(\delta\leq\varepsilon/9\) 完成证明。
+\end{explanation}
+
+\section{Sequential Characterization and Continuity}
+
+Function limit 也可以用 sequences 来刻画：
+\[
+  \lim_{x\to a}f(x)=L
+\]
+当且仅当对每个满足
+\[
+  x_n\in I\setminus\{a\},\qquad x_n\to a
+\]
+的 sequence，都有
+\[
+  f(x_n)\to L.
+\]
+这个 theorem 的用途有两个。若要证明 limit 存在，可以证明所有靠近
+\(a\) 的 sequences 都被送到同一个 \(L\)。若要证明 limit 不存在，可以找两列
+都趋向 \(a\) 的 inputs，使得对应 outputs 有不同 limits。
+
+Continuity 把 limit 和 function value 接起来。若 \(f:I\to\R\) 且
+\(a\in I\)，则 \(f\) is continuous at \(a\) 的意思是
+\[
+  \lim_{x\to a}f(x)=f(a).
+\]
+用 \(\varepsilon\)-\(\delta\) 写，就是
+\[
+  \forall\varepsilon>0,\ \exists\delta>0
+  \text{ such that }
+  |x-a|<\delta \Longrightarrow |f(x)-f(a)|<\varepsilon.
+\]
+这里不再排除 \(x=a\)，因为 continuity 必须同时检查 \(f(a)\) 本身。
+若 function 在 \(a\) 没有定义，它不能 continuous at \(a\)，但它仍可能有
+limit。
+
+\section{Homework 9}
+
+\begin{exerciseblock}[Homework 9 Problem 1]
+证明 discrete limit
+\[
+  \lim_{n\to\infty}\frac{n^2}{4^n}=0.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+我们使用 \(\varepsilon\)-\(N\) definition。给定 \(\varepsilon>0\)，需要找到
+\(N\in\N\)，使得 \(n\geq N\) 时
+\[
+  \left|\frac{n^2}{4^n}-0\right|<\varepsilon.
+\]
+
+先证明一个 estimate：对所有 \(n\geq4\)，
+\[
+  n^2\leq2^n.
+\]
+当 \(n=4\) 时，\(4^2=16=2^4\)。若某个 \(n\geq4\) 满足
+\(n^2\leq2^n\)，则
+\[
+  (n+1)^2
+  =
+  n^2\left(1+\frac1n\right)^2
+  \leq
+  n^2\left(\frac54\right)^2
+  =
+  \frac{25}{16}n^2
+  <
+  2n^2
+  \leq
+  2^{n+1}.
+\]
+所以 by induction，\(n^2\leq2^n\) 对所有 \(n\geq4\) 成立。
+
+因此当 \(n\geq4\) 时，
+\[
+  0\leq\frac{n^2}{4^n}
+  \leq
+  \frac{2^n}{4^n}
+  =
+  \frac{1}{2^n}.
+\]
+由 Archimedean property，选择 \(N\in\N\)，使得
+\[
+  N\geq4
+  \quad\text{and}\quad
+  N>\frac1\varepsilon.
+\]
+当 \(n\geq N\) 时，\(2^n\geq n\geq N>1/\varepsilon\)，所以
+\[
+  \frac1{2^n}<\varepsilon.
+\]
+于是
+\[
+  \left|\frac{n^2}{4^n}-0\right|
+  =
+  \frac{n^2}{4^n}
+  \leq
+  \frac1{2^n}
+  <
+  \varepsilon.
+\]
+由 \(\varepsilon\)-\(N\) definition，
+\[
+  \lim_{n\to\infty}\frac{n^2}{4^n}=0.
+\]
+\end{solution}
+
+\begin{explanation}
+这题的核心是 exponential growth eventually dominates polynomial growth。
+为了把这个直观变成 proof，我们不用直接处理 \(n^2/4^n\)，而是先证明
+\(n^2\leq2^n\)。这样原式被压到 \(1/2^n\) 以下。最后选择 \(N>1/\varepsilon\)
+是为了保证 \(1/2^n<\varepsilon\)。每一步都服务于
+\(\varepsilon\)-\(N\) definition 中的目标 inequality。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 9 Problem 2]
+找出 \(L\in\R\)，并证明
+\[
+  \lim_{x\to0}\frac{x}{1+x}=L.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+候选 limit 是
+\[
+  L=0.
+\]
+我们用 \(\varepsilon\)-\(\delta\) definition 证明。给定
+\(\varepsilon>0\)，计算
+\[
+  \left|\frac{x}{1+x}-0\right|
+  =
+  \frac{|x|}{|1+x|}.
+\]
+Denominator 需要先远离 \(0\)。若 \(|x|<1/2\)，则
+\[
+  |1+x|\geq 1-|x|>1-\frac12=\frac12.
+\]
+所以在 \(|x|<1/2\) 时，
+\[
+  \frac{|x|}{|1+x|}
+  <
+  2|x|.
+\]
+取
+\[
+  \delta=\min\left\{\frac12,\frac{\varepsilon}{2}\right\}.
+\]
+若 \(0<|x-0|<\delta\)，则 \(|x|<1/2\)，并且
+\[
+  \left|\frac{x}{1+x}-0\right|
+  =
+  \frac{|x|}{|1+x|}
+  <
+  2|x|
+  <
+  2\delta
+  \leq
+  \varepsilon.
+\]
+因此
+\[
+  \lim_{x\to0}\frac{x}{1+x}=0.
+\]
+\end{solution}
+
+\begin{explanation}
+直接代入 \(x=0\) 会给出候选值 \(0\)，但 proof 仍然要处理 quotient。
+靠近 \(0\) 时，\(1+x\) 靠近 \(1\)，所以不会接近 \(0\)。选择
+\(\delta\leq1/2\) 是为了保证 \(|1+x|>1/2\)，从而把 quotient error 控制为
+小于 \(2|x|\)。再选择 \(\delta\leq\varepsilon/2\)，就完成
+\(\varepsilon\)-\(\delta\) estimate。
+\end{explanation}

@@ -1,0 +1,510 @@
+\chapter{Sets with Structure}
+\label{chap:sets-with-structure}
+
+\section{从 set 到 structured set}
+
+在前面的章节中，一个 set 主要由它的 elements 决定。若 \(X=\{5,\mathrm{dog}\}\) 而 \(B=\{0,1\}\)，则从纯粹 set-theoretic 的角度看，只要存在 bijection \(X\to B\)，两个集合的 cardinality 就相同。但是 \(B\) 上还可以定义 Boolean addition and multiplication；这些 binary operations 是额外的 structure。因此，本章研究的对象不只是一个 set，而是一个 set together with operations, distinguished elements, and maps preserving those operations。
+
+\begin{definition}[binary operation]
+设 \(X\) 是集合。一个 binary operation on \(X\) 是函数
+\[
+  *:X\times X\to X.
+\]
+若 \(a,b\in X\)，通常把 \(*(a,b)\) 写成 \(a*b\)。定义中的 codomain 是 \(X\)，所以 operation 的 closure 已经包含在定义中。
+\end{definition}
+
+\begin{definition}[Boolean integers]
+令 \(B=\{0,1\}\)。在 \(B\) 上定义
+\[
+\begin{array}{c|cc}
++&0&1\\ \hline
+0&0&1\\
+1&1&0
+\end{array}
+\qquad
+\begin{array}{c|cc}
+\cdot&0&1\\ \hline
+0&0&0\\
+1&0&1
+\end{array}
+\]
+则 \((B,+,\cdot)\) 称为 Boolean integers。这里 \(+\) 是 addition modulo \(2\)，而 \(\cdot\) 是 usual Boolean multiplication。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 65]
+Prove the following fact about the Boolean integers:
+\[
+  \forall x\in B,\ \exists y\in B\ (x+y=0).
+\]
+\end{exerciseblock}
+
+\begin{solution}
+由于 \(B=\{0,1\}\)，证明全称命题只需要分别处理 \(x=0\) 与 \(x=1\)。若 \(x=0\)，取 \(y=0\)。由 Boolean addition table 得
+\[
+  x+y=0+0=0.
+\]
+若 \(x=1\)，取 \(y=1\)。由同一张表得
+\[
+  x+y=1+1=0.
+\]
+因此对于每个 \(x\in B\)，都存在 \(y\in B\) 使得 \(x+y=0\)，命题成立。
+\end{solution}
+
+\begin{explanation}
+该题的核心不是寻找复杂公式，而是严格展开 finite set 上的 quantified statement。因为 \(B\) 只有两个元素，\(\forall x\in B\) 的证明等价于列出两个 cases。这里的 \(y\) 实际上就是 \(x\) 本身，说明在 Boolean addition 下每个元素都是自己的 additive inverse。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 66]
+Come up with more examples of binary operations.
+\end{exerciseblock}
+
+\begin{solution}
+以下每一项都给出一个集合 \(X\) 和一个函数 \(X\times X\to X\)。
+\begin{enumerate}[label=(\alph*)]
+  \item 在 \(\Z\) 上，\((a,b)\mapsto a-b\) 是 binary operation，因为对任意 \(a,b\in\Z\)，差 \(a-b\) 仍属于 \(\Z\)。
+  \item 在 \(\calP(S)\) 上，\((A,B)\mapsto A\cup B\) 是 binary operation，因为 \(A,B\subseteq S\) 推出 \(A\cup B\subseteq S\)。
+  \item 在 \(\calP(S)\) 上，\((A,B)\mapsto A\cap B\) 是 binary operation，因为 \(A,B\subseteq S\) 推出 \(A\cap B\subseteq S\)。
+  \item 对任意集合 \(X\)，令 \(X^X\) 为所有函数 \(X\to X\) 的集合。函数复合
+  \[
+    (f,g)\mapsto f\circ g
+  \]
+  是 \(X^X\) 上的 binary operation，因为 \(f:X\to X\) 且 \(g:X\to X\) 推出 \(f\circ g:X\to X\)。
+  \item 在 \(\R\) 上，\((a,b)\mapsto \max\{a,b\}\) 是 binary operation，因为两个实数的 maximum 仍是实数。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+验证 binary operation 时必须检查 closure。也就是说，题目要求的不只是写出一个二元规则，而是证明该规则对任意输入 \((a,b)\in X\times X\) 都给出 \(X\) 中的输出。集合运算与函数复合是本课程最重要的例子，因为它们直接连接 set theory, function, and algebraic structure。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 67]
+Look up what a ring is.
+\end{exerciseblock}
+
+\begin{solution}
+一个 ring 是一个集合 \(R\)，配备两个 binary operations \(+\) 与 \(\cdot\)，满足以下条件。
+\begin{enumerate}[label=(\arabic*)]
+  \item \((R,+)\) 是 abelian group。也就是说，addition associative, commutative，有 additive identity \(0\)，且每个 \(a\in R\) 有 additive inverse \(-a\)。
+  \item multiplication associative：对任意 \(a,b,c\in R\)，
+  \[
+    (ab)c=a(bc).
+  \]
+  \item distributive laws 成立：对任意 \(a,b,c\in R\)，
+  \[
+    a(b+c)=ab+ac,\qquad (a+b)c=ac+bc.
+  \]
+\end{enumerate}
+若还要求存在 multiplicative identity \(1\) 且 \(1a=a=a1\)，则称为 ring with identity。若还要求 \(ab=ba\)，则称为 commutative ring。
+\end{solution}
+
+\begin{explanation}
+Boolean integers \((B,+,\cdot)\) 是 ring 的小型模型：\(+\) 给出 additive group structure，\(\cdot\) 给出 associative multiplication，并且 multiplication distributes over addition。课程暂时不需要 ring theory 的完整发展，但该定义说明一个 structured set 可以同时携带多个 operations，并且不同 operations 之间需要满足 compatibility laws。
+\end{explanation}
+
+\section{Monoids}
+
+\begin{definition}[monoid]
+一个 monoid 是一对 \((M,*)\)，其中 \(M\) 是集合，\(*:M\times M\to M\) 是 binary operation，并且满足：
+\[
+  (a*b)*c=a*(b*c)\quad\text{for all }a,b,c\in M,
+\]
+以及存在 \(e\in M\) 使得
+\[
+  a*e=e*a=a\quad\text{for all }a\in M.
+\]
+元素 \(e\) 称为 identity element。
+\end{definition}
+
+\begin{proposition}[identity 的唯一性]
+一个 monoid 至多有一个 identity element。
+\end{proposition}
+
+\begin{proof}
+设 \(e\) 与 \(e'\) 都是 identities。由于 \(e\) 是 identity，代入 \(a=e'\) 得 \(e*e'=e'\)。由于 \(e'\) 是 identity，代入 \(a=e\) 得 \(e*e'=e\)。因此 \(e=e'\)。
+\end{proof}
+
+\section{Groups}
+
+\begin{definition}[group]
+一个 group 是集合 \(G\)，配备 identity element \(e\) 与 binary operation \((a,b)\mapsto a\cdot b\)，满足：
+\[
+  e\cdot a=a=a\cdot e,
+\]
+\[
+  (a\cdot b)\cdot c=a\cdot(b\cdot c),
+\]
+并且对每个 \(a\in G\)，存在 \(b\in G\) 使得
+\[
+  a\cdot b=e.
+\]
+在完整的 group theory 语言中，\(b\) 称为 \(a\) 的 inverse；Worksheet 10 Exercise 1 会证明在这些公理下也有 \(b\cdot a=e\)。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 68]
+Find an example of a monoid that is not a group.
+\end{exerciseblock}
+
+\begin{solution}
+取 \((\N,+)\)，其中 \(\N=\{0,1,2,\ldots\}\)。addition 是 binary operation，因为 \(a,b\in\N\) 推出 \(a+b\in\N\)。addition associative，因为自然数加法满足
+\[
+  (a+b)+c=a+(b+c).
+\]
+元素 \(0\) 是 identity，因为
+\[
+  a+0=a=0+a
+\]
+对所有 \(a\in\N\) 成立。因此 \((\N,+)\) 是 monoid。
+
+但是 \((\N,+)\) 不是 group。若它是 group，则元素 \(1\in\N\) 应当存在 inverse \(b\in\N\) 使得
+\[
+  1+b=0.
+\]
+然而对任意 \(b\in\N\)，自然数加法满足 \(1+b\ge 1\)，所以 \(1+b\neq0\)。这与 inverse axiom 矛盾。因此 \((\N,+)\) 是 monoid 但不是 group。
+\end{solution}
+
+\begin{explanation}
+构造 “monoid but not group” 的标准方法是保留 associativity and identity，同时找出一个没有 inverse 的元素。自然数加法有 identity \(0\)，但正整数不能通过加另一个自然数回到 \(0\)。这个例子说明 group 比 monoid 多出的关键限制是 invertibility。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 69]
+Show that \(GL(2,\R)\) is not abelian.
+\end{exerciseblock}
+
+\begin{solution}
+令
+\[
+  A=\begin{pmatrix}1&1\\0&1\end{pmatrix},
+  \qquad
+  B=\begin{pmatrix}1&0\\1&1\end{pmatrix}.
+\]
+两者 determinant 都等于 \(1\)，所以 \(A,B\in GL(2,\R)\)。计算得
+\[
+  AB=
+  \begin{pmatrix}1&1\\0&1\end{pmatrix}
+  \begin{pmatrix}1&0\\1&1\end{pmatrix}
+  =
+  \begin{pmatrix}2&1\\1&1\end{pmatrix},
+\]
+而
+\[
+  BA=
+  \begin{pmatrix}1&0\\1&1\end{pmatrix}
+  \begin{pmatrix}1&1\\0&1\end{pmatrix}
+  =
+  \begin{pmatrix}1&1\\1&2\end{pmatrix}.
+\]
+矩阵 \(AB\) 与 \(BA\) 的 \((1,1)\)-entry 分别为 \(2\) 与 \(1\)，所以 \(AB\neq BA\)。因此 \(GL(2,\R)\) 中存在两个元素不 commute，故 \(GL(2,\R)\) is not abelian。
+\end{solution}
+
+\begin{explanation}
+证明一个 group 不是 abelian，只需要给出一个 counterexample pair。选择 shear matrices 的原因是它们 determinant 非零，保证属于 \(GL(2,\R)\)，同时矩阵乘法的顺序会改变输出。这里的计算完整展示了 non-commutativity，而不是只引用矩阵乘法一般不交换。
+\end{explanation}
+
+\section{Homomorphisms and Isomorphisms}
+
+\begin{definition}[group homomorphism]
+设 \((G,*)\) 与 \((H,*')\) 是 groups。函数 \(\varphi:G\to H\) 称为 group homomorphism，若对所有 \(a,b\in G\)，
+\[
+  \varphi(a*b)=\varphi(a)*'\varphi(b).
+\]
+\end{definition}
+
+\begin{definition}[isomorphism]
+一个 group homomorphism \(\varphi:G\to H\) 若同时是 bijection，则称为 isomorphism。若存在 isomorphism \(G\to H\)，则称 \(G\) 与 \(H\) isomorphic。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 70]
+Show that \((C,\clubsuit)\) is isomorphic to \((B,+)\).
+\end{exerciseblock}
+
+\begin{solution}
+令 \(C=\{F,T\}\)，其中 operation \(\clubsuit\) 满足
+\[
+  F\clubsuit F=F,\quad F\clubsuit T=T,\quad T\clubsuit F=T,\quad T\clubsuit T=F.
+\]
+定义函数 \(\varphi:C\to B\) by
+\[
+  \varphi(F)=0,\qquad \varphi(T)=1.
+\]
+该函数是 bijection，因为 \(F,T\) 分别映到 \(0,1\)，且 \(C\) 与 \(B\) 都只有这两个元素。
+
+接着验证 homomorphism property。对 \(C\) 中四个 ordered pairs 逐一计算：
+\[
+  \varphi(F\clubsuit F)=\varphi(F)=0=0+0=\varphi(F)+\varphi(F),
+\]
+\[
+  \varphi(F\clubsuit T)=\varphi(T)=1=0+1=\varphi(F)+\varphi(T),
+\]
+\[
+  \varphi(T\clubsuit F)=\varphi(T)=1=1+0=\varphi(T)+\varphi(F),
+\]
+\[
+  \varphi(T\clubsuit T)=\varphi(F)=0=1+1=\varphi(T)+\varphi(T).
+\]
+因此对所有 \(a,b\in C\)，\(\varphi(a\clubsuit b)=\varphi(a)+\varphi(b)\)。所以 \(\varphi\) 是 bijective homomorphism，即 isomorphism。
+\end{solution}
+
+\begin{explanation}
+构造 finite group 的 isomorphism 时，最直接的方法是把 identity 映到 identity，把另一个元素映到另一个元素，然后验证 operation table 被保留。这里 \(\clubsuit\) 的表与 Boolean addition 的表完全相同，只是元素名称从 \(F,T\) 改为 \(0,1\)。isomorphism 的意义是两组结构只有 labels 不同。
+\end{explanation}
+
+\section{Symmetric Groups}
+
+\begin{definition}[symmetric group]
+设 \(X\) 是集合。\(S_X\) 表示所有 bijections \(X\to X\) 的集合，operation 是 function composition。若 \(X=\{1,\ldots,n\}\)，则也写作 \(S_n\)。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 71]
+Write down all bijections of the sets \(\{1,2\}\) and \(\{1,2,3\}\).
+\end{exerciseblock}
+
+\begin{solution}
+对集合 \(\{1,2\}\)，bijection 必须把两个不同元素送到两个不同元素。因此共有两个 bijections：
+\[
+  \mathrm{id}=\begin{pmatrix}1&2\\1&2\end{pmatrix},
+  \qquad
+  (12)=\begin{pmatrix}1&2\\2&1\end{pmatrix}.
+\]
+
+对集合 \(\{1,2,3\}\)，bijection 等价于排列三个输出。共有 \(3!=6\) 个：
+\[
+  \mathrm{id}=\begin{pmatrix}1&2&3\\1&2&3\end{pmatrix},
+  \quad
+  (12)=\begin{pmatrix}1&2&3\\2&1&3\end{pmatrix},
+  \quad
+  (13)=\begin{pmatrix}1&2&3\\3&2&1\end{pmatrix},
+\]
+\[
+  (23)=\begin{pmatrix}1&2&3\\1&3&2\end{pmatrix},
+  \quad
+  (123)=\begin{pmatrix}1&2&3\\2&3&1\end{pmatrix},
+  \quad
+  (132)=\begin{pmatrix}1&2&3\\3&1&2\end{pmatrix}.
+\]
+\end{solution}
+
+\begin{explanation}
+列出 all bijections 的系统方法是先选择 \(1\) 的 image，再选择 \(2\) 的 image，最后剩余元素强制成为 \(3\) 的 image。对三元素集合，这给出 \(3\cdot2\cdot1=6\) 个 permutations。cycle notation 是 compact label；two-line notation 明确记录每个输入的输出。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 72]
+Show that \(S_2\) is isomorphic to \(\Z_2\).
+\end{exerciseblock}
+
+\begin{solution}
+把 \(\Z_2\) 视为 Boolean addition group \((B,+)\)，其中 \(B=\{0,1\}\)。由 Lecture Notes Exercise 71，
+\[
+  S_2=\{\mathrm{id},(12)\}.
+\]
+定义
+\[
+  \varphi:S_2\to B,\qquad
+  \varphi(\mathrm{id})=0,\quad \varphi((12))=1.
+\]
+该函数是 bijection。验证 homomorphism property：
+\[
+  \varphi(\mathrm{id}\circ\mathrm{id})=\varphi(\mathrm{id})=0=0+0,
+\]
+\[
+  \varphi(\mathrm{id}\circ(12))=\varphi((12))=1=0+1,
+\]
+\[
+  \varphi((12)\circ\mathrm{id})=\varphi((12))=1=1+0,
+\]
+\[
+  \varphi((12)\circ(12))=\varphi(\mathrm{id})=0=1+1.
+\]
+因此 \(\varphi(\sigma\circ\tau)=\varphi(\sigma)+\varphi(\tau)\) 对所有 \(\sigma,\tau\in S_2\) 成立。故 \(S_2\cong\Z_2\)。
+\end{solution}
+
+\begin{explanation}
+两个 order \(2\) 的 groups 若都由一个非 identity 元素生成，通常会同构。本题仍然需要写出具体 map 并检查 operation。关键计算是 transposition \((12)\) composed with itself gives identity，这与 \(1+1=0\) 完全对应。
+\end{explanation}
+
+\section{Worksheet 10: groups and conjugacy}
+
+\begin{exerciseblock}[Worksheet 10 Exercise 1]
+Let \((G,e,\cdot)\) be a group. Prove that for all \(a\in G\), there exists \(b\in G\) such that \(a\cdot b=b\cdot a=e\).
+\end{exerciseblock}
+
+\begin{solution}
+固定 \(a\in G\)。由 group axiom，存在 \(b\in G\) 使得
+\[
+  a\cdot b=e.
+\]
+再对元素 \(b\) 使用同一条 inverse axiom，存在 \(c\in G\) 使得
+\[
+  b\cdot c=e.
+\]
+现在计算 \(a\)。由 identity, associativity, and \(b\cdot c=e\)，
+\[
+  a=a\cdot e=a\cdot(b\cdot c)=(a\cdot b)\cdot c=e\cdot c=c.
+\]
+因此 \(c=a\)。代回 \(b\cdot c=e\) 得
+\[
+  b\cdot a=e.
+\]
+于是同一个 \(b\) 同时满足 \(a\cdot b=e\) 与 \(b\cdot a=e\)。
+\end{solution}
+
+\begin{explanation}
+题目的难点在于公理只直接给出 right inverse \(a\cdot b=e\)，但目标要求 two-sided inverse。证明策略是先给 \(a\) 找到 \(b\)，再给 \(b\) 找到 right inverse \(c\)。等式 \(a=a(bc)=(ab)c=c\) 把 \(c\) 识别为 \(a\)，从而把 \(b c=e\) 转化为 \(b a=e\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 10 Exercise 2]
+Let \((G,e,\cdot)\) be a group. Define \(g\sim h\) if there exists \(x\in G\) such that \(g=x^{-1}hx\). Prove that \(\sim\) is an equivalence relation on \(G\).
+\end{exerciseblock}
+
+\begin{solution}
+我们分别证明 reflexive, symmetric, and transitive。
+
+Reflexive: 对任意 \(g\in G\)，取 \(x=e\)。则
+\[
+  x^{-1}gx=e^{-1}ge=ege=g,
+\]
+所以 \(g\sim g\)。
+
+Symmetric: 设 \(g\sim h\)。则存在 \(x\in G\) 使得
+\[
+  g=x^{-1}hx.
+\]
+两边左乘 \(x\)、右乘 \(x^{-1}\)，得到
+\[
+  xgx^{-1}=h.
+\]
+令 \(y=x^{-1}\)。则 \(y^{-1}=x\)，并且
+\[
+  h=y^{-1}gy.
+\]
+因此 \(h\sim g\)。
+
+Transitive: 设 \(g\sim h\) 且 \(h\sim k\)。则存在 \(x,y\in G\) 使得
+\[
+  g=x^{-1}hx,\qquad h=y^{-1}ky.
+\]
+代入得
+\[
+  g=x^{-1}(y^{-1}ky)x=(yx)^{-1}k(yx),
+\]
+其中 \((yx)^{-1}=x^{-1}y^{-1}\)。由于 \(yx\in G\)，得到 \(g\sim k\)。
+
+三条性质都成立，所以 \(\sim\) 是 equivalence relation。
+\end{solution}
+
+\begin{explanation}
+该关系是 conjugacy relation。Reflexive 使用 identity conjugation；symmetric 使用 inverse conjugating element；transitive 使用 conjugations 的复合。最容易出错的地方是乘法顺序：若 \(g=x^{-1}hx\) 且 \(h=y^{-1}ky\)，则新的 conjugating element 是 \(yx\)，因为 \((yx)^{-1}=x^{-1}y^{-1}\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 10 Exercise 3]
+Let \(D_8\) be the group of symmetries of a square. Describe its \(8\) elements and verify that it is isomorphic to the permutation model \(\widehat D_8\).
+\end{exerciseblock}
+
+\begin{solution}
+把正方形的四个顶点按逆时针方向标记为 \(\Z/4\Z=\{0,1,2,3\}\)。令
+\[
+  r(i)=i+1\pmod 4,\qquad s(i)=-i\pmod 4.
+\]
+则 \(r\) 是旋转 \(90^\circ\)，而 \(s\) 是过顶点 \(0\) 与 \(2\) 的反射。所有八个对称可以写成
+\[
+  e,\ r,\ r^2,\ r^3,\ s,\ rs,\ r^2s,\ r^3s.
+\]
+其中 \(r^k(i)=i+k\)，而 \(r^k s(i)=k-i\)，所有运算都在 \(\Z/4\Z\) 中进行。
+
+令 \(\widehat D_8\) 为满足
+\[
+  f(i+2)=f(i)+2\pmod 4
+\]
+的 bijections \(f:\Z/4\Z\to\Z/4\Z\)。每个几何对称都把 opposite vertices 送到 opposite vertices，所以诱导出 \(\widehat D_8\) 中的 permutation。
+
+反过来，若 \(f\in\widehat D_8\)，则 \(f(0)\) 有 \(4\) 种选择。由于 \(f(2)=f(0)+2\)，顶点 \(2\) 的 image 被确定。元素 \(f(1)\) 不能等于 \(f(0)\) 或 \(f(0)+2\)，因此只有两个选择；随后 \(f(3)=f(1)+2\) 被确定。因此 \(\widehat D_8\) 只有 \(4\cdot2=8\) 个元素，且它们正是 \(r^k\) 与 \(r^k s\) 的 permutation 形式。
+
+定义 \(\Phi:D_8\to\widehat D_8\) 为“取一个几何对称在四个顶点上的诱导 permutation”。上面的讨论说明 \(\Phi\) 是 bijection。几何对称的先后复合在顶点上诱导的 permutation 等于对应 permutations 的复合，所以
+\[
+  \Phi(\alpha\beta)=\Phi(\alpha)\circ\Phi(\beta).
+\]
+故 \(\Phi\) 是 group isomorphism。
+\end{solution}
+
+\begin{explanation}
+正方形对称群的本质是“保持相邻和相对关系的顶点 permutation”。条件 \(f(i+2)=f(i)+2\) 正是在 permutation language 中表达 opposite vertices remain opposite。先用 \(r\) 与 \(s\) 写出八个几何对称，再证明 permutation model 也只有这八个元素，就得到两个模型描述的是同一个 group structure。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 10 Exercise 4]
+Describe the equivalence classes for the conjugacy relation in Worksheet 10 Exercise 2, for \(G=D_8\).
+\end{exerciseblock}
+
+\begin{solution}
+使用表示
+\[
+  D_8=\{e,r,r^2,r^3,s,rs,r^2s,r^3s\},
+\]
+其中 \(r^4=e\), \(s^2=e\), and \(srs=r^{-1}\)。Conjugacy classes 如下：
+\[
+  \{e\},
+  \qquad
+  \{r^2\},
+  \qquad
+  \{r,r^3\},
+  \qquad
+  \{s,r^2s\},
+  \qquad
+  \{rs,r^3s\}.
+\]
+
+验证旋转部分：\(e\) 与 \(r^2\) 属于 center，因为 \(r^2\) 是 \(180^\circ\) rotation，与所有对称 commute，所以它们各自形成 singleton class。又
+\[
+  srs=r^{-1}=r^3,
+\]
+所以 \(r\) 与 \(r^3\) conjugate。
+
+验证反射部分：由 \(r^k s r^{-k}=r^{2k}s\) 可知 \(s\) 与 \(r^2s\) conjugate；由同一公式乘上 \(r\) 的奇次幂版本可得 \(rs\) 与 \(r^3s\) conjugate。不同类型的 classes 不相交，因为 rotation 的 conjugate 仍是 rotation，而 reflection 的 conjugate 仍是 reflection；此外 \(s,r^2s\) 的反射轴经过对顶点，\(rs,r^3s\) 的反射轴经过对边中点，二者在 \(D_8\) 中不 conjugate。
+\end{solution}
+
+\begin{explanation}
+Conjugacy class 记录的是元素在 group 内部改名以后保持的类型。对 \(D_8\)，rotations conjugate to rotations, reflections conjugate to reflections。反射再分成两类，因为正方形有两种反射轴：经过对顶点的轴与经过对边中点的轴。这个分类比逐个计算 \(8\) 个元素的 conjugates 更有效。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 10 Exercise 5]
+Construct a group homomorphism \(f:S_2\to S_3\). Construct a group homomorphism \(g:S_3\to S_2\).
+\end{exerciseblock}
+
+\begin{solution}
+令
+\[
+  S_2=\{\mathrm{id},(12)\}.
+\]
+定义 \(f:S_2\to S_3\) by
+\[
+  f(\mathrm{id})=\mathrm{id},\qquad f((12))=(12),
+\]
+其中右边的 \((12)\) 视为 \(S_3\) 中交换 \(1,2\) 且固定 \(3\) 的 permutation。为了验证 homomorphism，只需检查 \(S_2\) 的四个乘法组合：
+\[
+  f(\mathrm{id}\circ\sigma)=f(\sigma)=\mathrm{id}\circ f(\sigma),
+\]
+\[
+  f((12)\circ(12))=f(\mathrm{id})=\mathrm{id}=(12)\circ(12)=f((12))\circ f((12)).
+\]
+因此 \(f\) 是 group homomorphism。
+
+定义 \(g:S_3\to S_2\) 为 sign homomorphism：
+\[
+  g(\sigma)=
+  \begin{cases}
+    \mathrm{id}, & \sigma\text{ is even},\\
+    (12), & \sigma\text{ is odd}.
+  \end{cases}
+\]
+若 \(\sigma,\tau\in S_3\)，则 parity satisfies
+\[
+  \operatorname{sgn}(\sigma\tau)=\operatorname{sgn}(\sigma)\operatorname{sgn}(\tau).
+\]
+在 \(S_2\) 中，\(\mathrm{id}\) 表示 even，而 \((12)\) 表示 odd；composition table 正好对应 parity multiplication。因此
+\[
+  g(\sigma\tau)=g(\sigma)g(\tau),
+\]
+所以 \(g\) 是 group homomorphism。
+\end{solution}
+
+\begin{explanation}
+从 \(S_2\) 到 \(S_3\) 的例子使用 subgroup inclusion：把两个元素的 permutation 看成固定第三个点的 permutation。从 \(S_3\) 到 \(S_2\) 的例子使用 parity：两个 odd permutations 的复合是 even，odd 与 even 的复合是 odd，这与 \(S_2\) 的两元素 multiplication table 相同。
+\end{explanation}

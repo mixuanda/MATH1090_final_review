@@ -1,0 +1,1697 @@
+\chapter{The integers, rationals, and quotient number systems}
+\label{chap:integers-rationals}
+
+本章从 Peano axioms 开始，说明 natural numbers 的结构怎样支持 induction 和
+recursive arithmetic；然后用 equivalence relation 与 quotient set 构造
+\(\Z\) 和 \(\Q\)。全章的重点不是把熟悉的计算重新包装，而是把每一次
+``选择 representative'' 的步骤写成 well-definedness proof。最后一节给出
+starred 的 Von Neumann ordinals，说明 set theory 中可以实际构造一个 Peano
+model。
+
+\section{Peano axioms and induction}
+
+\begin{definition}[Peano model]
+一个 triple \((N,0,S)\) 称为 model of the natural numbers，若 \(0\in N\)，
+\(S:N\to N\)，并满足下列条件：
+\begin{enumerate}
+  \item \(S\) is injective：若 \(S(x)=S(y)\)，则 \(x=y\)。
+  \item 没有 fixed point：对所有 \(x\in N\)，\(S(x)\neq x\)。
+  \item \(0\) is not a successor：不存在 \(x\in N\) 使 \(S(x)=0\)。
+  \item Principle of Induction：若 predicate \(P\) 满足 \(P(0)\)，并且对所有
+  \(x\in N\)，\(P(x)\Rightarrow P(S(x))\)，则 \(P(x)\) 对所有 \(x\in N\) 成立。
+\end{enumerate}
+\end{definition}
+
+这些 axioms 把 natural numbers 看成一条从 \(0\) 出发、不断取 successor 的链。
+前三条描述 successor 的 local behavior；induction 排除从 \(0\) 出发不能到达的
+额外 component。
+
+\begin{exerciseblock}[Lecture Notes Exercise 25]
+令 \(N=\{0,1,2\}\)，并定义
+\[
+  S(0)=1,\qquad S(1)=2,\qquad S(2)=0.
+\]
+判断哪些 Peano axioms fail。
+\end{exerciseblock}
+
+\begin{solution}
+先检查 injectivity。三个 outputs 分别是 \(1,2,0\)，没有两个不同 inputs 有相同
+output，所以 \(S\) is injective。
+
+再检查 fixed point。对三个元素逐一计算：
+\[
+S(0)=1\neq0,\qquad S(1)=2\neq1,\qquad S(2)=0\neq2.
+\]
+因此 no fixed point 条件成立。
+
+第三条 fail，因为 \(S(2)=0\)。这给出了一个元素 \(2\in N\)，使 \(0\) 是它的
+successor。
+
+最后检查 induction。设 predicate \(P\) 满足 \(P(0)\)，并且 \(P(x)\Rightarrow
+P(S(x))\)。由 \(P(0)\) 和 \(S(0)=1\) 得 \(P(1)\)；由 \(P(1)\) 和 \(S(1)=2\)
+得 \(P(2)\)。集合 \(N\) 只有这三个元素，所以 \(P\) 对所有元素成立。Induction
+没有 fail。
+
+因此唯一 fail 的 Peano axiom 是 ``\(0\) is not a successor''。
+\end{solution}
+
+\begin{explanation}
+这个例子说明 finite cycle 并不一定破坏 induction。Induction 只问从 \(0\) 开始
+沿 \(S\) 走能否覆盖所有元素；这里 \(0\to1\to2\) 已覆盖整个 set。真正的问题是
+cycle 又从 \(2\) 回到 \(0\)，这违反了 \(0\) 不能有 predecessor 的 axiom。
+\end{explanation}
+
+\section{Recursive arithmetic on \texorpdfstring{\(\N\)}{N}}
+
+\subsection{Addition}
+
+Addition 定义为
+\[
+  a+0=a,\qquad a+S(b)=S(a+b).
+\]
+这是对第二个 variable 的 recursive definition。每次要求 \(a+S(b)\) 时，定义把
+问题换成已经早一步出现的 \(a+b\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 26]
+用 Peano axioms 说明 recursive addition 为什么合法。
+\end{exerciseblock}
+
+\begin{solution}
+固定 \(a\in\N\)。我们要定义 function \(F_a:\N\to\N\)，并把 \(F_a(b)\) 记为
+\(a+b\)。递归规则是
+\[
+  F_a(0)=a,\qquad F_a(S(b))=S(F_a(b)).
+\]
+
+先证明 uniqueness。设 \(F,G:\N\to\N\) 都满足这两条规则。令
+\[
+  P(b):\quad F(b)=G(b).
+\]
+Base case 中，\(F(0)=a=G(0)\)，所以 \(P(0)\) 成立。若 \(P(b)\) 成立，即
+\(F(b)=G(b)\)，则
+\[
+  F(S(b))=S(F(b))=S(G(b))=G(S(b)).
+\]
+所以 \(P(S(b))\) 成立。由 induction，\(F(b)=G(b)\) 对所有 \(b\in\N\) 成立。
+
+Existence 是 Peano recursion theorem 的内容。这个 theorem 可由 induction 建立：
+从 value \(F_a(0)=a\) 开始，successor step 唯一指定 \(F_a(S(b))\)。由于每个
+nonzero natural number 都由有限次 successor 从 \(0\) 得到，规则不会留下未定义
+的 natural number，也不会给同一个 natural number 两个不同 values。
+\end{solution}
+
+\begin{explanation}
+Recursive definition 的难点是 well-definedness：同一个 input 不能因为不同的
+回溯路径得到不同答案。Peano induction 正是在这里发挥作用；它把 ``base value
+相同且 successor rule 相同'' 推广为 ``所有 values 相同''。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 27]
+证明对所有 \(n\in\N\)，\(0+n=n\)。
+\end{exerciseblock}
+
+\begin{solution}
+对 \(n\) 做 induction。Base case：
+\[
+  0+0=0,
+\]
+这是 addition 的第一条定义。
+
+Induction step：假设 \(0+n=n\)。由 addition 的第二条定义，
+\[
+  0+S(n)=S(0+n).
+\]
+把 induction hypothesis 代入右边，得到
+\[
+  0+S(n)=S(n).
+\]
+所以结论对 \(S(n)\) 成立。由 Principle of Induction，\(0+n=n\) 对所有
+\(n\in\N\) 成立。
+\end{solution}
+
+\begin{explanation}
+定义只给出 \(a+0=a\)，也就是 zero 在右边的情形。要把 zero 放到左边，必须让
+第二个 variable 变化，所以证明自然选择 induction on \(n\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 4 Exercise 1]
+证明对所有 \(a,b\in\N\)，
+\[
+  S(a)+b=S(a+b).
+\]
+\end{exerciseblock}
+
+\begin{solution}
+固定 \(a\)，对 \(b\) 做 induction。
+
+Base case：
+\[
+  S(a)+0=S(a)
+  \quad\text{and}\quad
+  S(a+0)=S(a),
+\]
+所以 \(S(a)+0=S(a+0)\)。
+
+Induction step：假设 \(S(a)+b=S(a+b)\)。则
+\[
+\begin{aligned}
+S(a)+S(b)
+  &=S(S(a)+b) && \text{by the recursive definition of addition}\\
+  &=S(S(a+b)) && \text{by the induction hypothesis}\\
+  &=S(a+S(b)) && \text{because } a+S(b)=S(a+b).
+\end{aligned}
+\]
+所以命题对 \(S(b)\) 成立。由 induction，结论对所有 \(b\in\N\) 成立。
+\end{solution}
+
+\begin{explanation}
+递归定义控制的是右边 input 的 successor：\(x+S(b)=S(x+b)\)。题目把 successor
+放在左边的 \(a\) 上，因此需要先固定 \(a\)，再让右边的 \(b\) 通过 induction
+移动。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 4 Exercise 2]
+使用 Worksheet 4 Exercise 1 证明 addition on \(\N\) is commutative。
+\end{exerciseblock}
+
+\begin{solution}
+证明对所有 \(a,b\in\N\)，\(a+b=b+a\)。按提示，对 \(b\) 做 induction，令
+\[
+  P(b):\quad \forall a\in\N,\ a+b=b+a.
+\]
+
+Base case \(b=0\)。对任意 \(a\)，左边 \(a+0=a\)。另一方面，Lecture Notes
+Exercise 27 已证明 \(0+a=a\)。因此 \(a+0=0+a\)，所以 \(P(0)\) 成立。
+
+Induction step：假设 \(P(b)\) 成立，即对所有 \(a\)，\(a+b=b+a\)。取任意
+\(a\in\N\)。计算
+\[
+\begin{aligned}
+a+S(b)
+  &=S(a+b) && \text{by recursive addition}\\
+  &=S(b+a) && \text{by the induction hypothesis}\\
+  &=S(b)+a && \text{by Worksheet 4 Exercise 1 with } b \text{ replaced by } a.
+\end{aligned}
+\]
+所以 \(a+S(b)=S(b)+a\)。任意 \(a\) 都成立，故 \(P(S(b))\) 成立。由 induction，
+addition is commutative。
+\end{solution}
+
+\begin{explanation}
+Exercise 1 的作用是把 ``左边加了一个 successor'' 转换成 ``整个和取 successor''。
+在 commutativity 的 induction step 中，我们正好需要把 \(S(b)+a\) 与 \(S(b+a)\)
+联系起来。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 5 Problem 1]
+对 \(x\in\N\)，令
+\[
+P(x):\quad x\neq0\Rightarrow \exists!y\in\N,\ S(y)=x.
+\]
+只用 Peano axioms 证明 \(P(x)\) 对所有 \(x\in\N\) 成立。
+\end{exerciseblock}
+
+\begin{solution}
+对 \(x\) 做 induction。
+
+Base case \(x=0\)。命题 \(P(0)\) 是
+\[
+0\neq0\Rightarrow \exists!y\in\N,\ S(y)=0.
+\]
+Antecedent \(0\neq0\) 为 false，所以 implication 为 true。因此 \(P(0)\)
+成立。
+
+Induction step：假设 \(P(x)\) 成立。要证 \(P(S(x))\)。由 Peano axiom，
+\(S(x)\neq0\)，所以需要证明存在唯一 \(y\) 使 \(S(y)=S(x)\)。
+
+存在性：取 \(y=x\)，则 \(S(y)=S(x)\)。
+
+唯一性：若 \(S(y)=S(x)\)，由 injectivity of \(S\) 得 \(y=x\)。因此唯一的
+predecessor 是 \(x\)。所以 \(P(S(x))\) 成立。
+
+由 induction，\(P(x)\) 对所有 \(x\in\N\) 成立。
+\end{solution}
+
+\begin{explanation}
+这题把 ``每个 nonzero natural number 是 successor'' 写成 predicate。唯一性
+不能从存在性推出，必须单独使用 injectivity of \(S\)：相同 successor 只能来自
+相同 predecessor。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 5 Problem 2]
+只用 Peano axioms 和 addition 的定义证明对每个 \(n\in\N\)，\(0+n=n\)。
+\end{exerciseblock}
+
+\begin{solution}
+这与 Lecture Notes Exercise 27 是同一个 statement。对 \(n\) 做 induction。
+\[
+0+0=0.
+\]
+若 \(0+n=n\)，则
+\[
+0+S(n)=S(0+n)=S(n).
+\]
+所以 induction step 成立。由 Peano induction，\(0+n=n\) 对所有 \(n\in\N\)
+成立。
+\end{solution}
+
+\begin{explanation}
+Homework 题目强调 ``only Peano's axioms and the definition of addition''，所以
+证明中不能引用 commutativity。事实上，这个结论是之后证明 commutativity 的必要
+准备。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 5 Problem 3]
+令 \(1=S(0)\)。证明对每个 \(n\in\N\)，
+\[
+  n+1=1+n.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+先证明左边等于 \(S(n)\)：
+\[
+  n+1=n+S(0)=S(n+0)=S(n).
+\]
+
+再证明 \(1+n=S(n)\)。对 \(n\) 做 induction。Base case：
+\[
+  1+0=1=S(0).
+\]
+Induction step：假设 \(1+n=S(n)\)。则
+\[
+  1+S(n)=S(1+n)=S(S(n)).
+\]
+所以 \(1+S(n)=S(S(n))\)，即命题对 \(S(n)\) 成立。由 induction，
+\[
+  1+n=S(n)
+\]
+对所有 \(n\) 成立。
+
+结合两部分，
+\[
+  n+1=S(n)=1+n.
+\]
+\end{solution}
+
+\begin{explanation}
+\(n+1=S(n)\) 只需要展开 addition 的定义，因为 \(1=S(0)\)。但 \(1+n=S(n)\)
+让 \(n\) 出现在右边 input，因此必须用 induction 推动递归定义。
+\end{explanation}
+
+\subsection{Multiplication}
+
+Multiplication 定义为
+\[
+  a\cdot0=0,\qquad a\cdot S(b)=a+(a\cdot b).
+\]
+
+\begin{exerciseblock}[Lecture Notes Exercise 28]
+计算 \(2\cdot3\)。
+\end{exerciseblock}
+
+\begin{solution}
+记 \(1=S(0)\)、\(2=S(1)\)、\(3=S(2)\)。按 multiplication 的 recursive
+definition：
+\[
+\begin{aligned}
+2\cdot3
+  &=2\cdot S(2)\\
+  &=2+(2\cdot2)\\
+  &=2+\bigl(2+(2\cdot1)\bigr)\\
+  &=2+\bigl(2+(2+(2\cdot0))\bigr)\\
+  &=2+\bigl(2+(2+0)\bigr).
+\end{aligned}
+\]
+用 addition 的定义计算 \(2+0=2\)，再得到 \(2+2=4\)，最后 \(2+4=6\)。因此
+\[
+  2\cdot3=6.
+\]
+\end{solution}
+
+\begin{explanation}
+递归定义每一步只允许把第二个 factor 从 \(S(b)\) 降到 \(b\)。因此计算
+\(2\cdot3\) 的路线是 \(3\to2\to1\to0\)，到达 \(2\cdot0\) 后再把 addition
+逐层加回去。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 29]
+从 definitions 证明 addition 和 multiplication on \(\N\) are commutative and
+associative。
+\end{exerciseblock}
+
+\begin{solution}
+Addition commutativity 已在 Worksheet 4 Exercise 2 中证明。
+
+Addition associativity：固定 \(a,b\)，对 \(c\) 做 induction。Base case：
+\[
+  (a+b)+0=a+b=a+(b+0).
+\]
+Induction step 中，假设 \((a+b)+c=a+(b+c)\)。则
+\[
+\begin{aligned}
+(a+b)+S(c)
+  &=S((a+b)+c)\\
+  &=S(a+(b+c))\\
+  &=a+S(b+c)\\
+  &=a+(b+S(c)).
+\end{aligned}
+\]
+所以 \((a+b)+c=a+(b+c)\) 对所有 \(c\) 成立。
+
+为了处理 multiplication，先证明两个 lemmas。
+
+第一，\(0\cdot b=0\)。对 \(b\) 做 induction。Base case 是 \(0\cdot0=0\)。
+若 \(0\cdot b=0\)，则
+\[
+0\cdot S(b)=0+(0\cdot b)=0+0=0.
+\]
+
+第二，\(S(a)\cdot b=a\cdot b+b\)。对 \(b\) 做 induction。Base case：
+\[
+S(a)\cdot0=0=a\cdot0+0.
+\]
+Induction step 中，假设 \(S(a)\cdot b=a\cdot b+b\)。则
+\[
+\begin{aligned}
+S(a)\cdot S(b)
+  &=S(a)+S(a)\cdot b\\
+  &=S(a)+(a\cdot b+b)\\
+  &=(S(a)+a\cdot b)+b\\
+  &=S(a+a\cdot b)+b\\
+  &=S(a\cdot S(b))+b\\
+  &=a\cdot S(b)+S(b).
+\end{aligned}
+\]
+最后一步使用 Worksheet 4 Exercise 1 的等价形式 \(S(x)+b=x+S(b)\)，该等价式由
+\(S(x)+b=S(x+b)=x+S(b)\) 得到。
+
+Multiplication commutativity：固定 \(a\)，对 \(b\) 做 induction。Base case：
+\[
+  a\cdot0=0=0\cdot a.
+\]
+Induction step 中，假设 \(a\cdot b=b\cdot a\)。则
+\[
+\begin{aligned}
+a\cdot S(b)
+  &=a+a\cdot b\\
+  &=a+b\cdot a\\
+  &=b\cdot a+a\\
+  &=S(b)\cdot a,
+\end{aligned}
+\]
+其中最后一步用上面的第二个 lemma。故 \(a\cdot b=b\cdot a\)。
+
+接着记录并证明 associativity 所需的 distributive lemma：
+\[
+  a\cdot(x+y)=a\cdot x+a\cdot y.
+\]
+固定 \(a,x\)，对 \(y\) 做 induction。Base case：
+\[
+  a\cdot(x+0)=a\cdot x=a\cdot x+a\cdot0.
+\]
+若 \(a\cdot(x+y)=a\cdot x+a\cdot y\)，则
+\[
+\begin{aligned}
+a\cdot(x+S(y))
+  &=a\cdot S(x+y)\\
+  &=a+a\cdot(x+y)\\
+  &=a+(a\cdot x+a\cdot y)\\
+  &=(a\cdot x)+(a+a\cdot y)\\
+  &=a\cdot x+a\cdot S(y).
+\end{aligned}
+\]
+所以这个 lemma 成立。
+
+Multiplication associativity：固定 \(a,b\)，对 \(c\) 做 induction。Base case：
+\[
+  (a\cdot b)\cdot0=0=a\cdot(b\cdot0).
+\]
+Induction step 中，假设 \((a\cdot b)\cdot c=a\cdot(b\cdot c)\)。用刚证明的
+distributive lemma：
+\[
+\begin{aligned}
+(a\cdot b)\cdot S(c)
+  &=(a\cdot b)+((a\cdot b)\cdot c)\\
+  &=(a\cdot b)+a\cdot(b\cdot c)\\
+  &=a\cdot b+a\cdot(b\cdot c)\\
+  &=a\cdot\bigl(b+(b\cdot c)\bigr)\\
+  &=a\cdot\bigl(b\cdot S(c)\bigr).
+\end{aligned}
+\]
+因此 multiplication is associative。
+\end{solution}
+
+\begin{explanation}
+Multiplication 的 commutativity 比 addition 更长，因为 recursive definition 只
+控制右 factor。证明 \(S(a)\cdot b=a\cdot b+b\) 的 lemma 等于把 successor 从左
+factor 移到结果中；有了它，induction step 才能把 \(a\cdot S(b)\) 改写成
+\(S(b)\cdot a\)。Associativity 需要一个 distributive lemma，因为
+\(b\cdot S(c)=b+b\cdot c\) 后必须把外层的 \(a\cdot\) 分配进去；本解答在使用前
+先把这个 lemma 证明出来。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 30]
+证明对任意 \(a,b,c\in\N\)，
+\[
+  a\cdot(b+c)=a\cdot b+a\cdot c.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+固定 \(a,b\)，对 \(c\) 做 induction。
+
+Base case：
+\[
+  a\cdot(b+0)=a\cdot b
+\]
+而
+\[
+  a\cdot b+a\cdot0=a\cdot b+0=a\cdot b.
+\]
+所以 base case 成立。
+
+Induction step：假设
+\[
+  a\cdot(b+c)=a\cdot b+a\cdot c.
+\]
+则
+\[
+\begin{aligned}
+a\cdot(b+S(c))
+  &=a\cdot S(b+c)\\
+  &=a+a\cdot(b+c)\\
+  &=a+(a\cdot b+a\cdot c)\\
+  &=(a+a\cdot b)+a\cdot c\\
+  &=(a\cdot b+a)+a\cdot c\\
+  &=a\cdot b+(a+a\cdot c)\\
+  &=a\cdot b+a\cdot S(c).
+\end{aligned}
+\]
+这里使用了 addition associativity 和 commutativity。由 induction，
+distributivity 成立。
+\end{solution}
+
+\begin{explanation}
+证明按 \(c\) 做 induction，是因为 \(b+S(c)=S(b+c)\)，能把左边送进
+multiplication 的 recursive rule。中间的重新加括号不是省略步骤，而是连续使用
+addition 的 associativity 与 commutativity。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 4 Exercise 3]
+给出一个只 fail injectivity of \(S\) 的 Peano-like example；再给出一个只 fail
+Principle of Induction 的 example。
+\end{exerciseblock}
+
+\begin{solution}
+只 fail injectivity 的例子：令 \(N=\{0,1,2\}\)，并定义
+\[
+  S(0)=1,\qquad S(1)=2,\qquad S(2)=1.
+\]
+这里 \(S(0)=S(2)\) 但 \(0\neq2\)，所以 injectivity fail。No fixed point 成立，
+因为 \(0\mapsto1\)、\(1\mapsto2\)、\(2\mapsto1\) 都没有固定输入。\(0\) is not
+a successor 也成立，因为 image set 是 \(\{1,2\}\)。Induction 成立：若 \(P(0)\)
+且 \(P(x)\Rightarrow P(S(x))\)，则 \(P(1)\) 由 \(0\mapsto1\) 得到，\(P(2)\) 由
+\(1\mapsto2\) 得到，故所有元素都满足 \(P\)。
+
+只 fail induction 的例子：令
+\[
+  M=\{0,1,2,\ldots\}\cup\{a,b,c\},
+\]
+usual successor 作用在数字部分，并令
+\[
+  S(a)=b,\qquad S(b)=c,\qquad S(c)=a.
+\]
+数字链的 image 是 \(\{1,2,3,\ldots\}\)，额外 cycle 的 image 是
+\(\{a,b,c\}\)，两部分 disjoint，且各自没有重复，所以 \(S\) is injective。没有
+元素满足 \(S(x)=x\)。也没有元素映到 \(0\)。
+
+Induction fail。令 predicate
+\[
+  P(x):\quad x\in\{0,1,2,\ldots\}.
+\]
+则 \(P(0)\) 成立；若 \(P(n)\) 对数字 \(n\) 成立，则 \(P(S(n))\) 成立。但
+\(P(a)\)、\(P(b)\)、\(P(c)\) 都不成立。因此 induction conclusion fail。
+\end{solution}
+
+\begin{explanation}
+第一个例子让两条从 \(0\) 出发的路径合并，所以 injectivity fail，但从 \(0\) 仍能
+到达所有元素。第二个例子保留了一条正常的 natural-number chain，同时加上一个
+与 \(0\) disconnected 的 cycle；local axioms 看不见这个问题，induction 会检测到
+它。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 31]
+令
+\[
+M=\{0,1,2,\ldots\}\cup\{a,b,c\},
+\]
+数字部分使用 usual successor，并定义
+\[
+S(a)=b,\qquad S(b)=c,\qquad S(c)=a.
+\]
+证明除了 Principle of Induction 以外，其余 Peano 条件都成立。
+\end{exerciseblock}
+
+\begin{solution}
+Injectivity：数字部分的 successor images 是 \(1,2,3,\ldots\)，额外部分的
+successor images 是 \(a,b,c\)。这两个 image sets disjoint。数字链中不同数字有
+不同 successors；cycle \(a\mapsto b\mapsto c\mapsto a\) 中不同元素也有不同
+successors。因此整个 \(S:M\to M\) is injective。
+
+No fixed point：数字部分满足 \(S(n)=n+1\neq n\)。额外部分中
+\[
+S(a)=b\neq a,\qquad S(b)=c\neq b,\qquad S(c)=a\neq c.
+\]
+
+\(0\) is not a successor：数字部分没有元素映到 \(0\)，额外部分只映到
+\(\{a,b,c\}\)，所以不存在 \(x\in M\) 使 \(S(x)=0\)。
+
+Induction fail。取 predicate \(P(x)\) 表示 ``\(x\) 是 usual numeric element''。
+则 \(P(0)\) 成立，并且若 \(P(n)\) 成立，则 \(P(S(n))\) 成立。但 \(a,b,c\) 不是
+numeric elements，所以 \(P(a)\)、\(P(b)\)、\(P(c)\) 不成立。这个 predicate
+满足 induction 的 hypotheses，却不满足 conclusion。
+\end{solution}
+
+\begin{explanation}
+这个 construction 把 Peano axioms 分成两类：injectivity、no fixed point、
+\(0\) not successor 都是 local 检查；induction 是 global 检查，它要求整个 set
+由 \(0\) 和 successor operation 生成。
+\end{explanation}
+
+\section{Quotient construction and the integers}
+
+Set theory 中的 quotient set 做法如下。若 \(R\) 是 set \(A\) 上的 equivalence
+relation，则每个 \(a\in A\) 有 equivalence class
+\[
+  [a]_R=\{x\in A:xRa\},
+\]
+而 quotient set \(A/R\) 是所有 equivalence classes 的集合。定义 quotient 上的
+operation 时，必须证明 changing representatives does not change the class of the
+answer。
+
+\subsection{Constructing \texorpdfstring{\(\Z\)}{Z}}
+
+把 pair \((a,b)\in\N^2\) 理解成 formal difference \(a-b\)。定义
+\[
+  (a,b)\sim_{\Z}(c,d)\quad\Longleftrightarrow\quad a+d=b+c.
+\]
+然后定义
+\[
+  \Z=\N^2/\!\sim_{\Z},\qquad [(a,b)]=\{(c,d)\in\N^2:(c,d)\sim_{\Z}(a,b)\}.
+\]
+Natural number \(n\) 嵌入为 \([(n,0)]\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 32]
+证明 \(\sim_{\Z}\) 是 equivalence relation。
+\end{exerciseblock}
+
+\begin{solution}
+Reflexive：对任意 \((a,b)\in\N^2\)，由 addition commutativity，
+\[
+  a+b=b+a.
+\]
+所以 \((a,b)\sim_{\Z}(a,b)\)。
+
+Symmetric：若 \((a,b)\sim_{\Z}(c,d)\)，则
+\[
+  a+d=b+c.
+\]
+用 commutativity 改写同一个 equality：
+\[
+  c+b=d+a.
+\]
+这就是 \((c,d)\sim_{\Z}(a,b)\)。
+
+Transitive：若
+\[
+  (a,b)\sim_{\Z}(c,d),\qquad (c,d)\sim_{\Z}(e,f),
+\]
+则
+\[
+  a+d=b+c,\qquad c+f=d+e.
+\]
+把两式相加：
+\[
+  (a+d)+(c+f)=(b+c)+(d+e).
+\]
+用 associativity 和 commutativity 重新排列：
+\[
+  (a+f)+(c+d)=(b+e)+(c+d).
+\]
+Natural-number addition 有 cancellation law；两边同时取消 \(c+d\)，得到
+\[
+  a+f=b+e.
+\]
+所以 \((a,b)\sim_{\Z}(e,f)\)。因此 \(\sim_{\Z}\) 是 equivalence relation。
+\end{solution}
+
+\begin{explanation}
+Transitivity 是本题的关键。两个已知等式中间的 pair \((c,d)\) 会在相加后出现为
+同一个 common summand \(c+d\)，然后通过 cancellation 消掉。这正是 formal
+difference \(a-b\) 的代数直觉在 \(\N^2\) 中的翻译。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 33]
+Define subtraction on \(\Z\)。
+\end{exerciseblock}
+
+\begin{solution}
+先定义 additive inverse：
+\[
+  -[(a,b)]=[(b,a)].
+\]
+需要证明这个定义 well-defined。若 \((a,b)\sim_{\Z}(c,d)\)，则
+\[
+  a+d=b+c.
+\]
+改写为
+\[
+  b+c=a+d,
+\]
+这正是 \((b,a)\sim_{\Z}(d,c)\)。因此 changing representative 不会改变 inverse
+的 equivalence class。
+
+于是 subtraction 定义为
+\[
+  [(a,b)]-[(c,d)]
+  =[(a,b)]+(-[(c,d)])
+  =[(a,b)]+[(d,c)]
+  =[(a+d,b+c)].
+\]
+\end{solution}
+
+\begin{explanation}
+Integer \([(a,b)]\) 表示 \(a-b\)，它的 additive inverse 应表示 \(b-a\)，所以交换
+两个 coordinates 是自然的候选定义。Quotient set 中不能只凭这个直觉下定义；
+必须证明 equivalent pairs 交换后仍 equivalent。
+\end{explanation}
+
+\subsection{Integer arithmetic}
+
+定义
+\[
+[(a,b)]+[(c,d)]=[(a+c,b+d)]
+\]
+和
+\[
+[(a,b)]\cdot[(c,d)]=[(ac+bd,ad+bc)].
+\]
+第二个公式来自
+\[
+  (a-b)(c-d)=ac+bd-(ad+bc).
+\]
+
+\begin{exerciseblock}[Lecture Notes Exercise 34]
+证明 integer multiplication is well-defined。
+\end{exerciseblock}
+
+\begin{solution}
+先证明更换第一个 representative 不影响结果。设
+\[
+  (a,b)\sim_{\Z}(a',b'),
+\]
+也就是
+\[
+  a+b'=b+a'.
+\]
+固定 \((c,d)\)。需要证明
+\[
+  (ac+bd,ad+bc)\sim_{\Z}(a'c+b'd,a'd+b'c).
+\]
+按 \(\sim_{\Z}\) 的定义，这等价于
+\[
+  (ac+bd)+(a'd+b'c)=(ad+bc)+(a'c+b'd).
+\]
+左边整理为
+\[
+  c(a+b')+d(b+a'),
+\]
+右边整理为
+\[
+  d(a+b')+c(b+a').
+\]
+由于 \(a+b'=b+a'\)，两边都是同一个 sum
+\[
+  c(b+a')+d(a+b')
+\]
+在不同括号和顺序下的写法。由 addition 的 associativity、commutativity 和
+distributivity，它们相等。
+
+更换第二个 representative 的证明相同：若 \((c,d)\sim_{\Z}(c',d')\)，固定
+\((a,b)\)，同样可推出 product pairs equivalent。若两个 representatives 都更换，
+先更换第一个再更换第二个，并使用 \(\sim_{\Z}\) 的 transitivity。故 multiplication
+well-defined。
+\end{solution}
+
+\begin{explanation}
+Well-definedness 的逻辑是：输入的 equivalence class 不是单个 pair，而是一整类
+pairs。证明时不能假设 \((a,b)=(a',b')\)，只能使用代表同一个 class 的条件
+\(a+b'=b+a'\)。展开 product formula 后，这个条件正好以 common summand 的形式
+出现。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 5 Problem 4]
+Recall that \(\Z\) is defined as equivalence classes in \(\N\times\N\) under
+\((a,b)\sim(c,d)\) iff \(a+d=b+c\)。证明
+\[
+  [(a,b)]\cdot[(c,d)]=[(ac+bd,ad+bc)]
+\]
+is well-defined。
+\end{exerciseblock}
+
+\begin{solution}
+这与 Lecture Notes Exercise 34 是同一个 well-definedness proof，但 Homework
+允许使用 \(\N\) 上 \(+\) 和 \(\cdot\) 的 basic properties。
+
+设 \((a,b)\sim(a',b')\) 与 \((c,d)\sim(c',d')\)。先固定 \((c,d)\)，由
+\((a,b)\sim(a',b')\) 得 \(a+b'=b+a'\)。按 Exercise 34 的计算，
+\[
+  (ac+bd,ad+bc)\sim(a'c+b'd,a'd+b'c).
+\]
+再固定 \((a',b')\)，由 \((c,d)\sim(c',d')\) 得 \(c+d'=d+c'\)，同样得到
+\[
+  (a'c+b'd,a'd+b'c)\sim(a'c'+b'd',a'd'+b'c').
+\]
+由 transitivity，
+\[
+  (ac+bd,ad+bc)\sim(a'c'+b'd',a'd'+b'c').
+\]
+所以 product 的 equivalence class 不依赖 representative。
+\end{solution}
+
+\begin{explanation}
+Homework 的题目只要求 multiplication。把两个代表同时换掉时，最稳妥的写法是分成
+两步：先换第一个 pair，再换第二个 pair。这样每一步只使用一个 equivalence
+condition，代数整理更可控。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 35]
+证明 integer addition 和 multiplication are commutative, associative, and satisfy
+distributivity。
+\end{exerciseblock}
+
+\begin{solution}
+由于 addition 和 multiplication 已经证明 well-defined，可以选择 convenient
+representatives 来计算，并在最后回到 equivalence classes。
+
+Addition commutativity：
+\[
+[(a,b)]+[(c,d)]
+=[(a+c,b+d)]
+=[(c+a,d+b)]
+=[(c,d)]+[(a,b)].
+\]
+
+Addition associativity：
+\[
+\begin{aligned}
+\bigl([(a,b)]+[(c,d)]\bigr)+[(e,f)]
+  &=[(a+c,b+d)]+[(e,f)]\\
+  &=[(a+c+e,b+d+f)],
+\end{aligned}
+\]
+而
+\[
+\begin{aligned}
+[(a,b)]+\bigl([(c,d)]+[(e,f)]\bigr)
+  &=[(a,b)]+[(c+e,d+f)]\\
+  &=[(a+c+e,b+d+f)].
+\end{aligned}
+\]
+两边是同一个 equivalence class。
+
+Multiplication commutativity：
+\[
+\begin{aligned}
+[(a,b)]\cdot[(c,d)]
+  &=[(ac+bd,ad+bc)]\\
+  &=[(ca+db,cb+da)]\\
+  &=[(c,d)]\cdot[(a,b)].
+\end{aligned}
+\]
+
+Multiplication associativity 可以用 formal-difference polynomial 展开来写。令
+\[
+[(a,b)],\quad [(c,d)],\quad [(e,f)]
+\]
+分别代表 \(a-b\)、\(c-d\)、\(e-f\)。左结合和右结合都代表
+\[
+  (a-b)(c-d)(e-f).
+\]
+把它展开为 positive part minus negative part：
+\[
+\begin{aligned}
+P&=ace+adf+bcf+bde,\\
+N&=acf+ade+bce+bdf.
+\end{aligned}
+\]
+两种结合方式计算出的 pair 都 equivalent to \((P,N)\)，因此两个 products 相等。
+
+Distributivity 同理。左边
+\[
+[(a,b)]\cdot\bigl([(c,d)]+[(e,f)]\bigr)
+\]
+代表
+\[
+  (a-b)\bigl((c-d)+(e-f)\bigr),
+\]
+右边
+\[
+[(a,b)]\cdot[(c,d)]+[(a,b)]\cdot[(e,f)]
+\]
+代表
+\[
+  (a-b)(c-d)+(a-b)(e-f).
+\]
+两者展开后都是
+\[
+  ac+ae+bd+bf-(ad+af+bc+be).
+\]
+所以它们给出同一个 equivalence class。
+\end{solution}
+
+\begin{explanation}
+这些 ring laws 的证明不需要重新发明整数代数；但必须说明为什么可以在
+representatives 上展开。前面 well-definedness 已保证 representatives 的选择不会
+改变答案，因此展开 polynomial 后比较 positive part 与 negative part 是合法的。
+\end{explanation}
+
+\section{Rational numbers}
+
+\subsection{Constructing \texorpdfstring{\(\Q\)}{Q}}
+
+令
+\[
+  Y=\Z\times(\Z\setminus\{0\})
+\]
+并定义
+\[
+  (a,b)\sim_{\Q}(c,d)\quad\Longleftrightarrow\quad ad=bc.
+\]
+Rational number 是 quotient set
+\[
+  \Q=Y/\!\sim_{\Q}.
+\]
+我们把 \([(a,b)]\) 记作 \(\frac ab\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 36]
+证明 \(\sim_{\Q}\) 是 equivalence relation on \(Y\)。
+\end{exerciseblock}
+
+\begin{solution}
+Reflexive：对 \((a,b)\in Y\)，
+\[
+  ab=ba,
+\]
+所以 \((a,b)\sim_{\Q}(a,b)\)。
+
+Symmetric：若 \((a,b)\sim_{\Q}(c,d)\)，则 \(ad=bc\)。把等式两边按
+commutativity 改写，得到
+\[
+  cb=da,
+\]
+所以 \((c,d)\sim_{\Q}(a,b)\)。
+
+Transitive：若
+\[
+  (a,b)\sim_{\Q}(c,d),\qquad (c,d)\sim_{\Q}(e,f),
+\]
+则
+\[
+  ad=bc,\qquad cf=de.
+\]
+第一式乘以 \(f\)，得
+\[
+  adf=bcf.
+\]
+第二式乘以 \(b\)，得
+\[
+  bcf=bde.
+\]
+因此
+\[
+  adf=bde.
+\]
+用 associativity 写成
+\[
+  d(af)=d(be).
+\]
+因为 \(d\neq0\)，integer multiplication 可对 nonzero factor \(d\) cancellation，
+得到
+\[
+  af=be.
+\]
+所以 \((a,b)\sim_{\Q}(e,f)\)。因此 \(\sim_{\Q}\) 是 equivalence relation。
+\end{solution}
+
+\begin{explanation}
+Transitivity 中不能把 \(d\) 当作 ordinary denominator 随手删除；删除 \(d\) 需要
+整数乘法的 cancellation property。这个 property 来自 \(\Z\) 没有 zero divisors：
+若 \(d\neq0\) 且 \(dx=dy\)，则 \(d(x-y)=0\)，从而 \(x-y=0\)。
+\end{explanation}
+
+\subsection{Rational arithmetic}
+
+定义
+\[
+  [(a,b)]+[(c,d)]=[(ad+bc,bd)],\qquad
+  [(a,b)]\cdot[(c,d)]=[(ac,bd)].
+\]
+
+\begin{proposition}[Well-defined rational addition]
+Rational addition is well-defined。
+\end{proposition}
+
+\begin{solution}
+设 \((a,b)\sim_{\Q}(a',b')\) 且 \((c,d)\sim_{\Q}(c',d')\)，即
+\[
+  ab'=ba',\qquad cd'=dc'.
+\]
+要证
+\[
+  (ad+bc,bd)\sim_{\Q}(a'd'+b'c',b'd').
+\]
+按定义，需要证明
+\[
+  (ad+bc)b'd'=bd(a'd'+b'c').
+\]
+左边展开为
+\[
+  adb'd'+bcb'd'.
+\]
+第一项中 \(ab'=ba'\)，所以
+\[
+  adb'd'=ba'dd'=bd\,a'd'.
+\]
+第二项中 \(cd'=dc'\)，所以
+\[
+  bcb'd'=bb'dc'=bd\,b'c'.
+\]
+两项相加得到
+\[
+  (ad+bc)b'd'=bd\,a'd'+bd\,b'c'=bd(a'd'+b'c').
+\]
+因此 addition well-defined。
+\end{solution}
+
+\begin{explanation}
+Fraction addition 的 denominator 变成 \(bd\)。换 representatives 后 denominator
+也变成 \(b'd'\)。Well-definedness 要比较的不是 numerators 本身，而是 cross
+products；这正是 relation \(\sim_{\Q}\) 的定义。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 37]
+证明 rational multiplication is well-defined。
+\end{exerciseblock}
+
+\begin{solution}
+设
+\[
+  (a,b)\sim_{\Q}(a',b'),\qquad (c,d)\sim_{\Q}(c',d').
+\]
+也就是
+\[
+  ab'=ba',\qquad cd'=dc'.
+\]
+要证明
+\[
+  (ac,bd)\sim_{\Q}(a'c',b'd'),
+\]
+按 \(\sim_{\Q}\) 的定义等价于
+\[
+  ac\,b'd'=bd\,a'c'.
+\]
+把两个已知等式相乘：
+\[
+  (ab')(cd')=(ba')(dc').
+\]
+用 associativity 和 commutativity 重排左边与右边：
+\[
+  ac\,b'd'=bd\,a'c'.
+\]
+因此 \((ac,bd)\sim_{\Q}(a'c',b'd')\)。所以 multiplication well-defined。
+\end{solution}
+
+\begin{explanation}
+Multiplication 的 proof 比 addition 短，因为两个 cross-product 条件可以直接相乘。
+这一步仍然是在证明 representative independence：\(\frac ab=\frac{a'}{b'}\) 和
+\(\frac cd=\frac{c'}{d'}\) 时，products 必须落在同一个 equivalence class。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 38]
+证明 rational addition 和 multiplication are commutative, associative, and satisfy
+distributivity。
+\end{exerciseblock}
+
+\begin{solution}
+所有计算都在 representatives 上进行，well-definedness 保证结果不依赖
+representative。
+
+Addition commutativity：
+\[
+[(a,b)]+[(c,d)]
+=[(ad+bc,bd)]
+=[(cb+da,db)]
+=[(c,d)]+[(a,b)].
+\]
+
+Addition associativity：取三个 rationals \([(a,b)]\)、\([(c,d)]\)、\([(e,f)]\)。
+左结合为
+\[
+\bigl([(a,b)]+[(c,d)]\bigr)+[(e,f)]
+=[((ad+bc)f+bde,bdf)].
+\]
+右结合为
+\[
+[(a,b)]+\bigl([(c,d)]+[(e,f)]\bigr)
+=[(adf+b(cf+de),bdf)].
+\]
+两个 numerators 都等于 \(adf+bcf+bde\)，denominator 都是 \(bdf\)，所以相等。
+
+Multiplication commutativity：
+\[
+[(a,b)]\cdot[(c,d)]
+=[(ac,bd)]
+=[(ca,db)]
+=[(c,d)]\cdot[(a,b)].
+\]
+
+Multiplication associativity：
+\[
+\bigl([(a,b)]\cdot[(c,d)]\bigr)\cdot[(e,f)]
+=[(ace,bdf)]
+=[(a,b)]\cdot\bigl([(c,d)]\cdot[(e,f)]\bigr).
+\]
+
+Distributivity：左边为
+\[
+\begin{aligned}
+[(a,b)]\cdot\bigl([(c,d)]+[(e,f)]\bigr)
+  &=[(a,b)]\cdot[(cf+de,df)]\\
+  &=[(acf+ade,bdf)].
+\end{aligned}
+\]
+右边为
+\[
+\begin{aligned}
+[(a,b)]\cdot[(c,d)]+[(a,b)]\cdot[(e,f)]
+  &=[(ac,bd)]+[(ae,bf)]\\
+  &=[(acbf+bdae,b^2df)].
+\end{aligned}
+\]
+这两个 representatives equivalent，因为
+\[
+  (acf+ade)b^2df=bdf(acbf+bdae).
+\]
+展开两边都得到
+\[
+  ab^2cdf^2+ab^2def.
+\]
+因此 distributivity 成立。
+\end{solution}
+
+\begin{explanation}
+Rational laws 的形式证明总是回到 common denominator 或 cross multiplication。
+尤其 distributivity 中，左右两边的 displayed representatives 不一定相同，但
+relation \(\sim_{\Q}\) 只要求 cross products 相同。
+\end{explanation}
+
+\begin{proposition}[Multiplicative inverse in \(\Q\)]
+若 \(q=[(a,b)]\neq0\)，则存在唯一 \(q^{-1}\in\Q\) 使 \(qq^{-1}=1\)，并且
+\[
+  q^{-1}=[(b,a)].
+\]
+\end{proposition}
+
+\begin{solution}
+\(q\neq0\) 意味着 \(a\neq0\)，所以 \((b,a)\in\Z\times(\Z\setminus\{0\})\) 是合法
+representative。计算
+\[
+[(a,b)]\cdot[(b,a)]=[(ab,ba)].
+\]
+由于 \(ab=ba\)，有
+\[
+  (ab,ba)\sim_{\Q}(1,1),
+\]
+所以 product 等于 \(1=[(1,1)]\)。
+
+若 \(r=[(c,d)]\) 也满足 \([(a,b)]r=1\)，则
+\[
+  [(ac,bd)]=[(1,1)].
+\]
+这等价于 \(ac=bd\)，也就是 \((c,d)\sim_{\Q}(b,a)\)。因此 \(r=[(b,a)]\)，唯一性
+成立。
+\end{solution}
+
+\begin{explanation}
+Inverse 的代表元把 numerator 和 denominator 交换。唯一性仍然是 quotient 语言：
+另一个 inverse 不一定等于同一个 pair \((b,a)\)，但必须属于同一个 equivalence
+class。
+\end{explanation}
+
+\section{Relations, gcd, irrationality, and suprema}
+
+\begin{exerciseblock}[Worksheet 5 Exercise 1]
+判断下列 relations on \(\Q\) 是否 well-defined：
+\[
+\frac pq R\frac mn\ \text{if }p>m;\qquad
+\frac pq R\frac mn\ \text{if }pn-qm>0;\qquad
+\frac pq R\frac mn\ \text{if }(pn-mq)nq>0.
+\]
+\end{exerciseblock}
+
+\begin{solution}
+第一条 relation not well-defined。因为
+\[
+  \frac11=\frac22,\qquad \frac01=\frac02.
+\]
+用 representatives \((1,1)\) 和 \((0,1)\) 时，condition \(p>m\) 给出
+\(1>0\)，为 true。用 equivalent representatives \((2,2)\) 和 \((0,2)\) 时，
+condition \(p>m\) 给出 \(2>0\)，仍为 true；这个例子没有改变 truth value。为了
+得到改变，保持右边为 \(0/1\)，把左边 \(1/1\) 改成 \((-1,-1)\)。则
+\[
+  \frac11=\frac{-1}{-1},
+\]
+但 \(1>0\) 为 true，而 \(-1>0\) 为 false。因此第一条 not well-defined。
+
+第二条 relation not well-defined。比较 \(\frac12\) 与 \(\frac01\)。用
+\((p,q)=(1,2)\)、\((m,n)=(0,1)\)，有
+\[
+  pn-qm=1\cdot1-2\cdot0=1>0.
+\]
+把 \(\frac12\) 改写成 \(\frac{-1}{-2}\)，则
+\[
+  pn-qm=(-1)\cdot1-(-2)\cdot0=-1<0.
+\]
+同一个 rational pair 得到不同 truth values，所以第二条 not well-defined。
+
+第三条 relation well-defined。注意
+\[
+  (pn-mq)nq=(qn)^2\left(\frac pq-\frac mn\right).
+\]
+因为 \(q,n\neq0\)，\((qn)^2>0\)。所以
+\[
+  (pn-mq)nq>0
+\]
+等价于
+\[
+  \frac pq-\frac mn>0,
+\]
+也就是 \(\frac pq>\frac mn\)。右边只依赖 rational numbers 本身，不依赖
+representatives。因此第三条 well-defined。
+\end{solution}
+
+\begin{explanation}
+Well-defined relation 的测试方法是换 representative。前两条直接使用 numerator
+或未修正符号的 cross difference，denominator 的负号会改变判断。第三条乘上
+\(nq\)，把符号问题修正成正的 square factor，因此它表示 ordinary order on
+\(\Q\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 5 Exercise 2]
+设 \(a,b\) 为 positive integers，\(a\geq b\)。若
+\[
+  a=bk+c,\qquad 0\leq c<b,
+\]
+证明
+\[
+  \gcd(a,b)=\gcd(b,c).
+\]
+\end{exerciseblock}
+
+\begin{solution}
+令 \(D_1\) 为 \(a,b\) 的 common divisors 集合，令 \(D_2\) 为 \(b,c\) 的 common
+divisors 集合。
+
+若 \(d\in D_1\)，则 \(d\mid a\) 且 \(d\mid b\)。因为 \(c=a-bk\)，所以
+\[
+  d\mid a-bk=c.
+\]
+因此 \(d\mid b\) 且 \(d\mid c\)，即 \(d\in D_2\)。
+
+反过来，若 \(d\in D_2\)，则 \(d\mid b\) 且 \(d\mid c\)。因为 \(a=bk+c\)，所以
+\[
+  d\mid bk+c=a.
+\]
+因此 \(d\mid a\) 且 \(d\mid b\)，即 \(d\in D_1\)。
+
+所以 \(D_1=D_2\)。两个 pairs 有完全相同的 positive common divisors，它们的
+greatest common divisor 相同：
+\[
+  \gcd(a,b)=\gcd(b,c).
+\]
+\end{solution}
+
+\begin{explanation}
+Euclidean algorithm 的核心不是 remainder 小，而是 common divisor set 不变。
+等式 \(a=bk+c\) 可以双向使用：从 \(a,b\) 推出 \(c=a-bk\)，从 \(b,c\) 推出
+\(a=bk+c\)。
+\end{explanation}
+
+\begin{lemma}[Parity lemma]
+若 \(p\in\Z\) 且 \(p^2\) is even，则 \(p\) is even。
+\end{lemma}
+
+\begin{solution}
+证明 contrapositive。若 \(p\) is odd，则存在 \(k\in\Z\) 使 \(p=2k+1\)。于是
+\[
+  p^2=(2k+1)^2=4k^2+4k+1=2(2k^2+2k)+1.
+\]
+所以 \(p^2\) is odd。Contrapositive 成立，因此原命题成立。
+\end{solution}
+
+\begin{explanation}
+这条 lemma 避免了从 \(p^2\) even 直接跳到 \(p\) even 的断言。证明 odd 的平方仍
+odd 后，contrapositive 给出需要的结论。
+\end{explanation}
+
+\begin{theorem}[\(\sqrt2\) is irrational]
+不存在 \(x\in\Q\) 使 \(x^2=2\)。
+\end{theorem}
+
+\begin{solution}
+假设存在 \(x=p/q\in\Q\)，其中 \(p,q\in\Z\)、\(q\neq0\)，且 \(\gcd(p,q)=1\)。
+若 \(x^2=2\)，则
+\[
+  p^2=2q^2.
+\]
+所以 \(p^2\) is even。由 parity lemma，\(p\) is even，写 \(p=2k\)。代回得
+\[
+  4k^2=2q^2,
+\]
+所以
+\[
+  q^2=2k^2.
+\]
+因此 \(q^2\) is even，再由 parity lemma，\(q\) is even。于是 \(2\mid p\) 且
+\(2\mid q\)，这与 \(\gcd(p,q)=1\) 矛盾。因此不存在 rational solution。
+\end{solution}
+
+\begin{explanation}
+``Lowest terms'' 是 irrationality proof 的关键。如果没有 \(\gcd(p,q)=1\)，推出
+\(p,q\) 都 even 只说明 fraction 可以约分；有了 lowest terms，这个结论变成矛盾。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 6 Problem 1]
+是否存在 rational number \(x\) 使
+\[
+  x^2=2026?
+\]
+\end{exerciseblock}
+
+\begin{solution}
+不存在。假设 \(x=p/q\)，其中 \(p,q\in\Z\)、\(q\neq0\)，并且
+\(\gcd(p,q)=1\)。由 \(x^2=2026\) 得
+\[
+  p^2=2026q^2=2\cdot1013q^2.
+\]
+所以 \(p^2\) is even，进而 \(p\) is even。写 \(p=2k\)。代回上式：
+\[
+  4k^2=2026q^2.
+\]
+两边除以 \(2\)，得
+\[
+  2k^2=1013q^2.
+\]
+左边 is even，而 \(1013\) is odd，所以 \(q^2\) 必须 even；否则 odd \(\times\)
+odd 为 odd。由 parity lemma，\(q\) is even。
+
+于是 \(p,q\) 都被 \(2\) 整除，与 \(\gcd(p,q)=1\) 矛盾。所以没有 rational
+number 的平方等于 \(2026\)。
+\end{solution}
+
+\begin{explanation}
+不需要完全分解 \(2026\)。只要观察到 \(2026=2\cdot1013\) 且 \(1013\) is odd，
+就能用 parity argument 逼出 numerator 和 denominator 都 even。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 6 Problem 2]
+若 \(x,y\in\Z\) 且
+\[
+  5x+7y=1,
+\]
+求 \(\gcd(x,y)\)。
+\end{exerciseblock}
+
+\begin{solution}
+令 \(d=\gcd(x,y)\)。则 \(d\mid x\) 且 \(d\mid y\)。因此 \(d\mid5x\) 且
+\(d\mid7y\)，从而
+\[
+  d\mid(5x+7y).
+\]
+由题设 \(5x+7y=1\)，所以 \(d\mid1\)。Greatest common divisor 按 positive
+integer 定义，因此 \(d=1\)。所以
+\[
+  \gcd(x,y)=1.
+\]
+\end{solution}
+
+\begin{explanation}
+这题使用 Bezout-type 思路：如果一个 integer 同时整除 \(x\) 和 \(y\)，它也整除
+任何 integer linear combination \(5x+7y\)。当某个 linear combination 等于 \(1\)
+时，common divisor 只能是 \(1\)。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 6 Problem 3]
+是否存在 rational number \(x\) 使
+\[
+  x^2+2x=1?
+\]
+\end{exerciseblock}
+
+\begin{solution}
+不存在。把 equation completion of square：
+\[
+  x^2+2x=1
+  \quad\Longleftrightarrow\quad
+  (x+1)^2=2.
+\]
+若 \(x\in\Q\)，则 \(x+1\in\Q\)。于是 \(x+1\) 是一个 rational number，其平方为
+\(2\)。这与 \(\sqrt2\) is irrational 的 theorem 矛盾。因此没有 rational
+solution。
+\end{solution}
+
+\begin{explanation}
+方程本身不是 \(u^2=2\)，但 completion of square 把它转化为同一个 irrationality
+obstruction。Rationals 对 addition 封闭，所以 \(x\in\Q\) 会推出 \(x+1\in\Q\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 5 Exercise 3]
+令 \(f:\N\to\Q\) 满足 \(f(0)=1\)，并且
+\[
+  f(n)=1+\frac12+\frac1{2^2}+\cdots+\frac1{2^n}\quad(n\geq1).
+\]
+判断 \(f(\N)\) 是否在 \(\Q\) 中有 supremum。
+\end{exerciseblock}
+
+\begin{solution}
+有，且
+\[
+  \sup_{\Q} f(\N)=2.
+\]
+先证明公式
+\[
+  f(n)=2-\frac1{2^n}
+\]
+对所有 \(n\in\N\) 成立。Base case \(n=0\) 时，右边为 \(2-1=1=f(0)\)。若
+\(f(n)=2-2^{-n}\)，则
+\[
+  f(n+1)=f(n)+\frac1{2^{n+1}}
+  =2-\frac1{2^n}+\frac1{2^{n+1}}
+  =2-\frac1{2^{n+1}}.
+\]
+
+由该公式，\(f(n)<2\) 对所有 \(n\) 成立，所以 \(2\) 是 upper bound。若
+\(u<2\)，取 \(n\) 使
+\[
+  \frac1{2^n}<2-u.
+\]
+这样的 \(n\) 存在，因为 powers of \(2\) eventually exceed any positive rational
+denominator bound。于是
+\[
+  f(n)=2-\frac1{2^n}>u.
+\]
+所以任何 \(u<2\) 都不是 upper bound。故 \(2\) 是 least upper bound。
+\end{solution}
+
+\begin{explanation}
+Supremum proof 有两部分：先证明 \(2\) 确实压住所有 \(f(n)\)，再证明任何更小的
+rational 都压不住。第二部分使用的是 tail \(\frac1{2^n}\) 可以小于任意给定的
+positive rational gap \(2-u\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 5 Exercise 4]
+设 \(a,b\in\Q\) 且 \(a<b\)。证明存在
+\[
+  X\subseteq\{x\in\Q:a<x<b\}
+\]
+使 \(X\) 在 \(\Q\) 中没有 supremum。
+\end{exerciseblock}
+
+\begin{solution}
+取 irrational number
+\[
+  \alpha=a+(b-a)\frac{\sqrt2}{2}.
+\]
+因为 \(0<\sqrt2/2<1\)，所以 \(a<\alpha<b\)。并且 \(\alpha\notin\Q\)：若
+\(\alpha\in\Q\)，则
+\[
+  \frac{\alpha-a}{b-a}=\frac{\sqrt2}{2}
+\]
+会是 rational，进而 \(\sqrt2\in\Q\)，矛盾。
+
+定义
+\[
+  X=\{x\in\Q:a<x<\alpha\}.
+\]
+则 \(X\subseteq\{x\in\Q:a<x<b\}\)。
+
+证明 \(X\) 在 \(\Q\) 中没有 supremum。假设 \(s\in\Q\) 是 \(\sup_{\Q}X\)。
+若 \(s<\alpha\)，由 density of \(\Q\) in \(\R\)，存在 rational \(r\) 满足
+\[
+  \max\{a,s\}<r<\alpha.
+\]
+则 \(r\in X\) 且 \(r>s\)，所以 \(s\) 不是 upper bound。
+
+若 \(s>\alpha\)，再由 density of \(\Q\)，存在 rational \(u\) 满足
+\[
+  \alpha<u<s.
+\]
+所有 \(x\in X\) 都满足 \(x<\alpha<u\)，所以 \(u\) 是 upper bound；但 \(u<s\)，
+所以 \(s\) 不是 least upper bound。
+
+剩下的可能是 \(s=\alpha\)，但 \(s\in\Q\) 而 \(\alpha\notin\Q\)，不可能。因此
+\(X\) 在 \(\Q\) 中没有 supremum。
+\end{solution}
+
+\begin{explanation}
+这题展示 \(\Q\) 的 gaps。我们把一个 irrational cut point \(\alpha\) 放在
+\((a,b)\) 里面，然后取所有小于 \(\alpha\) 的 rationals。这个 set 在 real line 中的
+least upper bound 是 \(\alpha\)，但 \(\alpha\) 不属于 \(\Q\)，所以 \(\Q\) 内没有
+可用的 supremum。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 6 Problem 4]
+令 \(X\) 为所有 decimal expansion 形如
+\[
+  1.23\ldots3
+\]
+的 rational numbers，其中省略的 digits 都是 \(3\)。判断 \(X\) 在 \(\Q\) 中是否有
+supremum。
+\end{exerciseblock}
+
+\begin{solution}
+按题目和 OCR 可读部分，本题的 intended set 是 finite decimal sequence
+\[
+  X=\{1.23,1.233,1.2333,\ldots\}.
+\]
+记 \(x_n\) 为小数点后有一个 \(2\) 和 \(n\) 个 \(3\) 的数，其中 \(n\geq1\)。则
+\[
+  x_n=1.2+0.0\underbrace{33\ldots3}_{n\text{ copies}}.
+\]
+无限 repeating decimal 的候选上界是
+\[
+  1.23333\ldots=1.2+0.03333\ldots=\frac65+\frac1{30}=\frac{37}{30}.
+\]
+
+每个 finite decimal \(x_n\) 都小于 \(37/30\)，所以 \(37/30\) 是 upper bound。
+若 \(u<37/30\)，令
+\[
+  \delta=\frac{37}{30}-u>0.
+\]
+Finite decimals \(x_n\) 与 repeating decimal \(37/30\) 的 gap 是一个 positive
+tail，且该 tail 随 \(n\) 增大趋向 \(0\)。取 \(n\) 使
+\[
+  \frac{37}{30}-x_n<\delta.
+\]
+于是
+\[
+  x_n>\frac{37}{30}-\delta=u.
+\]
+所以 \(u\) 不是 upper bound。故
+\[
+  \sup_{\Q}X=\frac{37}{30}.
+\]
+\end{solution}
+
+\begin{explanation}
+Supremum 不是要求 \(37/30\) 属于 \(X\)。它只要求 \(37/30\) 是所有 finite
+decimals 的 least upper bound。关键步骤是说明任何更小的 rational 与
+\(37/30\) 之间有 positive gap，而足够长的 finite decimal 可以进入这个 gap。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 6 Problem 5]
+对 positive \(n\in\N\)，令 \(n!=1\cdot2\cdots n\)。定义 \(f:\N\to\Q\)：
+\[
+  f(0)=1,\qquad
+  f(n)=1+\frac1{1!}+\frac1{2!}+\cdots+\frac1{n!}\quad(n\geq1).
+\]
+\begin{enumerate}[label=(\alph*)]
+  \item 若 \(n>m\geq2\)，证明 \(0<f(n)-f(m)<\frac{2}{(m+1)!}\)。
+  \item 证明 \(\sup(f(\N))\) does not exist in \(\Q\)。
+\end{enumerate}
+\end{exerciseblock}
+
+\begin{solution}
+(a) 若 \(n>m\)，则
+\[
+  f(n)-f(m)=\frac1{(m+1)!}+\frac1{(m+2)!}+\cdots+\frac1{n!}>0.
+\]
+对 \(j\geq0\)，从 \((m+1)!\) 到 \((m+1+j)!\) 至少多乘了 \(3^j\)，因为
+\(m\geq2\) 时后续 factors 都不小于 \(3\)。因此
+\[
+  \frac1{(m+1+j)!}\leq \frac1{(m+1)!3^j}.
+\]
+所以
+\[
+\begin{aligned}
+f(n)-f(m)
+  &<\frac1{(m+1)!}\left(1+\frac13+\frac1{3^2}+\cdots\right)\\
+  &=\frac1{(m+1)!}\cdot\frac{1}{1-\frac13}\\
+  &=\frac{3}{2(m+1)!}
+  <\frac{2}{(m+1)!}.
+\end{aligned}
+\]
+
+(b) 假设 \(f(\N)\) 在 \(\Q\) 中有 supremum，记为 \(r=p/q\)，其中
+\(p,q\in\Z\)、\(q>0\)、\(\gcd(p,q)=1\)。取
+\[
+  m=\max\{q,2\}.
+\]
+因为 \(m!\) 被 \(q\) 整除，\(m!r\in\Z\)。同时 \(m!f(m)\in\Z\)，因为
+\[
+  m!\left(1+\frac1{1!}+\cdots+\frac1{m!}\right)
+\]
+每一项都是 integer。由于 \(r\) 是 upper bound 且 \(f(m)\in f(\N)\)，有
+\(r\geq f(m)\)。若 \(r=f(m)\)，则 \(f(m+1)>f(m)=r\)，与 upper bound 矛盾。
+所以 \(r>f(m)\)。因此
+\[
+  M=m!\bigl(r-f(m)\bigr)
+\]
+是 positive integer，故 \(M\geq1\)，也就是
+\[
+  r-f(m)\geq\frac1{m!}.
+\]
+
+由 (a)，对所有 \(n>m\)，
+\[
+  f(n)<f(m)+\frac{2}{(m+1)!}.
+\]
+而 \(m\geq2\) 给出
+\[
+  \frac{2}{(m+1)!}<\frac1{m!}.
+\]
+令
+\[
+  U=f(m)+\frac{2}{(m+1)!}.
+\]
+则所有 \(n\leq m\) 满足 \(f(n)\leq f(m)<U\)，所有 \(n>m\) 满足 \(f(n)<U\)，所以
+\(U\) 是 \(f(\N)\) 的 rational upper bound。另一方面，
+\[
+  U=f(m)+\frac{2}{(m+1)!}
+  <f(m)+\frac1{m!}
+  \leq r.
+\]
+这给出一个比 supremum \(r\) 更小的 upper bound，矛盾。因此
+\(\sup(f(\N))\) 不存在于 \(\Q\)。
+\end{solution}
+
+\begin{explanation}
+这题的 part (b) 不是只说 partial sums converge to \(e\)。题目要求在 \(\Q\) 内做
+supremum contradiction。假设 rational supremum \(p/q\) 存在后，乘以 \(m!\) 把
+\(r-f(m)\) 变成 positive integer，从而得到一个至少 \(1/m!\) 的 gap；part (a) 又
+说明所有后续 terms 都落在更短的 tail 里，于是可以把 upper bound 往下移动。
+\end{explanation}
+
+\section{Von Neumann ordinals \optional}
+
+Lecture Notes 3.7 的 starred section 说明 Peano model 不只是 axioms 的抽象清单；
+在 set theory 中可以构造一个具体模型。Von Neumann 的想法是让每个 natural number
+等于所有 predecessors 的集合：
+\[
+  0=\emptyset,\qquad
+  1=\{0\},\qquad
+  2=\{0,1\},\qquad
+  3=\{0,1,2\}.
+\]
+对任意 set \(x\)，定义 successor
+\[
+  S(x)=x\cup\{x\}.
+\]
+
+\begin{definition}[Inductive set]
+Set \(X\) 称为 inductive，若
+\[
+  \emptyset\in X,\qquad x\in X\Rightarrow S(x)\in X.
+\]
+\end{definition}
+
+Axiom of Infinity 断言存在 inductive set。定义
+\[
+  \omega=\{x:x\in X\text{ for every inductive set }X\}.
+\]
+也就是说，\(\omega\) 是所有 inductive sets 的 intersection，因此是 smallest
+inductive set。我们把 \(\omega\) 作为 \(\N\) 的 Von Neumann model。
+
+\begin{proposition}[Von Neumann model satisfies Peano axioms]
+以 \(0=\emptyset\)、\(S(x)=x\cup\{x\}\) 和 \(N=\omega\) 构成的 triple
+\((\omega,0,S)\) satisfies Peano axioms。
+\end{proposition}
+
+\begin{solution}
+首先，\(0\in\omega\)。因为每个 inductive set 都包含 \(\emptyset\)，所以
+\(\emptyset\) 属于它们的 intersection。
+
+其次，若 \(n\in\omega\)，则 \(n\) 属于每个 inductive set。每个 inductive set 都
+在 successor 下 closed，所以 \(S(n)\) 也属于每个 inductive set。因此
+\(S(n)\in\omega\)。
+
+\(0\) is not a successor：对任意 \(n\)，set \(S(n)=n\cup\{n\}\) 含有元素 \(n\)。
+而 \(0=\emptyset\) 没有元素。所以 \(S(n)\neq0\)。
+
+No fixed point：Von Neumann natural number \(n\) 的元素都是它的 predecessors。
+因此若 \(n\in\omega\)，则 \(n\notin n\)。但 \(n\in S(n)\)。若 \(S(n)=n\)，则
+\(n\in n\)，矛盾。所以 \(S(n)\neq n\)。
+
+Injectivity：需要使用 finite ordinals 的 membership structure：若 \(n,m\in\omega\)，
+则 \(n\in m\)、\(n=m\)、\(m\in n\) 三者恰有一个成立。假设 \(S(n)=S(m)\)。因为
+\(n\in S(n)=S(m)=m\cup\{m\}\)，所以 \(n\in m\) 或 \(n=m\)。同理，
+\(m\in n\) 或 \(m=n\)。若 \(n\neq m\)，则同时有 \(n\in m\) 与 \(m\in n\)，这会使
+\(n\in n\) 通过 transitivity of membership on ordinals 得到，和 \(n\notin n\)
+矛盾。因此 \(n=m\)。
+
+Induction：设 predicate \(P\) 满足 \(P(0)\) 且
+\[
+  \forall n\in\omega,\quad P(n)\Rightarrow P(S(n)).
+\]
+令
+\[
+  A=\{n\in\omega:P(n)\}.
+\]
+则 \(0\in A\)，且若 \(n\in A\)，则 \(S(n)\in A\)。所以 \(A\) 是 \(\omega\) 内的
+inductive subset。由于 \(\omega\) 是所有 inductive sets 的 intersection，任何
+包含 \(0\) 且对 \(S\) closed 的 subset 都必须包含 \(\omega\) 的全部 elements。
+又 \(A\subseteq\omega\)，因此 \(A=\omega\)。所以 \(P(n)\) 对所有
+\(n\in\omega\) 成立。
+\end{solution}
+
+\begin{explanation}
+Von Neumann ordinals 的设计让 order 与 membership 合一：\(k<n\) 被表示成
+\(k\in n\)。Successor \(S(n)=n\cup\{n\}\) 正好把新的最大 predecessor \(n\) 加入
+集合。Axiom of Infinity 提供一个足够大的 inductive set；取所有 inductive sets
+的 intersection 则去掉多余元素，留下由 \(0\) 和 successor 强制生成的最小结构。
+\end{explanation}
+
+\begin{reviewbox}{Chapter checklist}
+完成本章后，应能：
+\begin{enumerate}
+  \item 写出 Peano axioms，并判断 examples fail 哪些 axioms。
+  \item 用 induction 证明 recursive addition 和 multiplication 的 basic laws。
+  \item 解释 quotient set、representative、well-defined operation 的关系。
+  \item 从 \(\N^2/\!\sim_{\Z}\) 构造 \(\Z\)，从
+  \(\Z\times(\Z\setminus\{0\})/\!\sim_{\Q}\) 构造 \(\Q\)。
+  \item 完成 gcd、irrationality、well-defined relation、supremum gap 的证明。
+  \item 说明 Von Neumann ordinals 如何在 set theory 中实现 Peano model。
+\end{enumerate}
+\end{reviewbox}

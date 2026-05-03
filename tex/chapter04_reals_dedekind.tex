@@ -1,0 +1,1444 @@
+\chapter{The reals through Dedekind cuts}
+\label{chap:reals-dedekind}
+
+本章从 ordered set 的语言开始，说明 \(\Q\) 缺少 completeness，然后用
+\textbf{Dedekind cuts} 构造 \(\R\)。正文保留 English mathematical terms：
+total order, ordered field, upper bound, supremum, infimum, Dedekind cut,
+decimal expansion, irrational number, sequence, limit, and Cauchy sequence。
+
+Dedekind 的想法是：不要先假设 real number 已经存在，而是把一个 real number
+理解为它在 \(\Q\) 中切出的左半边。若一个切口 \(A\subset\Q\) 代表某个数 \(r\)，
+则 \(A\) 应当包含所有小于 \(r\) 的 rationals，不包含所有大于或等于 \(r\) 的
+rationals，并且左半边没有最后一个 rational。这个写法把 ``gap'' 变成一个 set，
+从而可以用 set-theoretic language 处理 order, operation, and completeness。
+
+\section{Order language on \texorpdfstring{\(\Z\)}{Z} and \texorpdfstring{\(\Q\)}{Q}}
+
+\begin{definition}[Total order]
+设 \((X,\leq)\) 是 partially ordered set。若任意 \(x,y\in X\) 都满足
+\[
+  x\leq y \quad\text{or}\quad y\leq x,
+\]
+则称 \(\leq\) 是 total order 或 linearly order。这里的重点是 comparability：
+任意两个元素都可以放在同一条顺序线上比较。
+\end{definition}
+
+在 \(\Z\) 与 \(\Q\) 中，standard order 定义为
+\[
+  x\leq y \Longleftrightarrow 0\leq y-x.
+\]
+对 integers，这依赖每个 integer 恰好是 positive, zero, or negative。对 rationals，
+同样用分子分母的符号定义 positivity。这个 order 与 addition 和 multiplication
+相容，正是 later ordered field 的基础。
+
+\begin{exerciseblock}[Lecture Notes Exercise 39]
+Suppose \((X,\leq)\) is totally ordered. Then any \(Y\subset X\) equipped with
+the restricted order is also totally ordered.
+\end{exerciseblock}
+
+\begin{solution}
+Restricted order 定义为：对 \(y,y'\in Y\)，
+\[
+  y\leq_Y y' \Longleftrightarrow y\leq_X y'.
+\]
+因为 \(Y\subset X\)，任意 \(y,y'\in Y\) 也都是 \(X\) 的元素。由 \(X\) 上的
+total order，可得
+\[
+  y\leq_X y' \quad\text{or}\quad y'\leq_X y.
+\]
+按 restricted order 的定义，这等价于
+\[
+  y\leq_Y y' \quad\text{or}\quad y'\leq_Y y.
+\]
+因此 \(Y\) 上的 restricted order 满足 total order 所需的 comparability。
+Reflexivity, antisymmetry, and transitivity 已经从 partial order 的 restriction
+继承，所以 \((Y,\leq_Y)\) 是 totally ordered set。
+\end{solution}
+
+\begin{explanation}
+这个题的关键是不要额外证明 \(Y\) 有任何 algebraic closure。Total order 只讨论
+元素之间是否可比较；当 \(Y\) 是 subset 时，两个 \(Y\) 中的元素仍然可以借用
+\(X\) 中已有的比较结果。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 40]
+Prove the order compatibility properties in \(\Q\): if \(x\leq y\), then
+\(x+z\leq y+z\); if \(x\geq0\) and \(y\geq0\), then \(xy\geq0\).
+\end{exerciseblock}
+
+\begin{solution}
+由 standard order 的定义，\(x\leq y\) 意味着 \(y-x\geq0\)。于是
+\[
+  (y+z)-(x+z)=y-x\geq0,
+\]
+所以 \(x+z\leq y+z\)。
+
+再设 \(x\geq0\) 且 \(y\geq0\)。若其中一个为 \(0\)，则 \(xy=0\geq0\)。若二者都
+为 positive rationals，可写成
+\[
+  x=\frac{a}{b},\qquad y=\frac{c}{d},
+\]
+其中 \(a,b,c,d\in\Z\)，并且可取 \(a,b,c,d>0\)。因此
+\[
+  xy=\frac{ac}{bd},
+\]
+分子 \(ac\) 与分母 \(bd\) 都是 positive integers，所以 \(xy>0\)。合并零的情况，
+可得 \(xy\geq0\)。
+\end{solution}
+
+\begin{explanation}
+第一个性质说明 order 对 translation 不变；第二个性质说明 positive cone 在
+multiplication 下封闭。这两个条件正是 ordered field definition 中 order 与
+field operations 的连接点。
+\end{explanation}
+
+\begin{definition}[Ordered field]
+一个 field \(F\) 若配有 total order \(\leq\)，并且满足
+\[
+  x\leq y\Rightarrow x+z\leq y+z,
+  \qquad
+  x\geq0,\ y\geq0\Rightarrow xy\geq0,
+\]
+则称为 ordered field。Lecture Notes Chapter 4 的目标是构造一个 complete
+ordered field，也就是 \(\R\)。
+\end{definition}
+
+\section{Bounds, supremum, and infimum}
+
+设 \(Y\subset X\)，其中 \(X\) 是 partially ordered set。
+\begin{itemize}
+  \item \(m\in Y\) 是 maximum，若对所有 \(y\in Y\)，\(y\leq m\)。
+  \item \(m\in Y\) 是 minimum，若对所有 \(y\in Y\)，\(m\leq y\)。
+  \item \(u\in X\) 是 upper bound，若对所有 \(y\in Y\)，\(y\leq u\)。
+  \item \(\ell\in X\) 是 lower bound，若对所有 \(y\in Y\)，\(\ell\leq y\)。
+  \item \(s=\sup(Y)\) 是 supremum，若 \(s\) 是 upper bound，且任何 upper bound
+  \(u\) 都满足 \(s\leq u\)。
+  \item \(i=\inf(Y)\) 是 infimum，若 \(i\) 是 lower bound，且任何 lower bound
+  \(\ell\) 都满足 \(\ell\leq i\)。
+\end{itemize}
+
+Supremum 和 infimum 若存在则 unique。若 \(s,s'\) 都是 \(Y\) 的 supremum，则
+\(s\) 是 upper bound，而 \(s'\) 是 least upper bound，所以 \(s'\leq s\)。反过来
+也有 \(s\leq s'\)，由 antisymmetry 得 \(s=s'\)。Infimum 的 proof 把 inequality
+方向反转即可。
+
+\begin{exerciseblock}[Lecture Notes Exercise 41]
+Show that \(\Z\) has no maximum or minimum.
+\end{exerciseblock}
+
+\begin{solution}
+先证明没有 maximum。假设 \(M\in\Z\) 是 maximum。因为 \(M+1\in\Z\)，而
+\[
+  M<M+1,
+\]
+这与 maximum 的定义矛盾：maximum 必须大于或等于每个 integer。因此 \(\Z\) 没有
+maximum。
+
+再证明没有 minimum。假设 \(m\in\Z\) 是 minimum。因为 \(m-1\in\Z\)，而
+\[
+  m-1<m,
+\]
+这与 minimum 的定义矛盾：minimum 必须小于或等于每个 integer。因此 \(\Z\) 没有
+minimum。
+\end{solution}
+
+\begin{explanation}
+Maximum 和 minimum 必须属于集合本身。Integers 可以一直加 \(1\) 或减 \(1\)，所以
+任何候选元素都会被同一个集合里的另一个元素超过或低过。
+\end{explanation}
+
+\begin{proposition}[Infimum of positive rationals]
+令 \(\Q^+=\{q\in\Q:q>0\}\)。则
+\[
+  \inf(\Q^+)=0.
+\]
+\end{proposition}
+
+\begin{proof}
+首先，\(0\) 是 lower bound，因为每个 \(q\in\Q^+\) 都满足 \(0<q\)。其次，若
+\(\ell>0\)，则 \(\ell/2\in\Q^+\)，并且 \(\ell/2<\ell\)，所以 \(\ell\) 不是
+lower bound。若 \(\ell\leq0\)，则 \(\ell\leq0\)。因此所有 lower bounds 都小于
+或等于 \(0\)，而 \(0\) 本身是 lower bound，所以 \(0\) 是 greatest lower bound。
+\end{proof}
+
+\begin{definition}[Completeness]
+一个 partially ordered set \(X\) 称为 complete，若每个 non-empty 且 bounded
+above 的 subset 都有 supremum，并且每个 non-empty 且 bounded below 的 subset
+都有 infimum。
+\end{definition}
+
+\section{Why \texorpdfstring{\(\Q\)}{Q} is not complete}
+
+考虑
+\[
+  S=\{x\in\Q:x^2<2\}.
+\]
+这个集合有 upper bounds，例如任何大于 \(2\) 的 rational 都是 upper bound；但它在
+\(\Q\) 中没有 supremum。证明分三步：平方大于 \(2\) 的正候选还可以下降，平方小于
+\(2\) 的候选还可以上升，而 \(\Q\) 中没有平方等于 \(2\) 的元素。
+
+\begin{exerciseblock}[Lecture Notes Exercise 42]
+Show that a positive \(s\in\Q\) with \(s^2>2\) is an upper bound for
+\(S=\{x\in\Q:x^2<2\}\).
+\end{exerciseblock}
+
+\begin{solution}
+取任意 \(x\in S\)。若 \(x<0\)，由于 \(s>0\)，有 \(x<s\)。若 \(x\geq0\)，假设
+\(x\geq s\)。两个数都 non-negative 时，order 与 multiplication 相容，所以
+\[
+  x^2\geq s^2>2.
+\]
+这与 \(x\in S\) 即 \(x^2<2\) 矛盾。因此在 \(x\geq0\) 的情况下也必须有 \(x<s\)。
+任意 \(x\in S\) 都满足 \(x\leq s\)，所以 \(s\) 是 \(S\) 的 upper bound。
+\end{solution}
+
+\begin{explanation}
+源文件中的排版/OCR 对 Exercise 42 的条件有歧义。若只写 \(s^2>2\) 而不要求
+\(s>0\)，负数 \(s\) 不能成为 \(S\) 的 upper bound，因为 \(0\in S\) 且 \(0>s\)。
+本章采用完成证明所需的 positive-upper-bound 版本。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 43]
+Suppose \(s^2<2\). Then there exists \(r\in\Q\), \(s<r\), such that
+\(r^2<2\). Hence \(s\) is not an upper bound for \(S\).
+\end{exerciseblock}
+
+\begin{solution}
+若 \(s<0\)，取 \(r=0\)。则 \(s<0=r\)，且 \(r^2=0<2\)。下面设 \(s\geq0\)。
+令
+\[
+  M=2-s^2>0.
+\]
+由 positive rationals 的密度，可取 rational \(\eps>0\) 满足
+\[
+  \eps<1,\qquad \eps<\frac{M}{2s+1}.
+\]
+令 \(r=s+\eps\)。则 \(r\in\Q\) 且 \(r>s\)。并且
+\[
+  r^2=(s+\eps)^2=s^2+2s\eps+\eps^2
+      <s^2+(2s+1)\eps
+      <s^2+M=2.
+\]
+因此 \(r\in S\) 且 \(r>s\)，所以 \(s\) 不是 \(S\) 的 upper bound。
+\end{solution}
+
+\begin{explanation}
+这个 proof 的难点是控制 \((s+\eps)^2\)。把剩余空间写成 \(M=2-s^2\)，再选择
+\(\eps\) 使增加量 \(2s\eps+\eps^2\) 小于 \(M\)，就能把 \(s\) 往右推而仍留在
+\(S\) 中。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 44]
+Suppose \(s>0\) and \(s^2>2\). Then there exists \(r\in\Q\), \(r<s\), which
+is an upper bound for \(S\). Hence \(s\) is not a supremum of \(S\).
+\end{exerciseblock}
+
+\begin{solution}
+令
+\[
+  M=s^2-2>0.
+\]
+取 rational \(\eps>0\) 满足
+\[
+  \eps<s,\qquad \eps<\frac{M}{2s}.
+\]
+令 \(r=s-\eps\)。则 \(0<r<s\)。同时
+\[
+  r^2=(s-\eps)^2=s^2-2s\eps+\eps^2
+      >s^2-2s\eps
+      >s^2-M=2.
+\]
+由 Lecture Notes Exercise 42，正 rational \(r\) 且 \(r^2>2\) 蕴含 \(r\) 是
+\(S\) 的 upper bound。因为 \(r<s\)，\(s\) 不是 least upper bound。
+
+若 \(S\) 在 \(\Q\) 中有 supremum \(t\)，则 \(t^2<2\) 会被 Exercise 43 排除，
+\(t>0\) 且 \(t^2>2\) 会被本题排除，而 \(t^2=2\) 在 \(\Q\) 中无解。因此 \(S\) 在
+\(\Q\) 中没有 supremum。
+\end{solution}
+
+\begin{explanation}
+Least upper bound 不能只是 upper bound，还要是所有 upper bounds 中最小的一个。
+当 \(s^2>2\) 时，平方值距离 \(2\) 还有 \(M\) 的余量；选小的 \(\eps\) 可以把
+\(s\) 左移到 \(r\)，同时保持 \(r^2>2\)，于是得到更小的 upper bound。
+\end{explanation}
+
+\section{Dedekind cuts}
+
+\begin{definition}[Dedekind cut: pair version]
+一个 Dedekind cut 是一对 non-empty subsets \((A,B)\)，其中 \(A,B\subset\Q\)，并且
+\[
+  \Q=A\cup B,\qquad
+  a<b\text{ for all }a\in A,\ b\in B,\qquad
+  A\text{ has no maximum}.
+\]
+这里 \(A\) 是左半边，\(B\) 是右半边。
+\end{definition}
+
+\begin{definition}[Dedekind cut: one-set version]
+一个 subset \(A\subset\Q\) 称为 Dedekind cut，若：
+\begin{enumerate}
+  \item \(A\ne\emptyset\) 且 \(A\ne\Q\)；
+  \item downward closed：若 \(x\in A\) 且 \(y<x\)，则 \(y\in A\)；
+  \item no maximum：若 \(x\in A\)，则存在 \(y\in A\) 使 \(x<y\)。
+\end{enumerate}
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 45]
+Prove that the pair version and one-set version of Dedekind cuts are equivalent.
+\end{exerciseblock}
+
+\begin{solution}
+先设 \((A,B)\) 是 pair version 的 Dedekind cut。因为 \(A,B\) non-empty 且
+\(\Q=A\cup B\)，所以 \(A\ne\emptyset\) 且 \(A\ne\Q\)。若 \(x\in A\) 且 \(y<x\)，
+假设 \(y\notin A\)。由 \(\Q=A\cup B\)，有 \(y\in B\)。Pair version 要求每个
+\(a\in A\) 都小于每个 \(b\in B\)，于是 \(x<y\)，这与 \(y<x\) 矛盾。所以
+\(y\in A\)，即 \(A\) downward closed。Pair version 已经要求 \(A\) has no
+maximum，因此 \(A\) 满足 one-set version。
+
+反过来，设 \(A\subset\Q\) 满足 one-set version，令 \(B=\Q\setminus A\)。由
+\(A\ne\emptyset\) 且 \(A\ne\Q\)，可得 \(A,B\) non-empty 且 \(\Q=A\cup B\)。取
+\(a\in A\)、\(b\in B\)。若 \(b<a\)，由 downward closed 得 \(b\in A\)，与
+\(b\in B\) 矛盾；若 \(b=a\)，同样与 \(A\cap B=\emptyset\) 矛盾。因此 \(a<b\)。
+One-set version 的第三条给出 \(A\) has no maximum。所以 \((A,\Q\setminus A)\)
+满足 pair version。
+\end{solution}
+
+\begin{explanation}
+两个版本的差别只是是否显式写出右半边。One-set version 把右半边定义为 complement；
+pair version 则直接写出 \(A\) 与 \(B\) 的 separation。Downward closed 正是由
+``左边元素必须小于右边元素'' 推出来的。
+\end{explanation}
+
+\begin{definition}[Rational cut]
+对 \(q\in\Q\)，定义
+\[
+  q^{\R}=\{x\in\Q:x<q\}.
+\]
+这个 cut 是 rational \(q\) 在 \(\R\) 中的 copy。若 pair cut \((A,B)\) 的 \(B\)
+有 minimum，则该 cut 对应 rational number \(\min(B)\)。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 46]
+Show that for each \(q\in\Q\), the set \(q^{\R}\) is a Dedekind cut. Moreover,
+show that \(i:\Q\to\R\), \(i(q)=q^{\R}\), is injective.
+\end{exerciseblock}
+
+\begin{solution}
+令 \(q^{\R}=\{x\in\Q:x<q\}\)。它 non-empty，因为 \(q-1<q\)；它 proper，因为
+\(q\notin q^{\R}\)。若 \(x\in q^{\R}\) 且 \(y<x\)，则 \(y<x<q\)，所以
+\(y\in q^{\R}\)。若 \(x\in q^{\R}\)，则
+\[
+  x<\frac{x+q}{2}<q,
+\]
+并且 \((x+q)/2\in\Q\)，所以 \(q^{\R}\) has no maximum。故 \(q^{\R}\) 是
+Dedekind cut。
+
+若 \(i(p)=i(q)\)，即 \(p^{\R}=q^{\R}\)。假设 \(p<q\)。取
+\[
+  r=\frac{p+q}{2}.
+\]
+则 \(p<r<q\)，所以 \(r\in q^{\R}\) 但 \(r\notin p^{\R}\)，与两个 cuts 相等矛盾。
+若 \(q<p\)，取 \(r=(p+q)/2\)，则 \(q<r<p\)，所以 \(r\in p^{\R}\) 但
+\(r\notin q^{\R}\)，同样与 \(p^{\R}=q^{\R}\) 矛盾。因此 \(p=q\)，所以
+\(i\) injective。
+\end{solution}
+
+\begin{explanation}
+这里必须使用 strict inequality \(x<q\)，不能用 \(x\leq q\)。集合
+\(\{x\in\Q:x\leq q\}\) 虽然 non-empty, proper, and downward closed，但有 maximum
+\(q\)，会让同一个 rational boundary 出现不必要的二义性。
+\end{explanation}
+
+\section{Order and operations on cuts}
+
+从现在起，\(\R\) 表示所有 one-set Dedekind cuts 的集合。Order 定义为
+\[
+  A\leq A' \Longleftrightarrow A\subseteq A'.
+\]
+这与 ``左半边越大，代表的 real number 越大'' 一致。Addition 定义为
+\[
+  A+A'=\{a+a':a\in A,\ a'\in A'\}.
+\]
+Negation 可以写成
+\[
+  -A=\{t\in\Q:\exists b\in\Q\setminus A\text{ such that }t<-b\}.
+\]
+这个公式在 rational 和 irrational 两种 cut 中都能处理边界；若 \(A=q^{\R}\)，
+则 \(-A=(-q)^{\R}\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 47]
+If \(A=q^{\R}\) for some \(q\in\Q\), prove that \(-A=(-q)^{\R}\).
+\end{exerciseblock}
+
+\begin{solution}
+使用 negation 的 cut formula：
+\[
+  -A=\{t\in\Q:\exists b\in\Q\setminus A\text{ such that }t<-b\}.
+\]
+当 \(A=q^{\R}\) 时，\(\Q\setminus A=\{b\in\Q:b\geq q\}\)。
+
+若 \(t\in -A\)，则存在 \(b\geq q\) 使 \(t<-b\)。因为 \(-b\leq -q\)，所以
+\[
+  t<-b\leq -q,
+\]
+从而 \(t< -q\)，即 \(t\in(-q)^{\R}\)。
+
+若 \(t\in(-q)^{\R}\)，则 \(t<-q\)。取 \(b=q\)，有 \(b\in\Q\setminus A\)，并且
+\[
+  t<-q=-b.
+\]
+所以 \(t\in -A\)。两边互相包含，故 \(-A=(-q)^{\R}\)。
+\end{solution}
+
+\begin{explanation}
+Rational cut 的右半边有最小元素 \(q\)，所以求 negative 时边界变成 \(-q\)。公式中
+用 \(t<-b\) 而不是 \(t\leq -b\)，正是为了保持 cut 的 no maximum 条件。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 48]
+Prove that the Dedekind-cut construction of \(\R\) is complete.
+\end{exerciseblock}
+
+\begin{solution}
+令 \(\mathcal S\subset\R\) non-empty，并假设它 bounded above。取一个 upper bound
+\(U\in\R\)，于是每个 \(A\in\mathcal S\) 都满足 \(A\subseteq U\)。定义
+\[
+  A_*=\bigcup_{A\in\mathcal S}A.
+\]
+我们证明 \(A_*\) 是 Dedekind cut，并且是 \(\mathcal S\) 的 supremum。
+
+因为 \(\mathcal S\) non-empty，取 \(A_0\in\mathcal S\)。由于 \(A_0\ne\emptyset\)，
+有 \(A_*\ne\emptyset\)。又因为每个 \(A\subseteq U\)，所以 \(A_*\subseteq U\)。
+而 \(U\ne\Q\)，因此 \(A_*\ne\Q\)。若 \(x\in A_*\) 且 \(y<x\)，则 \(x\in A\) 对某个
+\(A\in\mathcal S\) 成立；由 \(A\) downward closed，得 \(y\in A\subseteq A_*\)。
+若 \(x\in A_*\)，取 \(A\in\mathcal S\) 使 \(x\in A\)。因为 \(A\) has no maximum，
+存在 \(z\in A\) 使 \(x<z\)，于是 \(z\in A_*\)。所以 \(A_*\) 是 Dedekind cut。
+
+对每个 \(A\in\mathcal S\)，有 \(A\subseteq A_*\)，所以 \(A_*\) 是 upper bound。
+若 \(V\) 是任意 upper bound，则每个 \(A\in\mathcal S\) 都满足 \(A\subseteq V\)，
+所以
+\[
+  A_*=\bigcup_{A\in\mathcal S}A\subseteq V.
+\]
+因此 \(A_*\leq V\)，说明 \(A_*=\sup\mathcal S\)。
+
+若 \(\mathcal S\) non-empty 且 bounded below，则集合
+\[
+  -\mathcal S=\{-A:A\in\mathcal S\}
+\]
+non-empty 且 bounded above。由上半部分，\(\sup(-\mathcal S)\) 存在。定义
+\[
+  \inf\mathcal S=-\sup(-\mathcal S).
+\]
+记 \(I=-\sup(-\mathcal S)\)。若 \(A\in\mathcal S\)，则 \(-A\leq\sup(-\mathcal S)\)，
+反转 order 得 \(I\leq A\)，所以 \(I\) 是 lower bound。若 \(J\) 是任意 lower bound，
+则 \(J\leq A\) 对所有 \(A\in\mathcal S\) 成立，反转 order 得
+\(-A\leq -J\)，所以 \(-J\) 是 \(-\mathcal S\) 的 upper bound。由 supremum 的定义，
+\(\sup(-\mathcal S)\leq -J\)，再反转 order 得 \(J\leq I\)。因此 \(I\) 是 greatest
+lower bound。
+\end{solution}
+
+\begin{explanation}
+Completeness 的核心不是对每个 cut 逐项计算，而是用 union。一个 bounded-above 的
+cut family 的所有左半边合并后仍然是左半边；upper bound \(U\) 保证合并不会变成
+整个 \(\Q\)。这就是 Dedekind construction 直接内建 supremum 的原因。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 6 Exercise 1]
+Determine which of the four listed subsets of \(\Q\) are Dedekind cuts.
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\arabic*)]
+  \item \(A=\{x\in\Q:x^3<17\}\) 是 Dedekind cut。它 non-empty，因为
+  \(2^3=8<17\)；proper，因为 \(3^3=27>17\)。若 \(x\in A\) 且 \(y<x\)，则 cube
+  function 在 \(\Q\) 上 strictly increasing，所以 \(y^3<x^3<17\)，故 \(y\in A\)。
+  若 \(x^3<17\)，取 \(\eps>0\) rational 使
+  \[
+    \eps<1,\qquad \eps(3x^2+3|x|+1)<17-x^3.
+  \]
+  则 \((x+\eps)^3<17\)，所以 \(A\) has no maximum。
+
+  \item \(B=\{x\in\Q:x^4<100\}\) 不是 Dedekind cut。因为 \(2\in B\)，但
+  \(-4<2\)，而 \((-4)^4=256>100\)，所以 \(-4\notin B\)。这违反 downward closed。
+
+  \item \(C=\{x\in\Q:x^2>-3\}\) 不是 Dedekind cut。每个 rational 都满足
+  \(x^2\geq0>-3\)，所以 \(C=\Q\)。这违反 proper condition \(A\ne\Q\)。
+
+  \item \(D=\{x\in\Q:x^5\leq2\}\) 是 Dedekind cut。它 non-empty，因为 \(1\in D\)；
+  proper，因为 \(2^5=32>2\)。Fifth power 在 \(\Q\) 上 strictly increasing，所以
+  downward closed 成立。若 \(x^5<2\)，可选小 rational \(\eps>0\) 使
+  \((x+\eps)^5<2\)，从而得到更大的元素仍在 \(D\)。若 \(x^5=2\)，则把
+  \(x=a/b\) 写成 lowest terms 会给出 \(a^5=2b^5\)，推出 \(2\mid a\)，继而
+  \(2\mid b\)，与 lowest terms 矛盾。因此 \(D\) 没有 maximum。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+验证 Dedekind cut 时必须逐条检查 non-empty, proper, downward closed, and no
+maximum。Polynomial inequality 的题目常见陷阱是偶次幂不保序；这正是
+\(x^4<100\) 失败的原因。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 6 Exercise 2]
+For rational \(p,q\in\Q\), prove \(p^{\R}+q^{\R}=(p+q)^{\R}\).
+\end{exerciseblock}
+
+\begin{solution}
+按 cut addition 的定义，
+\[
+  p^{\R}+q^{\R}
+  =\{a+b:a<p,\ b<q,\ a,b\in\Q\}.
+\]
+若 \(x\in p^{\R}+q^{\R}\)，则 \(x=a+b\)，其中 \(a<p\) 且 \(b<q\)。相加得
+\[
+  x=a+b<p+q,
+\]
+所以 \(x\in(p+q)^{\R}\)。
+
+反过来，若 \(x\in(p+q)^{\R}\)，即 \(x<p+q\)。令
+\[
+  \delta=\frac{p+q-x}{2}>0,\qquad a=p-\delta,\qquad b=x-a.
+\]
+则 \(a<p\)，而且
+\[
+  b=x-p+\delta
+   =x-p+\frac{p+q-x}{2}
+   =\frac{x-p+q}{2},
+\]
+所以
+\[
+  q-b
+  =q-\frac{x-p+q}{2}
+  =\frac{p+q-x}{2}
+  =\delta>0.
+\]
+因此 \(b<q\)，且 \(x=a+b\)。于是 \(x\in p^{\R}+q^{\R}\)。两边互相包含，结论成立。
+\end{solution}
+
+\begin{explanation}
+第二个 inclusion 的关键是把 \(x<p+q\) 留下的正 gap 平分成 \(\delta\)。这样可以
+构造 \(a<p\) 和 \(b<q\)，并让它们的和正好等于 \(x\)。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 6 Exercise 3]
+For a Dedekind cut \(A\), prove existence and uniqueness of \(-A\), prove the
+rational case, and state the irrational formula.
+\end{exerciseblock}
+
+\begin{solution}
+定义
+\[
+  N_A=\{t\in\Q:\exists b\in\Q\setminus A\text{ such that }t<-b\}.
+\]
+这个集合 non-empty：取 \(b\notin A\)，则 \(t=-b-1\in N_A\)。它 proper：取
+\(a\in A\)。若 \(t\geq -a\)，则不可能存在 \(b\notin A\) 使 \(t<-b\)，因为这会给出
+\(b<-t\leq a\)，再由 downward closed 得 \(b\in A\)，矛盾。若 \(t\in N_A\) 且
+\(u<t\)，同一个 \(b\notin A\) 满足 \(u<t<-b\)，所以 \(u\in N_A\)。若 \(t<-b\)，
+取 \(v=(t-b)/2\)。则 \(t<v<-b\)，所以 \(v\in N_A\)。故 \(N_A\) 是 Dedekind cut。
+
+要说明 \(N_A+A=0^{\R}\)，先取 \(n\in N_A\)、\(a\in A\)。存在 \(b\notin A\) 使
+\(n<-b\)。由于 \(a\in A\) 且 \(b\notin A\)，不能有 \(b\leq a\)，否则由 downward
+closed 或 disjointness 得矛盾；因此 \(a<b\)。于是
+\[
+  n+a<-b+a<0,
+\]
+所以 \(N_A+A\subseteq0^{\R}\)。反向 inclusion 使用 cut 的 gap lemma：对任意
+\(\eta>0\)，存在 \(a\in A\) 与 \(b\notin A\) 使 \(0<b-a<\eta\)。给定 \(x<0\)，
+取 \(\eta=-x\)，再取这样的 \(a,b\)，令 \(n=x-a\)。因为
+\[
+  n=x-a<-b
+  \Longleftrightarrow
+  x<b-a,
+\]
+而 \(x<0<b-a\)，所以 \(n\in N_A\)，且 \(x=n+a\)。因此 \(0^{\R}\subseteq N_A+A\)。
+所以 \(N_A\) 是 additive inverse。
+
+Uniqueness：若 \(B+A=0^{\R}\) 且 \(C+A=0^{\R}\)，则用 addition 的 associativity
+和 zero law 得
+\[
+  B=B+0^{\R}=B+(A+C)=(B+A)+C=0^{\R}+C=C.
+\]
+所以 inverse unique。
+
+若 \(A=q^{\R}\)，上一题已经给出 \(N_A=(-q)^{\R}\)。若 \(A\) 不是 rational cut，
+则 \(\Q\setminus A\) 没有 minimum，此时
+\[
+  -A=\Q\setminus\{x\in\Q:-x\in A\}.
+\]
+\end{solution}
+
+\begin{explanation}
+求 negative 时最容易在 boundary 上出错。Rational cut 的右半边有最小元素，必须用
+strict inequality 来避免 maximum；irrational cut 没有 rational boundary，所以
+complement-reflection formula 与 general formula 合并。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 6 Exercise 4]
+Let \(A=\{x\in\Q:x<0\text{ or }x^2<2\}\). Prove that \(A\) is not \(q^{\R}\)
+for any \(q\in\Q\), and prove \(A\cdot A=2^{\R}\).
+\end{exerciseblock}
+
+\begin{solution}
+先验证 \(A\) 是 Dedekind cut。它 non-empty，因为 \(1\in A\)；proper，因为
+\(2\notin A\)。若 \(x\in A\) 且 \(y<x\)，当 \(x<0\) 时有 \(y<0\)，故 \(y\in A\)；
+当 \(x\geq0\) 且 \(x^2<2\) 时，若 \(y<0\) 则 \(y\in A\)，若 \(0\leq y<x\) 则
+\(y^2<x^2<2\)，也有 \(y\in A\)。No maximum 由 Exercise 43 的 perturbation 得到：
+负数可向右移动一点仍为负；非负且平方小于 \(2\) 的元素可向右移动一点仍保持平方
+小于 \(2\)。
+
+若 \(A=q^{\R}\)，则 \(q\) 必须是 boundary。因为 \(1\in A\) 且 \(2\notin A\)，有
+\(1<q\leq2\)。对所有 \(x<q\) 应有 \(x^2<2\)，对所有 \(x>q\) 应有 \(x^2>2\)。
+这迫使 \(q^2=2\)。但 \(\Q\) 中不存在平方等于 \(2\) 的 rational，所以 \(A\) 不是
+rational cut。
+
+对 multiplication，\(A\) 是 positive cut。由 Dedekind multiplication 的 positive
+definition，\(A\cdot A\) 包含所有 negative rationals；positive part 由 \(a,a'\in A\)
+且 \(a,a'\geq0\) 的 products 产生。若 \(a,a'\geq0\) 且 \(a^2<2\)、\((a')^2<2\)，
+则 \(aa'<2\)，所以 \(A\cdot A\subseteq2^{\R}\)。反过来，若 \(0\leq x<2\)，取
+rational \(a\) 满足
+\[
+  0\leq x<a^2<2,
+\]
+这可由 Exercise 43 的上推 argument 应用于 \(\sqrt{x}\) 的 rational 近似得到。于是
+\(a\in A\)，且 \(x<a\cdot a\)，所以 \(x\) 属于 \(A\cdot A\) 的 downward closure。
+因此 \(A\cdot A=2^{\R}\)。
+\end{solution}
+
+\begin{explanation}
+这个 cut 是 \(\sqrt2\) 的左半边。Irrationality 来自 boundary equation
+\(q^2=2\) 在 \(\Q\) 中无解；乘法结论说明这个左半边在 Dedekind multiplication 下
+确实平方成 \(2^{\R}\)。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 50]
+Show that there exists a positive real number \(r\in\R\) such that \(r^2=2\).
+\end{exerciseblock}
+
+\begin{solution}
+令
+\[
+  r=\{x\in\Q:x<0\text{ or }x^2<2\}.
+\]
+Worksheet 6 Exercise 4 已经逐条证明 \(r\) 是 Dedekind cut，且 \(r\cdot r=2^{\R}\)。
+它是 positive real number，因为 \(0^{\R}\subsetneq r\)：例如 \(1\in r\) 但
+\(1\notin0^{\R}\)。因此存在 positive real \(r\) 满足 \(r^2=2^{\R}\)。按 usual
+notation，称这个 \(r\) 为 \(\sqrt2\)。
+\end{solution}
+
+\begin{explanation}
+这里的存在性不是从 decimal approximation 猜出来的，而是直接构造一个 cut。这个
+cut 把所有 negative rationals 放进左边，再把 positive side 中平方小于 \(2\) 的
+rationals 放进左边，从而形成正的 square root。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 7 Problem 1]
+Let \(A,B\in\R\). Determine which listed set operations necessarily produce
+Dedekind cuts.
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item \(\{ab:a\in A,b\in B\}\) 不一定是 Dedekind cut。取
+  \(A=B=0^{\R}=\{x\in\Q:x<0\}\)。则 \(1=(-1)(-1)\) 属于该集合，但
+  \(1/2<1\) 不一定能写成两个 negative rationals 的 product；事实上 product set
+  是 positive rationals，加上部分 large values，不包含所有更小的 rationals。
+  Downward closed 失败。
+
+  \item \(\{a-b:a\in A,b\in B\}\) 不一定是 Dedekind cut。仍取
+  \(A=B=0^{\R}\)。对任意 \(q\in\Q\)，选 \(b<\min(0,-q)\)，令 \(a=q+b\)。则
+  \(a<0\)、\(b<0\)，并且 \(q=a-b\)。所以该集合等于 \(\Q\)，违反 proper condition。
+
+  \item \(\Q\setminus\{-x:x\in A\}\) 不一定是 Dedekind cut。取 \(A=q^{\R}\)。则
+  \[
+    \{-x:x\in A\}=\{y\in\Q:y>-q\},
+  \]
+  因而 complement 是 \(\{y\in\Q:y\leq -q\}\)。这个集合有 maximum \(-q\)，违反
+  no maximum。
+
+  \item \(A\cap B\) 一定是 Dedekind cut。Non-empty：取 \(a\in A\)、\(b\in B\)，
+  再取 rational \(c<\min(a,b)\)，则 \(c\in A\cap B\)。Proper：若
+  \(q\notin A\)，则 \(q\notin A\cap B\)。Downward closed 从 \(A\) 与 \(B\) 继承。
+  若 \(x\in A\cap B\)，先在 \(A\) 中取 \(a_1>x\)，在 \(B\) 中取 \(b_1>x\)，再取
+  rational \(y\) 满足
+  \[
+    x<y<\min(a_1,b_1).
+  \]
+  由 downward closed，\(y\in A\cap B\)。所以 \(A\cap B\) has no maximum。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+这个题训练的是 ``set operation'' 与 ``cut operation'' 的区别。Dedekind addition
+和 multiplication 有专门定义；任意把 representatives 做 pointwise set operation
+不会自动保持 cut 的四条性质。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 7 Problem 2]
+Let \(S\) be a non-empty subset of \(\R\) that has a lower bound. Prove that
+\(S\) has an infimum.
+\end{exerciseblock}
+
+\begin{solution}
+设 \(L\) 是 \(S\) 的 lower bound，所以对所有 \(A\in S\)，有 \(L\leq A\)。考虑
+\[
+  -S=\{-A:A\in S\}.
+\]
+Negation reverses order，因此 \(A\geq L\) 蕴含 \(-A\leq -L\)。所以 \(-S\) 是
+non-empty 且 bounded above 的 subset of \(\R\)。由 Lecture Notes Exercise 48，
+\(-S\) 有 supremum，记为 \(U=\sup(-S)\)。定义
+\[
+  I=-U.
+\]
+对任意 \(A\in S\)，有 \(-A\leq U\)，反转 order 得 \(I=-U\leq A\)，所以 \(I\) 是
+lower bound。若 \(J\) 是 \(S\) 的任意 lower bound，则 \(J\leq A\) 对所有
+\(A\in S\) 成立，故 \(-A\leq -J\) 对所有 \(A\in S\) 成立；也就是说 \(-J\) 是
+\(-S\) 的 upper bound。因为 \(U\) 是 least upper bound，有 \(U\leq -J\)。再反转
+order，得到 \(J\leq -U=I\)。因此 \(I\) 是 greatest lower bound，即
+\(\inf S\)。
+\end{solution}
+
+\begin{explanation}
+Completeness 通常只需证明 bounded-above subsets 有 supremum；infimum 可由 negative
+把 lower-bound problem 转成 upper-bound problem。这个转换也解释了为什么 ordered
+field 中 additive inverse 与 order 的关系很重要。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 7 Problem 3]
+Let \(A,B,C\in\R\). Prove \((A+B)+C=A+(B+C)\).
+\end{exerciseblock}
+
+\begin{solution}
+按 Dedekind addition 的定义，
+\[
+  (A+B)+C
+  =\{(a+b)+c:a\in A,\ b\in B,\ c\in C\}.
+\]
+同样，
+\[
+  A+(B+C)
+  =\{a+(b+c):a\in A,\ b\in B,\ c\in C\}.
+\]
+对任意 \(a,b,c\in\Q\)，rational addition associative，所以
+\[
+  (a+b)+c=a+(b+c).
+\]
+因此左边集合的每个元素都属于右边，右边集合的每个元素也属于左边。由 extensionality
+of sets，
+\[
+  (A+B)+C=A+(B+C).
+\]
+\end{solution}
+
+\begin{explanation}
+Dedekind operations 的多数 algebraic laws 都 piggy-back on rational arithmetic。
+这里没有 representative ambiguity，因为 cut addition 直接由所有 rational sums 组成，
+而 \(\Q\) 中的 associativity 已经成立。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 7 Problem 4]
+Determine whether \(A=\{x\in\Q:x^3<5\}\) is a Dedekind cut.
+\end{exerciseblock}
+
+\begin{solution}
+它是 Dedekind cut。首先 \(1\in A\)，因为 \(1^3<5\)，所以 \(A\ne\emptyset\)；
+\(2\notin A\)，因为 \(2^3=8>5\)，所以 \(A\ne\Q\)。
+
+若 \(x\in A\) 且 \(y<x\)，cube function 在 \(\Q\) 上 strictly increasing，因此
+\[
+  y^3<x^3<5,
+\]
+所以 \(y\in A\)。这证明 downward closed。
+
+最后证明 no maximum。若 \(x\in A\)，则 \(5-x^3>0\)。取 rational \(\eps>0\) 满足
+\[
+  \eps<1,\qquad
+  \eps(3x^2+3|x|+1)<5-x^3.
+\]
+则
+\[
+  (x+\eps)^3
+  =x^3+3x^2\eps+3x\eps^2+\eps^3
+  \leq x^3+\eps(3x^2+3|x|+1)
+  <5.
+\]
+因此 \(x+\eps\in A\) 且 \(x<x+\eps\)。所以 \(A\) has no maximum。
+\end{solution}
+
+\begin{explanation}
+Odd powers preserve order over rationals，所以 downward closure 与 cube inequality
+配合得很好。No maximum 需要一个 quantitative perturbation：选择足够小的
+\(\eps\)，让 cube 的增加量小于剩余空间 \(5-x^3\)。
+\end{explanation}
+
+\section{Decimal expansions and irrational numbers}
+
+Dedekind cut 可以产生 decimal expansion。设 \(A\in\R\)。先选择 integer part，使
+\[
+  m_0^{\R}\leq A<(m_0+1)^{\R}.
+\]
+然后逐位选择 decimal truncation：对每个 \(n\geq1\)，在 denominator \(10^n\) 的
+rationals 中取最大的 \(m_n/10^n\) 使它仍位于 \(A\) 的左侧。这样得到 nested
+decimal intervals，长度为 \(10^{-n}\)，逐位确定 decimal digits。Terminating
+expansion 和 eventually all \(9\) 的 expansion 表示同一个 cut，例如
+\(1.000\ldots=0.999\ldots\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 49]
+Given a Dedekind cut, explain how to produce a decimal expansion for the
+corresponding real number.
+\end{exerciseblock}
+
+\begin{solution}
+设 \(A\) 是 Dedekind cut。先用 Archimedean property for rationals 找到 integer
+\(m_0\) 使
+\[
+  m_0^{\R}\leq A<(m_0+1)^{\R}.
+\]
+这确定 integer part。对 \(n=1,2,3,\ldots\)，在所有 denominator 为 \(10^n\) 的
+rationals 中，取 integer \(m_n\) 满足
+\[
+  \frac{m_n}{10^n}\in A,\qquad
+  \frac{m_n+1}{10^n}\notin A.
+\]
+这样的 \(m_n\) 存在，因为 \(A\) 在左右都有 rationals，并且 denominator 固定后
+形成 discrete grid。于是
+\[
+  \frac{m_n}{10^n}\leq A<\frac{m_n+1}{10^n}
+\]
+给出长度 \(10^{-n}\) 的 decimal interval。相邻的 \(m_n\) 彼此兼容，因此可以从
+\(m_n\) 的十进制表示读出 digits。
+
+若某一步正好落在 rational boundary，会出现两种 decimal expressions；例如某个
+finite expansion 也可写成 eventually all \(9\) 的 expansion。为了得到 canonical
+表达，可以规定不用 eventually all \(9\) 的形式。
+\end{solution}
+
+\begin{explanation}
+Decimal expansion 是 Dedekind cut 的后续读法，而不是 definition 的基础。每一位
+digit 来自一个更细的 rational grid；cut 告诉我们 grid point 应该放在左边还是右边。
+\end{explanation}
+
+\section{Sequences and limits}
+
+\begin{definition}[Sequence and limit]
+一个 sequence in \(X\) 是 function \(\N\to X\)，通常写作 \((x_n)\)。Real sequence
+\((x_n)\) has limit \(L\in\R\)，若对每个 \(\eps>0\)，存在 \(N\in\N\)，使得
+\[
+  n>N \Longrightarrow |x_n-L|<\eps.
+\]
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 51]
+Write the definition of convergence more symbolically.
+\end{exerciseblock}
+
+\begin{solution}
+Sequence \((x_n)\) converges to \(L\) 的 symbolic form 是
+\[
+  \forall \eps\in\R\,
+  \Bigl(\eps>0\Rightarrow
+  \exists N\in\N\,
+  \forall n\in\N\,
+  (n>N\Rightarrow |x_n-L|<\eps)\Bigr).
+\]
+也可以写作
+\[
+  \lim_{n\to\infty}x_n=L.
+\]
+两个写法的内容相同：每一个 positive tolerance \(\eps\) 都要求一个 tail index
+\(N\)，使 tail 中所有 terms 都落在 interval \((L-\eps,L+\eps)\) 内。
+\end{solution}
+
+\begin{explanation}
+符号里的 quantifier order 很重要。先给 \(\eps\)，再选择 \(N\)，最后检查所有
+\(n>N\)。\(N\) 可以依赖 \(\eps\)，但不能依赖 tail 中的某个特定 \(n\)。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 52]
+Compute the limit, if it exists, of the sequence \(x_n=0\) for all \(n\geq0\).
+\end{exerciseblock}
+
+\begin{solution}
+这个 sequence 的 limit 是 \(0\)。给定任意 \(\eps>0\)，取 \(N=0\)。则对所有
+\(n>N\)，
+\[
+  |x_n-0|=|0-0|=0<\eps.
+\]
+所以按 \(\eps\)-\(N\) definition，有
+\[
+  \lim_{n\to\infty}x_n=0.
+\]
+若 \(L\ne0\)，取 \(\eps=|L|/2>0\)。对所有 \(n\)，
+\[
+  |x_n-L|=|L|>\eps,
+\]
+所以 \(L\) 不能是 limit。因此 limit unique 且等于 \(0\)。
+\end{solution}
+
+\begin{explanation}
+Constant zero sequence 是 definition 的 base example。证明时不需要让 \(N\) 变大，
+因为所有 terms 从一开始就已经在任何以 \(0\) 为中心的 positive radius 内。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 7 Exercise 1]
+Using triangle inequality, prove the listed inequalities for all \(x,y,z\in\R\).
+\end{exerciseblock}
+
+\begin{solution}
+由 triangle inequality，
+\[
+  |x-z|=|(x-y)+(y-z)|\leq |x-y|+|y-z|.
+\]
+移项后得到
+\[
+  |x-y|+|y-z|\geq |x-z|.
+\]
+
+再证明 reverse triangle inequality 的一边。因为
+\[
+  x=(x-y)+y,
+\]
+所以
+\[
+  |x|\leq |x-y|+|y|.
+\]
+两边减去 \(|y|\)，得到
+\[
+  |x|-|y|\leq |x-y|.
+\]
+若交换 \(x,y\)，还可得到 \(|y|-|x|\leq|x-y|\)，合并即
+\[
+  \bigl||x|-|y|\bigr|\leq |x-y|.
+\]
+\end{solution}
+
+\begin{explanation}
+Triangle inequality 常用于把一个差拆成两段。第一问把 \(x-z\) 拆成
+\((x-y)+(y-z)\)；第二问把 \(x\) 拆成 \((x-y)+y\)，再把 \(|y|\) 移到另一边。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 7 Exercise 2]
+Check whether the three listed sequences have limits, and compute the limits when
+they exist.
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item
+  \[
+    x_n=\frac{5n^2+n+7}{n^3+3n^2+3n+1}.
+  \]
+  对 \(n\geq1\)，denominator positive，并且
+  \[
+    0\leq x_n
+    \leq \frac{13n^2}{n^3}
+    =\frac{13}{n}.
+  \]
+  给定 \(\eps>0\)，取 \(N>13/\eps\)，则 \(n>N\) 时 \(|x_n-0|<\eps\)。所以
+  \(x_n\to0\)。
+
+  \item
+  \[
+    x_n=\frac{n^2-(-1)^n n-13}{n^2+n+1}.
+  \]
+  计算
+  \[
+    x_n-1
+    =\frac{-(-1)^n n-13-n-1}{n^2+n+1}.
+  \]
+  因此
+  \[
+    |x_n-1|
+    \leq\frac{|(-1)^n|n+n+14}{n^2}
+    =\frac{2n+14}{n^2}
+    =\frac2n+\frac{14}{n^2}.
+  \]
+  给定 \(\eps>0\)，取 \(N\) 使 \(2/N<\eps/2\) 且 \(14/N^2<\eps/2\)。当
+  \(n>N\) 时，\(|x_n-1|<\eps\)。所以 \(x_n\to1\)。
+
+  \item \(x_n=2^n\) 没有 finite real limit。若 \(x_n\to L\)，则 convergent
+  sequence bounded。取 \(M>|L|+1\) 作为 tail bound，再把有限多个 early terms 合并，
+  会得到所有 \(2^n\) 的共同 upper bound。但对任意 real \(M\)，Archimedean
+  property 给出 \(n\) 使 \(2^n>M\)，矛盾。因此 \(2^n\) diverges。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+Rational functions 的 limit 由最高次项控制，但 proof 仍要写成 inequality。第二问
+的 oscillating term \((-1)^n n\) 只是一阶误差；除以 \(n^2\) 后趋于 \(0\)。第三问
+用 boundedness 排除 convergence。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 7 Exercise 3]
+Let \((x_n)\) be a sequence of real numbers with limit \(L\). Prove that it is
+bounded.
+\end{exerciseblock}
+
+\begin{solution}
+因为 \(x_n\to L\)，对 \(\eps=1\)，存在 \(N\in\N\) 使 \(n>N\) 时
+\[
+  |x_n-L|<1.
+\]
+这意味着 tail 中所有 terms 都满足
+\[
+  L-1<x_n<L+1.
+\]
+前面只有有限多个 terms：\(x_0,x_1,\ldots,x_N\)。令
+\[
+  m=\min\{x_0,x_1,\ldots,x_N,L-1\},
+  \qquad
+  M=\max\{x_0,x_1,\ldots,x_N,L+1\}.
+\]
+有限集合在 total order 中有 maximum 和 minimum。若 \(n\leq N\)，则
+\(m\leq x_n\leq M\) 由定义成立；若 \(n>N\)，则 \(L-1<x_n<L+1\)，也有
+\[
+  m\leq x_n\leq M.
+\]
+所以存在 \(m,M\in\R\) 使所有 \(n\) 都满足 \(m\leq x_n\leq M\)。
+\end{solution}
+
+\begin{explanation}
+Convergence 只直接控制 tail；boundedness 需要同时处理有限多个 early terms。有限
+多个 early terms 可以取 maximum 和 minimum，因此不会破坏整体 boundedness。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 7 Exercise 4]
+If \(x_n\to L\), prove \(|x_n|\to |L|\).
+\end{exerciseblock}
+
+\begin{solution}
+由 Worksheet 7 Exercise 1 的 reverse triangle inequality，
+\[
+  \bigl||x_n|-|L|\bigr|\leq |x_n-L|.
+\]
+给定 \(\eps>0\)，因为 \(x_n\to L\)，存在 \(N\) 使 \(n>N\) 时
+\[
+  |x_n-L|<\eps.
+\]
+于是同样的 \(N\) 满足
+\[
+  \bigl||x_n|-|L|\bigr|<\eps.
+\]
+所以按 limit definition，
+\[
+  \lim_{n\to\infty}|x_n|=|L|.
+\]
+\end{solution}
+
+\begin{explanation}
+Absolute value function 的 continuity 在这里由 reverse triangle inequality 表达。
+它把新 sequence \(|x_n|\) 与原 sequence \(x_n\) 的距离直接比较起来。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 7 Exercise 5]
+Calculate \(\lim_{n\to\infty}(\sqrt{n+1}-\sqrt n)\).
+\end{exerciseblock}
+
+\begin{solution}
+对每个 \(n\geq1\)，有
+\[
+  \sqrt{n+1}-\sqrt n
+  =\frac{(\sqrt{n+1}-\sqrt n)(\sqrt{n+1}+\sqrt n)}
+         {\sqrt{n+1}+\sqrt n}
+  =\frac1{\sqrt{n+1}+\sqrt n}.
+\]
+因为 denominator 大于 \(\sqrt n\)，所以
+\[
+  0<\sqrt{n+1}-\sqrt n<\frac1{\sqrt n}.
+\]
+给定 \(\eps>0\)，取 \(N>1/\eps^2\)。若 \(n>N\)，则 \(\sqrt n>1/\eps\)，从而
+\[
+  0<\sqrt{n+1}-\sqrt n<\eps.
+\]
+因此 limit 为 \(0\)。
+\end{solution}
+
+\begin{explanation}
+两个 square roots 的差不适合直接估计；乘以 conjugate 后变成 reciprocal。分母随
+\(n\) 增大而趋向 infinity，所以整个 expression 趋向 \(0\)。
+\end{explanation}
+
+\section{Cauchy sequences \optional}
+
+Lecture Notes 4.13 给出 real numbers 的另一种 construction：从 rational Cauchy
+sequences 出发，把彼此最终无限接近的 sequences 视为同一个 real number。
+
+\begin{definition}[Cauchy sequence]
+Rational sequence \((x_n)\) 称为 Cauchy，若
+\[
+  \forall\eps>0\ \exists N\in\N\ \forall m,n>N,\quad |x_n-x_m|<\eps.
+\]
+这个 condition 不提未知的 limit，只要求 tail 中任意两个 terms 最终彼此接近。
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 53]
+Find examples of Cauchy sequences and sequences which fail to be Cauchy.
+\end{exerciseblock}
+
+\begin{solution}
+Constant sequence \(x_n=q\) 是 Cauchy。给定 \(\eps>0\)，任取 \(N\)，则
+\[
+  |x_n-x_m|=|q-q|=0<\eps
+\]
+对所有 \(m,n>N\) 成立。
+
+Sequence \(x_n=1/n\) 也是 Cauchy。给定 \(\eps>0\)，取 \(N>2/\eps\)。若
+\(m,n>N\)，则
+\[
+  \left|\frac1n-\frac1m\right|
+  \leq \frac1n+\frac1m
+  <\frac1N+\frac1N
+  <\eps.
+\]
+
+Sequence \(x_n=n\) 不是 Cauchy。取 \(\eps=1\)。无论 \(N\) 多大，选择
+\(n=N+2\)、\(m=N+1\)，都有
+\[
+  |x_n-x_m|=1,
+\]
+不小于 \(\eps\)。Sequence \(x_n=(-1)^n\) 也不是 Cauchy；取 \(\eps=1\)，tail 中
+总有一偶一奇两个 indices，使对应 terms 相差 \(2\)。
+\end{solution}
+
+\begin{explanation}
+Cauchy condition 描述的是 tail 的 internal closeness。Converging-to-zero 的
+\(1/n\) 满足它；持续向 infinity 走的 \(n\) 和来回震荡的 \((-1)^n\) 都不满足。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 54]
+Explain how rationals appear in the Cauchy-sequence construction of \(\R\).
+\end{exerciseblock}
+
+\begin{solution}
+每个 rational \(q\in\Q\) 对应 constant Cauchy sequence
+\[
+  (q,q,q,\ldots).
+\]
+定义 embedding
+\[
+  j:\Q\to\R,\qquad j(q)=[(q,q,q,\ldots)].
+\]
+它 well-defined，因为 constant sequence 是 Cauchy。它 injective：若
+\[
+  [(p,p,p,\ldots)]=[(q,q,q,\ldots)],
+\]
+则按 equivalence definition，对每个 \(\eps>0\)，eventually 有
+\[
+  |p-q|<\eps.
+\]
+若 \(p\ne q\)，取 \(\eps=|p-q|/2>0\)，就得到 \(|p-q|<|p-q|/2\)，矛盾。因此
+\(p=q\)。
+\end{solution}
+
+\begin{explanation}
+Cauchy construction 中的 real number 是 equivalence class。Rationals 进入这个
+quotient set 的方式是 constant representatives；不同 rationals 的 constant
+sequences 不会被 equivalence relation 合并。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 55]
+Find a few representatives of \(1/2\in\Q\) in the Cauchy-sequence construction.
+\end{exerciseblock}
+
+\begin{solution}
+以下 rational Cauchy sequences 都代表 \(1/2\)：
+\[
+  x_n=\frac12,\qquad
+  y_n=\frac12+\frac1n,\qquad
+  z_n=\frac12+\frac{(-1)^n}{n}.
+\]
+它们都是 Cauchy，因为 constant sequence 是 Cauchy，\(1/n\) 是 Cauchy，且 Cauchy
+sequences 的 sum 与 sign change 仍是 Cauchy。
+
+还要说明它们与 constant representative equivalent。对 \(y_n\)，给定
+\(\eps>0\)，取 \(N>1/\eps\)。若 \(n>N\)，则
+\[
+  \left|y_n-\frac12\right|=\frac1n<\eps.
+\]
+对 \(z_n\)，同样取 \(N>1/\eps\)，则
+\[
+  \left|z_n-\frac12\right|=\frac1n<\eps.
+\]
+所以这些 sequences 都属于 \(1/2\) 的 equivalence class。
+\end{solution}
+
+\begin{explanation}
+同一个 real number 可以有很多 representatives。只要 sequence 的 error 相对于
+\(1/2\) 趋向 \(0\)，它就在 constant \(1/2\) sequence 的 equivalence class 中。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 56]
+Show that every nonzero Cauchy-sequence real number has a multiplicative inverse.
+\end{exerciseblock}
+
+\begin{solution}
+设 \(x=[(x_n)]\ne[(0,0,0,\ldots)]\)。Nonzero 的意思是 \((x_n)\) 不 equivalent to
+zero sequence。因此存在 \(\eta>0\)，使得对每个 \(N\)，都能找到 \(n>N\) 满足
+\(|x_n|\geq\eta\)；否则 \(|x_n|\) 对每个 positive tolerance 最终都小于该
+tolerance，\((x_n)\) 就会 equivalent to zero。
+
+现在证明存在 \(N_0\) 使所有 \(n>N_0\) 都满足
+\[
+  |x_n|\geq\eta/2.
+\]
+因为 \((x_n)\) 是 Cauchy，取 \(N_1\) 使 \(m,n>N_1\) 时
+\[
+  |x_m-x_n|<\eta/2.
+\]
+由上一段，存在 \(k>N_1\) 满足 \(|x_k|\geq\eta\)。对任意 \(n>N_1\)，triangle
+inequality 给出
+\[
+  |x_n|\geq |x_k|-|x_n-x_k|>\eta-\eta/2=\eta/2.
+\]
+所以可取 \(N_0=N_1\)。
+
+定义 rational sequence
+\[
+  y_n=
+  \begin{cases}
+    0,& n\leq N_0,\\
+    1/x_n,& n>N_0.
+  \end{cases}
+\]
+若 \(m,n>N_0\)，则
+\[
+  |y_n-y_m|
+  =\left|\frac1{x_n}-\frac1{x_m}\right|
+  =\frac{|x_m-x_n|}{|x_nx_m|}
+  \leq \frac{4}{\eta^2}|x_m-x_n|.
+\]
+因为 \((x_n)\) is Cauchy，右边可任意小，所以 \((y_n)\) is Cauchy。
+
+最后，对 \(n>N_0\)，有 \(x_ny_n=1\)。因此 product sequence \((x_ny_n)\) 与
+constant sequence \((1,1,1,\ldots)\) 只在有限多个位置可能不同，二者 equivalent。
+于是
+\[
+  [(x_n)]\cdot[(y_n)]=[(1,1,1,\ldots)].
+\]
+所以 \(x\) 有 multiplicative inverse。
+\end{solution}
+
+\begin{explanation}
+核心难点是避免除以接近 \(0\) 的 terms。Nonzero equivalence class 保证某个 tail
+远离 \(0\)；有了这个 lower bound，reciprocal sequence 才会保持 Cauchy。
+\end{explanation}
+
+\section{Homework 8: ordered-field consequences}
+
+\begin{exerciseblock}[Homework 8 Problem 1]
+Trichotomy. Let \(A\in\R\). Prove exactly one of \(A>0^{\R}\), \(A=0^{\R}\),
+or \(A<0^{\R}\) holds.
+\end{exerciseblock}
+
+\begin{solution}
+Order on Dedekind cuts is total，因此对 \(A\) 与 \(0^{\R}\)，有
+\[
+  A\leq0^{\R}\quad\text{or}\quad0^{\R}\leq A.
+\]
+若两者同时成立，则 \(A\subseteq0^{\R}\) 且 \(0^{\R}\subseteq A\)，所以
+\(A=0^{\R}\)。
+
+若 \(0^{\R}\leq A\) 且 \(A\ne0^{\R}\)，则按 strict order definition，
+\[
+  A>0^{\R}.
+\]
+若 \(A\leq0^{\R}\) 且 \(A\ne0^{\R}\)，则
+\[
+  A<0^{\R}.
+\]
+三种情况至少有一种成立。
+
+它们不能同时成立：\(A>0^{\R}\) 与 \(A<0^{\R}\) 会给出
+\[
+  0^{\R}<A<0^{\R},
+\]
+违反 antisymmetry/transitivity；任一 strict inequality 也排除 equality。因此
+exactly one holds。
+\end{solution}
+
+\begin{explanation}
+Trichotomy 是 total order 的具体表现。先用 totality 得到可比较性，再用
+antisymmetry 把 double inclusion 识别成 equality，剩下的 proper inclusion 就是
+strict inequality。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 8 Problem 2]
+Multiplicative inverse. Let \(A\in\R\), \(A\ne0^{\R}\). Prove there exists a
+unique \(B\in\R\) such that \(A\cdot B=1^{\R}\).
+\end{exerciseblock}
+
+\begin{solution}
+先处理 \(A>0^{\R}\)。定义
+\[
+  B=\{q\in\Q:q<0\}\cup
+    \{q\in\Q:q>0\text{ and }q<1/c
+      \text{ for some }c\in\Q\setminus A,\ c>0\}.
+\]
+这个 \(B\) non-empty，因为包含所有 negative rationals；proper，因为若
+\(a\in A\) 且 \(a>0\)，则任何 \(q\geq1/a\) 都不能属于 \(B\)。Downward closed
+由 inequality \(u<q<1/c\) 继承。No maximum 分两类：negative element 可向右移动
+仍保持 negative，positive element \(q<1/c\) 可在 \(q\) 与 \(1/c\) 之间取 rational
+\(q'\)，仍满足 \(q'<1/c\)。所以 \(B\) 是 Dedekind cut。
+
+按照 positive cuts 的 multiplication definition，右半边的 elements \(c\notin A\)
+和 \(d\notin B\) 都是 positive boundary-side rationals。由 \(d\notin B\) 可得
+\[
+  d\geq 1/c
+\]
+对每个 positive \(c\notin A\) 成立，所以 \(cd\geq1\)。这说明所有 \(x<1\) 都在
+\(A\cdot B\)，即 \(1^{\R}\subseteq A\cdot B\)。
+
+反过来，先处理 \(x>1\)。选 positive \(a\in A\)。因为 \(x>1\)，有 \(a<xa\)。
+右半边 \(\Q\setminus A\) 非空，且 \(A\) 没有 maximum；用 rational density 可在
+boundary 右侧选 \(c\notin A\) 使
+\[
+  c/x\in A.
+\]
+令 \(d=x/c\)。若 \(e\in\Q\setminus A\) 且 \(e>0\)，则不能有 \(e<c/x\)，否则
+downward closed 会由 \(c/x\in A\) 推出 \(e\in A\)。所以 \(e\geq c/x\)，从而
+\[
+  d=\frac{x}{c}\geq \frac1e.
+\]
+这对每个 positive \(e\notin A\) 成立，故 \(d\notin B\)。同时 \(c\notin A\) 且
+\[
+  cd=x.
+\]
+按照 product cut 的 upper-side characterization，存在 \(c\notin A,d\notin B\)
+且 \(cd\leq x\)，所以 \(x\notin A\cdot B\)。于是所有 \(x>1\) 都不在 product cut。
+若 \(1\in A\cdot B\)，由于 \(A\cdot B\) has no maximum，会存在 \(y\in A\cdot B\)
+使 \(y>1\)，这与刚证明的结论矛盾。因此 \(1\notin A\cdot B\)。综上，
+\[
+  A\cdot B=1^{\R}.
+\]
+
+若 \(A<0^{\R}\)，则 \(-A>0^{\R}\)。按上半部分构造 \(C\) 使
+\[
+  (-A)C=1^{\R}.
+\]
+令 \(B=-C\)。由 sign rule for multiplication，
+\[
+  A B=A(-C)=(-A)C=1^{\R}.
+\]
+
+Uniqueness：若 \(AB=1^{\R}\) 且 \(AC=1^{\R}\)，则
+\[
+  B=B\cdot1^{\R}=B(AC)=(BA)C=(AB)C=1^{\R}C=C.
+\]
+因此 inverse unique。
+\end{solution}
+
+\begin{explanation}
+Positive case 的 construction 把 \(A\) 的右半边 \(c\) 反转成 \(1/c\) 的左半边。
+负数情况不用重新构造，只需先取 additive inverse 变成 positive cut，再把 inverse
+的 sign 反回来。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 8 Problem 3]
+Archimedean property. Let \(A,B\in\R\) be positive cuts. Prove that there exists
+an integer \(N\) such that \(N^{\R}\cdot A>B\).
+\end{exerciseblock}
+
+\begin{solution}
+反设对所有 \(N\in\N\)，都有
+\[
+  N^{\R}\cdot A\leq B.
+\]
+令
+\[
+  T=\{N^{\R}\cdot A:N\in\N\}.
+\]
+则 \(T\) non-empty 且 bounded above by \(B\)。由 completeness，存在
+\[
+  C=\sup T.
+\]
+因为 \(A>0^{\R}\)，有 \(C-A<C\)。若 \(C-A\) 仍是 \(T\) 的 upper bound，则由于
+\(C\) 是 least upper bound，应有 \(C\leq C-A\)，这与 \(A>0^{\R}\) 矛盾。因此
+\(C-A\) 不是 upper bound。于是存在 \(N\in\N\) 使
+\[
+  N^{\R}\cdot A>C-A.
+\]
+两边加 \(A\)，得
+\[
+  (N+1)^{\R}\cdot A>C.
+\]
+但 \((N+1)^{\R}\cdot A\in T\)，而 \(C\) 是 \(T\) 的 upper bound，矛盾。因此原
+假设不成立，存在 \(N\) 使 \(N^{\R}\cdot A>B\)。
+\end{solution}
+
+\begin{explanation}
+Archimedean property 的证明使用 completeness。如果所有 multiples 都被 \(B\) 压住，
+它们就有 supremum \(C\)。但从 \(C\) 往左减去一个 positive \(A\) 后不可能仍是
+upper bound，于是某个 multiple 超过 \(C-A\)，再加一次 \(A\) 就超过 \(C\)。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 8 Problem 4]
+Square root. Let \(A\in\R\) be non-negative. Prove there exists a unique
+non-negative \(B\in\R\) such that \(B\cdot B=A\).
+\end{exerciseblock}
+
+\begin{solution}
+若 \(A=0^{\R}\)，取 \(B=0^{\R}\) 即可。下面设 \(A>0^{\R}\)。定义
+\[
+  S=\{X\in\R: X\geq0^{\R}\text{ and }X^2\leq A\}.
+\]
+这个 set non-empty，因为 \(0^{\R}\in S\)。它 bounded above：由 Archimedean
+property，可取 integer \(N\) 使 \(N^{\R}>A+1^{\R}\)。若 \(X\geq N^{\R}\)，则
+\(X^2\geq N^{\R}X\geq N^{\R}>A\)，所以这样的 \(X\) 不在 \(S\)。因此 \(N^{\R}\)
+是 upper bound。由 completeness，令
+\[
+  B=\sup S.
+\]
+则 \(B\geq0^{\R}\)。
+
+证明 \(B^2=A\)。若 \(B^2<A\)，令差为 \(D=A-B^2>0\)。取 small positive rational
+\(h^{\R}\) 使
+\[
+  2Bh+h^2<D.
+\]
+则
+\[
+  (B+h)^2=B^2+2Bh+h^2<A,
+\]
+所以 \(B+h\in S\)，但 \(B+h>B\)，与 \(B\) 是 upper bound 矛盾。
+
+若 \(B^2>A\)，令 \(D=B^2-A>0\)。取 small positive rational \(h^{\R}\) 满足
+\[
+  0<h<B,\qquad 2Bh-h^2<D.
+\]
+则
+\[
+  (B-h)^2=B^2-2Bh+h^2>A.
+\]
+若 \(X\in S\)，则 \(X^2\leq A<(B-h)^2\)。因为 \(X,B-h\) non-negative，order 与
+multiplication 相容给 \(X\leq B-h\)。所以 \(B-h\) 是 \(S\) 的 upper bound，且
+\(B-h<B\)，与 \(B=\sup S\) 的 leastness 矛盾。因此只能有 \(B^2=A\)。
+
+Uniqueness：若 \(B,C\geq0^{\R}\) 且 \(B^2=C^2=A\)。若 \(B<C\)，则
+\[
+  0^{\R}<C-B,\qquad 0^{\R}\leq B+C,
+\]
+并且 \(B+C>0^{\R}\)。于是
+\[
+  0^{\R}<(C-B)(B+C)=C^2-B^2=0^{\R},
+\]
+矛盾。若 \(C<B\)，交换 \(B\) 与 \(C\) 的位置，同一段计算给出
+\[
+  0^{\R}<(B-C)(B+C)=B^2-C^2=0^{\R},
+\]
+也矛盾。所以既不能 \(B<C\)，也不能 \(C<B\)。由 trichotomy，只能 \(B=C\)。
+\end{solution}
+
+\begin{explanation}
+Square root existence 是 supremum method 的典型应用：把所有平方不超过 \(A\) 的
+non-negative numbers 收集起来，取它们的 supremum。若 supremum 的平方太小，可向右
+移动；若平方太大，可向左移动。两种移动都由 small rational perturbation 控制。
+\end{explanation}
+
+\begin{reviewbox}{Chapter checklist}
+本章需要掌握：total order, ordered field, upper/lower bound, supremum/infimum,
+completeness, \(\Q\) not complete, Dedekind cut 的 pair and one-set versions,
+rational cut embedding, cut order, addition, negative, multiplication, completeness
+by union, decimal expansion, irrational cut for \(\sqrt2\), sequence limit,
+Cauchy sequence quotient construction, and ordered-field consequences such as
+inverse, Archimedean property, and square roots。
+\end{reviewbox}

@@ -1,0 +1,292 @@
+\chapter{Midterm Problems as Final Review}
+\label{chap:midterm-review}
+
+Midterm solution 覆盖了 predicate logic, function graph, image and preimage, quotient construction of \(\Z\), supremum, finite induction on posets, and Von Neumann ordinals。以下每题都按照 final-review 的格式重写：Solution 给出完整推导，Explanation 说明证明路线和容易出错的位置。
+
+\begin{exerciseblock}[Midterm Problem 1]
+Express the following sentences using the language of predicate logic: injectivity of \(f:X\to Y\), partial order on \(X\), and equivalence relation on \(X\).
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item 函数 \(f:X\to Y\) is injective 的 predicate-logic 表达为
+  \[
+    \forall x_1\in X\,\forall x_2\in X\,
+    \bigl(f(x_1)=f(x_2)\to x_1=x_2\bigr).
+  \]
+  \item 关系 \(R\subseteq X\times X\) is a partial order 表示 \(R\) 同时 reflexive, antisymmetric, and transitive。用 \(xRy\) 表示 \((x,y)\in R\)，公式为
+  \[
+  \bigl(\forall x\in X\, xRx\bigr)
+  \land
+  \bigl(\forall x,y\in X\,((xRy\land yRx)\to x=y)\bigr)
+  \land
+  \bigl(\forall x,y,z\in X\,((xRy\land yRz)\to xRz)\bigr).
+  \]
+  \item 关系 \(R\subseteq X\times X\) is an equivalence relation 表示 \(R\) 同时 reflexive, symmetric, and transitive。公式为
+  \[
+  \bigl(\forall x\in X\, xRx\bigr)
+  \land
+  \bigl(\forall x,y\in X\,(xRy\to yRx)\bigr)
+  \land
+  \bigl(\forall x,y,z\in X\,((xRy\land yRz)\to xRz)\bigr).
+  \]
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+该题考查把 definitions 逐字翻译成 quantified formulas。Injective 的定义比较两个 domain elements；partial order 与 equivalence relation 的差别只在第二条性质：partial order 使用 antisymmetry，而 equivalence relation 使用 symmetry。写公式时必须注明 quantified variables 的 domain，否则 statement 的 truth value 依赖未说明的 universe。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 2]
+For each listed subset \(\Delta\subseteq X\times Y\), determine whether it is the graph of a function \(f:X\to Y\).
+\end{exerciseblock}
+
+\begin{solution}
+一个 subset \(\Delta\subseteq X\times Y\) 是某个函数 \(f:X\to Y\) 的 graph，当且仅当
+\[
+  \forall x\in X,\ \exists! y\in Y\ ((x,y)\in\Delta).
+\]
+
+\begin{enumerate}[label=(\alph*)]
+  \item \(X=\N\), \(Y=\Z\), \(\Delta=\{(n+10,n)\mid n\in\N\}\)。取 \(x=0\in\N\)。若存在 \(y\in\Z\) 使 \((0,y)\in\Delta\)，则存在 \(n\in\N\) 满足 \(0=n+10\)，即 \(n=-10\)，这与 \(n\in\N\) 矛盾。因此 existence 条件失败，所以不是 graph of a function \(X\to Y\)。
+  \item \(X=\Z\), \(Y=\Q\), \(\Delta=\{(n+10,n)\mid n\in\Z\}\)。给定 \(x\in\Z\)，令 \(n=x-10\in\Z\)，并取 \(y=n=x-10\in\Z\subseteq\Q\)。则 \((x,y)=(n+10,n)\in\Delta\)。若 \((x,y')\in\Delta\)，则存在 \(m\in\Z\) 使 \(x=m+10\) 且 \(y'=m\)。由 \(x=n+10=m+10\) 得 \(m=n\)，所以 \(y'=y\)。因此存在唯一 \(y\)，该 \(\Delta\) 是 graph。
+  \item \(X=\Q\), \(Y=\Q\), \(\Delta=\{(t^2,t^3)\mid t\in\Q\}\)。取输入 \(x=1\in\Q\)。当 \(t=1\) 时得到 \((1,1)\in\Delta\)；当 \(t=-1\) 时得到 \((1,-1)\in\Delta\)。同一输入 \(1\) 对应两个不同输出 \(1\) 与 \(-1\)，所以 uniqueness 条件失败。因此不是 graph。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+Graph test 有两个独立部分：每个 \(x\in X\) 至少有一个 output，以及至多有一个 output。Part (a) 失败在 existence；part (c) 失败在 uniqueness。Part (b) 成立，因为等式 \(x=n+10\) 对每个 \(x\in\Z\) 唯一确定 \(n=x-10\)。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 3]
+Let \(f:X\to Y\). Determine whether the usual image and preimage identities for unions and intersections are true.
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item 对所有 \(A,B\subseteq X\)，
+  \[
+    f(A\cup B)=f(A)\cup f(B)
+  \]
+  为真。若 \(y\in f(A\cup B)\)，则存在 \(x\in A\cup B\) 使 \(f(x)=y\)。若 \(x\in A\)，则 \(y\in f(A)\)；若 \(x\in B\)，则 \(y\in f(B)\)。故 \(y\in f(A)\cup f(B)\)。反向，若 \(y\in f(A)\cup f(B)\)，则 \(y=f(x)\) for some \(x\in A\) 或 \(x\in B\)。两种情况下 \(x\in A\cup B\)，所以 \(y\in f(A\cup B)\)。
+  \item 对所有 \(A,B\subseteq X\)，
+  \[
+    f(A\cap B)=f(A)\cap f(B)
+  \]
+  为假。取 \(X=\{1,2\}\), \(Y=\{0\}\)，并定义 \(f(1)=0=f(2)\)。令 \(A=\{1\}\), \(B=\{2\}\)。则 \(A\cap B=\varnothing\)，所以 \(f(A\cap B)=\varnothing\)。但 \(f(A)=\{0\}=f(B)\)，所以 \(f(A)\cap f(B)=\{0\}\)。两边不相等。
+  \item 对所有 \(A,B\subseteq Y\)，
+  \[
+    f^{-1}(A\cup B)=f^{-1}(A)\cup f^{-1}(B)
+  \]
+  为真。对任意 \(x\in X\)，
+  \[
+  x\in f^{-1}(A\cup B)
+  \Longleftrightarrow f(x)\in A\cup B
+  \Longleftrightarrow f(x)\in A\text{ or }f(x)\in B
+  \Longleftrightarrow x\in f^{-1}(A)\cup f^{-1}(B).
+  \]
+  由 Axiom of Extension 得两集合相等。
+  \item 对所有 \(A,B\subseteq Y\)，
+  \[
+    f^{-1}(A\cap B)=f^{-1}(A)\cap f^{-1}(B)
+  \]
+  为真。对任意 \(x\in X\)，
+  \[
+  x\in f^{-1}(A\cap B)
+  \Longleftrightarrow f(x)\in A\cap B
+  \Longleftrightarrow f(x)\in A\text{ and }f(x)\in B
+  \Longleftrightarrow x\in f^{-1}(A)\cap f^{-1}(B).
+  \]
+  由 Axiom of Extension 得两集合相等。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+Image 不一定 preserve intersections，因为两个不同 inputs 可以被同一个 function 送到同一个 output；这就是 part (b) counterexample 的机制。Preimage 的行为更稳定，因为 membership \(x\in f^{-1}(S)\) 完全等价于 \(f(x)\in S\)，所以 union 与 intersection 的逻辑结构可以逐字通过 \(\lor\) 和 \(\land\) 转换。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 4]
+State the construction of \(\Z\) as a quotient of \(\N^2\), define addition and multiplication, and prove commutativity and associativity.
+\end{exerciseblock}
+
+\begin{solution}
+在 \(\N^2\) 上定义 relation
+\[
+  (a,b)\sim(c,d)\quad\Longleftrightarrow\quad a+d=b+c.
+\]
+整数定义为 quotient set
+\[
+  \Z=\N^2/{\sim}.
+\]
+元素 \([(a,b)]\) 表示形式差 \(a-b\)。定义
+\[
+  [(a,b)]+[(c,d)]=[(a+c,b+d)]
+\]
+以及
+\[
+  [(a,b)]\cdot[(c,d)]=[(ac+bd,ad+bc)].
+\]
+
+Addition commutativity:
+\[
+[(a,b)]+[(c,d)]=[(a+c,b+d)]=[(c+a,d+b)]=[(c,d)]+[(a,b)].
+\]
+第二个等号使用 \(\N\) 中加法的 commutativity。
+
+Addition associativity:
+\[
+([(a,b)]+[(c,d)])+[(e,f)]
+=[((a+c)+e,(b+d)+f)]
+\]
+而
+\[
+[(a,b)]+([(c,d)]+[(e,f)])
+=[(a+(c+e),b+(d+f))].
+\]
+由于 \(\N\) 中 addition associative，两个 representatives 相同，所以两边相等。
+
+Multiplication commutativity:
+\[
+[(a,b)]\cdot[(c,d)]=[(ac+bd,ad+bc)].
+\]
+由 \(\N\) 中 multiplication and addition 的 commutativity，
+\[
+  ac+bd=ca+db,\qquad ad+bc=cb+da.
+\]
+因此
+\[
+[(ac+bd,ad+bc)]=[(ca+db,cb+da)]=[(c,d)]\cdot[(a,b)].
+\]
+
+Multiplication associativity 通过展开验证。左边为
+\[
+([(a,b)]\cdot[(c,d)])\cdot[(e,f)]
+=[((ac+bd)e+(ad+bc)f,\ (ac+bd)f+(ad+bc)e)].
+\]
+展开 components 得
+\[
+[(ace+bde+adf+bcf,\ acf+bdf+ade+bce)].
+\]
+右边为
+\[
+[(a,b)]\cdot([(c,d)]\cdot[(e,f)])
+=[(a(ce+df)+b(cf+de),\ a(cf+de)+b(ce+df))],
+\]
+展开得
+\[
+[(ace+adf+bcf+bde,\ acf+ade+bce+bdf)].
+\]
+由 \(\N\) 中 addition 的 commutativity and associativity，两对 components 分别相等，所以 integer multiplication associative。
+\end{solution}
+
+\begin{explanation}
+构造 \(\Z\) 的关键是 quotient construction：\((a,b)\) 不被看作 ordered pair 本身，而被看作 equivalence class。题目没有要求重新证明 well-definedness，但所有运算都必须写在 equivalence classes 上。乘法公式来自形式恒等式 \((a-b)(c-d)=(ac+bd)-(ad+bc)\)。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 5]
+Let \(f:\N\to\Q\) be defined by \(f(0)=1\) and \(f(n)=1+\frac12+\cdots+\frac1{2^n}\). Prove or disprove that \(f(\N)\) has a supremum in \(\Q\).
+\end{exerciseblock}
+
+\begin{solution}
+命题为真，并且
+\[
+  \sup_{\Q} f(\N)=2.
+\]
+对 \(n\in\N\)，有限 geometric series 给出
+\[
+  f(n)=\sum_{k=0}^{n}\frac1{2^k}
+  =\frac{1-(1/2)^{n+1}}{1-1/2}
+  =2-\frac1{2^n}.
+\]
+这里的 \(n=0\) 给出 \(2-1=1=f(0)\)，与定义相符。
+
+首先证明 \(2\) 是 upper bound。对任意 \(n\in\N\)，有 \(\frac1{2^n}>0\)，所以
+\[
+  f(n)=2-\frac1{2^n}<2.
+\]
+因此 \(2\) 是 \(f(\N)\) 的 upper bound。
+
+再证明它是 least upper bound。设 \(q\in\Q\) 是 upper bound。若 \(q<2\)，令 \(\varepsilon=2-q>0\)。由 Archimedean property，存在 \(n\in\N\) 使得
+\[
+  2^n>\frac1{\varepsilon}.
+\]
+于是 \(\frac1{2^n}<\varepsilon\)，从而
+\[
+  f(n)=2-\frac1{2^n}>2-\varepsilon=q.
+\]
+这与 \(q\) 是 upper bound 矛盾。因此每个 upper bound \(q\) 都满足 \(q\ge2\)。由于 \(2\in\Q\) 且 \(2\) 是 upper bound，得到 \(\sup_{\Q}f(\N)=2\)。
+\end{solution}
+
+\begin{explanation}
+Supremum proof 分成两部分：先证明 candidate 是 upper bound，再证明任何更小的数都不是 upper bound。这里的 sequence \(f(n)\) 从下方逼近 \(2\)。Archimedean property 的作用是把任意正距离 \(\varepsilon=2-q\) 转化成足够大的 \(2^n\)，使某一项超过 \(q\)。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 6]
+Let \((S,\le)\) be a partially ordered set such that every two-element subset has a unique supremum. Prove or disprove that every non-empty finite subset of \(S\) has a unique supremum.
+\end{exerciseblock}
+
+\begin{solution}
+命题为真。对 \(n\ge1\)，令 \(P(n)\) 表示：“每个有 \(n\) 个元素的 subset of \(S\) 都有 unique supremum。” 对 \(n\) 作 induction。
+
+Base case \(n=1\)。设 \(A=\{a\}\)。元素 \(a\) 是 \(A\) 的 upper bound，因为 \(a\le a\)。若 \(u\) 是任意 upper bound，则 \(a\le u\)。因此 \(a\) 是 least upper bound。若 \(s,t\) 都是 \(A\) 的 supremum，则 \(s\le t\) 且 \(t\le s\)，由 antisymmetry 得 \(s=t\)。故 \(P(1)\) 成立。
+
+Inductive step。假设 \(P(k)\) 成立，其中 \(k\ge1\)。令 \(A\subseteq S\) 且 \(|A|=k+1\)。取 \(a\in A\)，并令 \(B=A\setminus\{a\}\)。则 \(|B|=k\)，由 induction hypothesis，\(B\) 有 unique supremum，记为 \(s_B\)。由题设，pair \(\{s_B,a\}\) 有 unique supremum，记为 \(s\)。
+
+证明 \(s=\sup A\)。若 \(x\in A\)，则或者 \(x=a\)，或者 \(x\in B\)。当 \(x=a\) 时，由 \(s\) 是 \(\{s_B,a\}\) 的 upper bound 得 \(a\le s\)。当 \(x\in B\) 时，由 \(s_B=\sup B\) 得 \(x\le s_B\)，又由 \(s\) 是 \(\{s_B,a\}\) 的 upper bound 得 \(s_B\le s\)，所以 \(x\le s\)。因此 \(s\) 是 \(A\) 的 upper bound。
+
+若 \(t\) 是 \(A\) 的任意 upper bound，则 \(t\) 是 \(B\) 的 upper bound，故 \(s_B\le t\)。同时 \(a\le t\)。因此 \(t\) 是 \(\{s_B,a\}\) 的 upper bound。因为 \(s=\sup\{s_B,a\}\)，得 \(s\le t\)。所以 \(s\) 是 \(A\) 的 least upper bound。唯一性由 partial order 的 antisymmetry 得到。
+
+由 induction，所有 non-empty finite subsets of \(S\) 都有 unique supremum。
+\end{solution}
+
+\begin{explanation}
+题设只给出 pairwise supremum。要扩展到 finite subset，需要把 \(k+1\) 个元素拆成 \(k\) 个元素的 subset \(B\) 和一个额外元素 \(a\)。先对 \(B\) 取 supremum \(s_B\)，再对 pair \(\{s_B,a\}\) 取 supremum。证明的核心是检查这个新的 supremum 同时满足 upper bound 与 least 两个条件。
+\end{explanation}
+
+\begin{exerciseblock}[Midterm Problem 7]
+For Von Neumann ordinals, write \(0,1,2,3\), define successor, compute \(S(2)\), \(S(3)\), prove transitivity, and prove \(m\in n\Rightarrow m\subset n\).
+\end{exerciseblock}
+
+\begin{solution}
+Von Neumann construction 定义
+\[
+  0=\varnothing,\qquad S(x)=x\cup\{x\}.
+\]
+因此
+\[
+  1=S(0)=\{\varnothing\},
+\]
+\[
+  2=S(1)=\{\varnothing,\{\varnothing\}\},
+\]
+\[
+  3=S(2)=\{\varnothing,\{\varnothing\},\{\varnothing,\{\varnothing\}\}\}.
+\]
+继续计算：
+\[
+  S(2)=2\cup\{2\}=3,
+\]
+\[
+  S(3)=3\cup\{3\}
+  =\{\varnothing,\{\varnothing\},\{\varnothing,\{\varnothing\}\},
+  \{\varnothing,\{\varnothing\},\{\varnothing,\{\varnothing\}\}\}\}.
+\]
+
+证明每个由该方式构造的 \(n\) is transitive。定义 transitive 为
+\[
+  \forall y\in n\,\forall x\in y\ (x\in n).
+\]
+对 \(n\) 作 induction。Base case: \(0=\varnothing\) 没有元素 \(y\)，所以上述 universal implication 成立。
+
+Inductive step: 假设 \(n\) transitive，证明 \(S(n)=n\cup\{n\}\) transitive。取 \(y\in S(n)\) 且 \(x\in y\)。由 \(y\in n\cup\{n\}\)，有两种情况。若 \(y\in n\)，则由 \(n\) transitive 得 \(x\in n\)，从而 \(x\in S(n)\)。若 \(y=n\)，则 \(x\in n\)，从而 \(x\in S(n)\)。故 \(S(n)\) transitive。
+
+最后，设 \(m,n\) 是上述 numbers，且 \(m\in n\)。由于已经证明 \(n\) transitive，任取 \(x\in m\)。由 \(x\in m\) 且 \(m\in n\)，transitivity of \(n\) 给出 \(x\in n\)。因此
+\[
+  \forall x\,(x\in m\to x\in n),
+\]
+也就是 \(m\subset n\)。
+\end{solution}
+
+\begin{explanation}
+Von Neumann ordinal 的设计思想是让每个自然数等于所有更小自然数的集合。因此 membership \(m\in n\) 同时表达 order \(m<n\)。Transitivity 是这个设计的关键性质：若 \(m\in n\)，则 \(m\) 的所有元素也属于 \(n\)，所以 \(m\subset n\)。这正是 ordinal membership 能够模拟自然数顺序的原因。
+\end{explanation}

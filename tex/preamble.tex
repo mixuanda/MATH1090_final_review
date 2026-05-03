@@ -1,0 +1,91 @@
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[most]{tcolorbox}
+
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Kaiti SC}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black
+}
+
+\setlist[enumerate]{itemsep=0.35em,topsep=0.35em}
+\setlist[itemize]{itemsep=0.25em,topsep=0.25em}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\Pow}{\mathcal{P}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\emptystr}{\varnothing}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\graph}{\operatorname{graph}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\lub}{\operatorname{lub}}
+\newcommand{\glb}{\operatorname{glb}}
+\newcommand{\zeroR}{0^{\R}}
+\newcommand{\oneR}{1^{\R}}
+\newcommand{\card}[1]{\left|#1\right|}
+\newcommand{\setbuilder}[2]{\left\{\,#1\mid #2\,\right\}}
+\newcommand{\optional}{\texorpdfstring{$\star$}{*}}
+\newcommand{\source}[1]{\par\smallskip\noindent{\footnotesize\textcolor{black!55}{Source: #1}}\par\smallskip}
+
+\newtheoremstyle{reviewstyle}
+  {0.6em}{0.6em}{\normalfont}{}{\bfseries}{.}{0.5em}{}
+\theoremstyle{reviewstyle}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{example}[definition]{Example}
+\newtheorem{exerciseblock}[definition]{Exercise}
+
+\newenvironment{solution}
+  {\begin{proof}[Solution]}
+  {\end{proof}}
+
+\newenvironment{explanation}
+  {\begin{reviewbox}{Explanation}}
+  {\end{reviewbox}}
+
+\newtcolorbox{reviewbox}[1]{
+  colback=blue!3,
+  colframe=blue!45!black,
+  title=#1,
+  fonttitle=\bfseries,
+  breakable,
+  arc=2mm
+}
+
+\newtcolorbox{warningbox}[1]{
+  colback=red!3,
+  colframe=red!45!black,
+  title=#1,
+  fonttitle=\bfseries,
+  breakable,
+  arc=2mm
+}
+
+\newenvironment{guidance}
+  {\begin{reviewbox}{Guidance}}
+  {\end{reviewbox}}
+
+\newenvironment{warning}
+  {\begin{warningbox}{Common mistake}}
+  {\end{warningbox}}

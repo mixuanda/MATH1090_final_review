@@ -1,0 +1,689 @@
+\chapter{Sets, Functions, and Relations}
+\label{chap:sets-functions-relations}
+
+\section*{Final review orientation}
+
+本章按 source 重新整理 Lecture Notes Chapter 2 Sets、Lecture Notes Exercises 11--24、Worksheet 3、Homework 3、Homework 4，以及 Worksheet 5 Exercise 1。核心方法是 element chasing：证明 set equality 时证明两个 inclusions；证明 function 和 relation 性质时直接展开 definition；处理 quotient representatives 时检查 well-definedness。
+
+\section{Sets and basic constructions}
+
+A set 是一个 collection of things。若 \(x\) 是 \(A\) 的 element，写作 \(x\in A\)；否则写作 \(x\notin A\)。Set 不记录重复次数，因此 \(\{1,2,3\}=\{1,1,2,3\}\)。
+
+\begin{definition}[Axiom of Extension]
+\[
+A=B\quad\Longleftrightarrow\quad \forall x(x\in A\leftrightarrow x\in B).
+\]
+\end{definition}
+
+\begin{exerciseblock}[Lecture Notes Exercise 11]
+Prove that \(A\subset B\) and \(B\subset A\) imply \(A=B\)。
+\end{exerciseblock}
+
+\begin{solution}
+任取 \(x\)。若 \(x\in A\)，由 \(A\subset B\) 得 \(x\in B\)。若 \(x\in B\)，由 \(B\subset A\) 得 \(x\in A\)。所以 \(\forall x(x\in A\leftrightarrow x\in B)\)。By Axiom of Extension，\(A=B\)。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+常用 set operations 是
+\[
+A\cup B=\setbuilder{x}{x\in A\text{ or }x\in B},\qquad
+A\cap B=\setbuilder{x}{x\in A\text{ and }x\in B},
+\]
+\[
+A\setminus B=\setbuilder{x}{x\in A\text{ and }x\notin B}.
+\]
+若所有 sets 都在 universal set \(E\) 中，complement 写作 \(A^c=E\setminus A\)。Cartesian product 是
+\[
+A\times B=\setbuilder{(a,b)}{a\in A,\ b\in B}.
+\]
+
+\begin{exerciseblock}[Lecture Notes Exercise 12]
+If \(|A|=5\) and \(|B|=3\)，how many elements does \(A\times B\) have？
+\end{exerciseblock}
+
+\begin{solution}
+每个 \(a\in A\) 可与 \(3\) 个 \(b\in B\) 配成 ordered pairs，而 \(A\) 有 \(5\) 个 choices，所以
+\[
+|A\times B|=5\cdot 3=15.
+\]
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+Power set 是
+\[
+\calP(A)=\setbuilder{X}{X\subset A}.
+\]
+若 \(|A|=n\)，则 \(|\calP(A)|=2^n\)，因为每个 element 对一个 subset 有两种 choices：in or not in。Disjoint union 是
+\[
+A\sqcup B=(A\times\{1\})\cup(B\times\{2\}),
+\]
+tag 保留 element 的来源。Axiom of Comprehension 说：若 \(S\) 是 set，\(P\) 是 predicate，则
+\[
+\setbuilder{x\in S}{P(x)}
+\]
+is a set。
+
+\section{Algebra of sets}
+
+\begin{exerciseblock}[Lecture Notes Exercise 13]
+State and prove analogous properties for intersections。
+\end{exerciseblock}
+
+\begin{solution}
+对应 union laws，intersection laws 是
+\[
+A\cap E=A,\qquad A\cap B=B\cap A,\qquad
+A\cap(B\cap C)=(A\cap B)\cap C,
+\]
+\[
+A\cap A=A,\qquad
+A\subset B\Longleftrightarrow A\cap B=A.
+\]
+例如 associativity 可由 element chasing 证明：
+\[
+x\in A\cap(B\cap C)
+\Longleftrightarrow x\in A\land(x\in B\land x\in C)
+\]
+\[
+\Longleftrightarrow (x\in A\land x\in B)\land x\in C
+\Longleftrightarrow x\in(A\cap B)\cap C.
+\]
+其他 laws 同样展开 definitions 即可。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 14]
+Prove or disprove：
+\[
+(A\cap B)\cup C=A\cap(B\cup C)
+\]
+holds iff \(C\subset A\)。
+\end{exerciseblock}
+
+\begin{solution}
+先假设 equality holds。若 \(x\in C\)，则 \(x\in(A\cap B)\cup C\)。由 equality，\(x\in A\cap(B\cup C)\)，所以 \(x\in A\)。故 \(C\subset A\)。
+
+反过来假设 \(C\subset A\)。对任意 \(x\)，
+\[
+x\in(A\cap B)\cup C
+\Longleftrightarrow (x\in A\land x\in B)\lor x\in C.
+\]
+因为 \(x\in C\Rightarrow x\in A\)，上式等价于
+\[
+x\in A\land(x\in B\lor x\in C),
+\]
+也就是 \(x\in A\cap(B\cup C)\)。所以 equality holds。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+Complement laws 和 de Morgan's laws 在 universal set \(E\) 中成立：
+\[
+(A^c)^c=A,\quad \emptyset^c=E,\quad E^c=\emptyset,\quad
+A\cap A^c=\emptyset,\quad A\cup A^c=E,
+\]
+\[
+A\subset B\Longleftrightarrow B^c\subset A^c,
+\]
+\[
+(A\cup B)^c=A^c\cap B^c,\qquad (A\cap B)^c=A^c\cup B^c.
+\]
+
+\section{Functions}
+
+A function \(f:X\to Y\) 是 subset \(f\subset X\times Y\)，满足
+\[
+\forall x\in X,\ \exists!y\in Y\text{ such that }(x,y)\in f.
+\]
+Domain 是 \(X\)，target 是 \(Y\)。The graph of \(f\) is \(\setbuilder{(x,f(x))}{x\in X}\)。
+
+\begin{exerciseblock}[Lecture Notes Exercise 15]
+Given sets \(A,B\)，show that the set \(B^A\) of all functions \(A\to B\) exists。
+\end{exerciseblock}
+
+\begin{solution}
+每个 function \(A\to B\) 是 \(A\times B\) 的 subset，所以所有 candidates 都在 \(\calP(A\times B)\) 中。用 Comprehension 选出满足 function condition 的 subsets：
+\[
+B^A=\setbuilder{F\in\calP(A\times B)}{\forall a\in A,\ \exists!b\in B\text{ such that }(a,b)\in F}.
+\]
+因此 \(B^A\) exists。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 16]
+Give examples of functions。
+\end{exerciseblock}
+
+\begin{solution}
+\[
+\id_X:X\to X,\quad x\mapsto x
+\]
+是 identity function。
+\[
+f:\R\to\R,\quad f(x)=x^2
+\]
+是 function，因为每个 real input 有唯一 real output。
+\[
+g:\Z\to\Z,\quad g(n)=n+1
+\]
+也是 function。Non-example：
+\[
+R=\setbuilder{(x,y)\in\R^2}{y^2=x}
+\]
+不是 function \(\R\to\R\)，因为 \(x=1\) 有两个 outputs \(y=1,-1\)，而 \(x=-1\) 没有 real output。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+对于 \(f:X\to Y\)，image 和 preimage 是
+\[
+f(A)=\setbuilder{f(x)}{x\in A}\quad(A\subset X),
+\]
+\[
+f(X)=\setbuilder{y\in Y}{\exists x\in X,\ f(x)=y},
+\]
+\[
+f^{-1}(B)=\setbuilder{x\in X}{f(x)\in B}\quad(B\subset Y).
+\]
+Preimage 不要求 \(f\) invertible。若 \(f:X\to Y\)，\(g:Y\to Z\)，则
+\[
+(g\circ f)(x)=g(f(x)).
+\]
+
+\begin{exerciseblock}[Lecture Notes Exercise 17]
+Give examples and non-examples of injective and surjective functions。
+\end{exerciseblock}
+
+\begin{solution}
+\[
+f:\Z\to\Z,\quad f(n)=n+1
+\]
+is bijective。
+\[
+g:\R\to\R,\quad g(x)=x^2
+\]
+is neither injective nor surjective：\(g(1)=g(-1)\)，且 negative reals are not outputs。
+\[
+h:\R\to[0,\infty),\quad h(x)=x^2
+\]
+is surjective but not injective。
+\[
+k:[0,\infty)\to\R,\quad k(x)=x^2
+\]
+is injective but not surjective。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 18]
+Show that inverse function, if it exists, is unique。
+\end{exerciseblock}
+
+\begin{solution}
+Suppose \(g,h:Y\to X\) are both inverse functions of \(f:X\to Y\)。Then
+\[
+g\circ f=\id_X,\quad f\circ h=\id_Y.
+\]
+对任意 \(y\in Y\)，
+\[
+g(y)=g(\id_Y(y))=g(f(h(y)))=(g\circ f)(h(y))=\id_X(h(y))=h(y).
+\]
+所以 \(g=h\)。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 19]
+Show that inverse function exists iff \(f\) is bijective。
+\end{exerciseblock}
+
+\begin{solution}
+若 \(g=f^{-1}\) exists，且 \(f(x_1)=f(x_2)\)，apply \(g\) 得 \(x_1=x_2\)，所以 \(f\) injective。对任意 \(y\in Y\)，\(f(g(y))=y\)，所以 \(f\) surjective。
+
+反过来，若 \(f\) bijective，则对每个 \(y\in Y\)，surjectivity 给出至少一个 \(x\) 使 \(f(x)=y\)，injectivity 保证这个 \(x\) unique。定义 \(g(y)=x\)。于是 \(g\circ f=\id_X\) 且 \(f\circ g=\id_Y\)，所以 inverse exists。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\section{Cardinality, operations, and relations}
+
+Two sets \(X,Y\) have the same cardinality if there exists a bijection \(X\to Y\)。An \(n\)-ary operation on \(S\) is a function \(S^n\to S\)。
+
+A relation from \(X\) to \(Y\) is a subset \(R\subset X\times Y\)。写 \(xRy\) 表示 \((x,y)\in R\)。The domain of \(R\) 是出现过的 first coordinates，range 是出现过的 second coordinates。
+
+\begin{exerciseblock}[Lecture Notes Exercise 20]
+Find the domain and range of \(R=\setbuilder{(x,y)\in\Z\times\Z}{y^2=x}\)。
+\end{exerciseblock}
+
+\begin{solution}
+因为 \(x=y^2\)，domain 是 all integer squares：
+\[
+\dom(R)=\setbuilder{n^2}{n\in\Z}=\{0,1,4,9,\ldots\}.
+\]
+每个 \(y\in\Z\) 都与 \(x=y^2\) related，所以
+\[
+\ran(R)=\Z.
+\]
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+对于 relation \(R\subset X\times X\)，常见性质是：
+\[
+\text{reflexive: }\forall x,\ xRx,
+\]
+\[
+\text{symmetric: }\forall x,y,\ xRy\to yRx,
+\]
+\[
+\text{antisymmetric: }\forall x,y,\ xRy\land yRx\to x=y,
+\]
+\[
+\text{transitive: }\forall x,y,z,\ xRy\land yRz\to xRz.
+\]
+
+\begin{exerciseblock}[Lecture Notes Exercise 21]
+Give examples of relations satisfying or failing each property。
+\end{exerciseblock}
+
+\begin{solution}
+On \(\Z\)，usual equality \(=\) is reflexive, symmetric, antisymmetric, and transitive。
+
+Usual order \(\le\) on \(\Z\) is reflexive, antisymmetric, and transitive, but not symmetric。
+
+Relation \(xRy\) iff \(x-y\) is even is reflexive, symmetric, and transitive, but not antisymmetric，因为 \(1R3\) and \(3R1\)，但 \(1\ne3\)。
+
+Relation \(xRy\) iff \(x<y\) is transitive, but not reflexive and not symmetric。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\section{Partial orders and equivalence relations}
+
+A partial order is reflexive, antisymmetric, and transitive。Power set \(\calP(X)\) with \(\subset\) is a standard example。
+
+\begin{exerciseblock}[Lecture Notes Exercise 22]
+Let \(P=\{1,2,3\}\) and define \(a\preceq b\) if \(a\le b\), except also define \(1\preceq 3\) and \(3\preceq 1\)。Which property fails？
+\end{exerciseblock}
+
+\begin{solution}
+Antisymmetry fails。We have \(1\preceq 3\) and \(3\preceq 1\)，but \(1\ne3\)。因此这不是 partial order。
+Reflexivity 和 transitivity 不是这道题要指出的失败点；只要找到两个 distinct elements 互相 related，就已经违反 antisymmetry 的 definition。这里 \(1\) 与 \(3\) 正好给出 witness。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+An equivalence relation is reflexive, symmetric, and transitive。
+
+\begin{exerciseblock}[Lecture Notes Exercise 23]
+Give examples that fail one of each equivalence-relation property but satisfy the other two。
+\end{exerciseblock}
+
+\begin{solution}
+在 \(X=\{1,2\}\) 上：
+\begin{enumerate}[label=\arabic*.]
+  \item \(R=\{(1,1)\}\) is symmetric and transitive, but not reflexive。
+  \item \(R=\{(1,1),(2,2),(1,2)\}\) is reflexive and transitive, but not symmetric。
+  \item \(R=\{(1,1),(2,2),(3,3),(1,2),(2,1),(2,3),(3,2)\}\) on \(X=\{1,2,3\}\) is reflexive and symmetric, but not transitive，因为 \(1R2\) and \(2R3\)，but not \(1R3\)。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Lecture Notes Exercise 24]
+Show congruence modulo \(m\) is an equivalence relation。
+\end{exerciseblock}
+
+\begin{solution}
+令 \(m\in\Z\), \(m>0\)。定义 \(a\equiv b\pmod m\) iff \(m\mid(a-b)\)。
+
+Reflexive：\(a-a=0=m\cdot0\)，所以 \(a\equiv a\pmod m\)。
+
+Symmetric：若 \(m\mid(a-b)\)，则 \(a-b=mk\)。于是 \(b-a=m(-k)\)，所以 \(m\mid(b-a)\)。
+
+Transitive：若 \(a-b=mk\)，\(b-c=m\ell\)，则
+\[
+a-c=(a-b)+(b-c)=m(k+\ell),
+\]
+所以 \(a\equiv c\pmod m\)。因此 congruence modulo \(m\) is an equivalence relation。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+若 \(R\) 是 equivalence relation，equivalence class 是
+\[
+[x]_R=\setbuilder{y}{xRy},
+\]
+quotient set \(X/R\) 是 all equivalence classes 的 set。
+
+\section{Worksheet 3: sets and functions}
+
+\begin{exerciseblock}[Worksheet 3 Exercise 1]
+Ten students go hiking. Seven use sunscreen, six wear a hat, and two use no sun protection. How many use both？
+\end{exerciseblock}
+
+\begin{solution}
+设 \(S\) 为 sunscreen users，\(H\) 为 hat wearers。两人没有任何 sun protection，所以
+\[
+|S\cup H|=10-2=8.
+\]
+By inclusion-exclusion，
+\[
+|S\cap H|=|S|+|H|-|S\cup H|=7+6-8=5.
+\]
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 3 Exercise 2]
+Draw Venn diagrams for four configurations。
+\end{exerciseblock}
+
+\begin{solution}
+本讲义用 set-language 描述 diagrams：
+\begin{enumerate}[label=\arabic*.]
+  \item \(A\subset B,\ C\subset B,\ A\cap C=\emptyset\)：在 \(B\) 内放两个 disjoint nonempty regions \(A,C\)。
+  \item \(A\cap B\ne\emptyset,\ A\cap C\ne\emptyset,\ B\cap C\ne\emptyset,\ A\cap B\cap C=\emptyset\)：三对相交，但中央 triple intersection 留空。
+  \item \(A\subset(B\cap C),\ B\subset C\)：画 \(B\) 在 \(C\) 内，\(A\) 在 \(B\) 内。
+  \item \(A\subset(B\cup C)\)，但 \(A\not\subset B\) 且 \(A\not\subset C\)：让 \(A\) 横跨 \(B\) 与 \(C\) 的两个区域，并且不超出 \(B\cup C\)。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 3 Exercise 3]
+Construct functions with left/right inverses, and prove finite same-set case。
+\end{exerciseblock}
+
+\begin{solution}
+Let \(X=\{a,b,c\}\), \(Y=\{\alpha,\beta,\gamma,\delta\}\)。
+
+Define \(f_1:X\to Y\) by \(a\mapsto\alpha\), \(b\mapsto\beta\), \(c\mapsto\gamma\)。It is injective, so it has a left inverse \(l:Y\to X\)，例如 \(l(\alpha)=a,l(\beta)=b,l(\gamma)=c,l(\delta)=a\)。It has no right inverse because it is not surjective。
+
+Define \(f_2:Y\to X\) by \(\alpha\mapsto a,\beta\mapsto b,\gamma\mapsto c,\delta\mapsto c\)。It is surjective, so it has a right inverse \(r:X\to Y\)，例如 \(r(a)=\alpha,r(b)=\beta,r(c)=\gamma\)。It has no left inverse because it is not injective。
+
+Now let \(g:X\to X\) and suppose \(h\circ g=\id_X\)。Then \(g\) is injective。Because \(X\) is finite and \(g:X\to X\) is injective, \(g\) is also surjective。Hence for each \(x\in X\)，there exists \(y\) with \(g(y)=x\)。Then
+\[
+g(h(x))=g(h(g(y)))=g(y)=x.
+\]
+So \(g\circ h=\id_X\)，and \(h\) is also a right inverse。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 3 Exercise 4]
+Construct a bijection between \(\N\) and \(\Z\)。
+\end{exerciseblock}
+
+\begin{solution}
+Define \(f:\N\to\Z\) by
+\[
+f(n)=
+\begin{cases}
+n/2,& n\text{ is even},\\
+-(n+1)/2,& n\text{ is odd}.
+\end{cases}
+\]
+Thus
+\[
+0\mapsto0,\quad 1\mapsto-1,\quad 2\mapsto1,\quad 3\mapsto-2,\quad 4\mapsto2,\ldots
+\]
+Every nonnegative integer \(k\) is hit by \(2k\)，and every negative integer \(-k\) with \(k\ge1\) is hit by \(2k-1\)。These preimages are unique, so \(f\) is bijective。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Worksheet 3 Exercise 5]
+Construct an injection \(f:\N\times\N\to\N\)。
+\end{exerciseblock}
+
+\begin{solution}
+Define
+\[
+f(a,b)=2^a3^b.
+\]
+If \(2^a3^b=2^c3^d\)，unique prime factorization gives \(a=c\) and \(b=d\)。Hence \(f\) is injective。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\section{Homework 3: sets and functions}
+
+\begin{exerciseblock}[Homework 3 Problem 1]
+Does there have to exist a bijection between \(A\cup(B\times C)\) and \((A\cup B)\times(A\cup C)\)？
+\end{exerciseblock}
+
+\begin{solution}
+No。取 \(A=\{a\}\)，\(B=C=\emptyset\)。Then
+\[
+A\cup(B\times C)=\{a\}
+\]
+has one element，而
+\[
+(A\cup B)\times(A\cup C)=\{a\}\times\{a\}=\{(a,a)\}
+\]
+也有 one element，这个例子还不反驳。改取 \(A=\{a\}\)，\(B=\{b\}\)，\(C=\emptyset\)。Then
+\[
+A\cup(B\times C)=\{a\}
+\]
+has one element，而
+\[
+(A\cup B)\times(A\cup C)=\{a,b\}\times\{a\}
+\]
+has two elements。Finite sets cardinalities different，所以 no bijection。
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 3 Problem 2]
+Let \(f(x)=x+1\), \(g(x)=x^2\), \(h(x)=x-7\)。Calculate compositions。
+\end{exerciseblock}
+
+\begin{solution}
+\[
+(f\circ f)(x)=x+2,\quad (f\circ g)(x)=x^2+1,\quad (f\circ h)(x)=x-6.
+\]
+\[
+(g\circ f)(x)=(x+1)^2,\quad (g\circ g)(x)=x^4,\quad (g\circ h)(x)=(x-7)^2.
+\]
+\[
+(h\circ f)(x)=x-6,\quad (h\circ g)(x)=x^2-7,\quad (h\circ h)(x)=x-14.
+\]
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 3 Problem 3]
+Classify three functions as injective or surjective。
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item \(X=\{0,1,3,5\}\), \(Y=\{5,7,11\}\)，\(f(0)=7,f(1)=5,f(3)=11,f(5)=5\)。Not injective，因为 \(1,5\) both map to \(5\)。Surjective，因为 \(5,7,11\) 都被 hit。
+  \item \(X=\{-2,-1,0,1,2\}\), \(Y=\Z\)，\(f(x)=x^5+3x+1\)。Not surjective，因为 finite domain cannot hit all \(\Z\)。It is injective on \(X\)，因为 \(x^5+3x+1\) is strictly increasing on these ordered inputs。
+  \item \(X=\Z\), \(Y=\Z\)，\(f(x)=x^2+x=x(x+1)\)。Not injective，因为 \(f(0)=f(-1)=0\)。Not surjective，因为 \(x(x+1)\) is always even, so no odd integer is hit。
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\begin{exerciseblock}[Homework 3 Problem 4]
+Is symmetric difference associative？
+\end{exerciseblock}
+
+\begin{solution}
+Yes。For any element \(x\)，\(x\in A\triangle B\) iff \(x\) belongs to exactly one of \(A,B\)。Therefore \(x\in(A\triangle B)\triangle C\) iff \(x\) belongs to an odd number of the sets \(A,B,C\)。The same condition describes \(x\in A\triangle(B\triangle C)\)。Thus
+\[
+(A\triangle B)\triangle C=A\triangle(B\triangle C).
+\]
+\end{solution}
+
+\begin{explanation}
+本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+\end{explanation}
+
+\section{Homework 4: relations}
+
+\begin{exerciseblock}[Homework 4 Problem 1]
+Let \(X=\calP(\{1,2,3,4\})\). Define \(xRy\) iff \(x\cap y=\emptyset\). Determine whether \(R\) is reflexive, symmetric, transitive, and antisymmetric.
+\end{exerciseblock}
+
+\begin{solution}
+Reflexivity fails. It would require \(xRx\) for every \(x\in X\), which means \(x\cap x=\emptyset\). Since \(x\cap x=x\), the choice \(x=\{1\}\) gives \(x\cap x=\{1\}\neq\emptyset\).
+
+Symmetry holds. If \(xRy\), then \(x\cap y=\emptyset\). Since intersection is commutative,
+\[
+y\cap x=x\cap y=\emptyset,
+\]
+so \(yRx\).
+
+Transitivity fails. Let \(x=\{1\}\), \(y=\emptyset\), and \(z=\{1\}\). Then \(x\cap y=\emptyset\) and \(y\cap z=\emptyset\), so \(xRy\) and \(yRz\). But \(x\cap z=\{1\}\neq\emptyset\), so \(xRz\) is false.
+
+Antisymmetry fails. Let \(x=\{1\}\) and \(y=\{2\}\). Then \(x\cap y=\emptyset\) and \(y\cap x=\emptyset\), so \(xRy\) and \(yRx\), but \(x\neq y\).
+\end{solution}
+
+\begin{explanation}
+Disjointness is naturally symmetric because \(x\cap y=y\cap x\). It does not force equality, so antisymmetry fails, and it does not compose through a middle set, so transitivity fails. Each failed universal property is disproved by one explicit counterexample.
+\end{explanation}
+
+\begin{exerciseblock}[Homework 4 Problem 2]
+For the Chinese-character component partial order, describe the Hasse diagram for the listed set \(X\).
+\end{exerciseblock}
+
+\begin{solution}
+The Hasse diagram is specified by cover relations. Under the component interpretation in the prompt, the covers are:
+\begin{itemize}
+  \item 人 \(\prec\) 化, 匕 \(\prec\) 化, 化 \(\prec\) 花.
+  \item 木 \(\prec\) 林, 林 \(\prec\) 森, 人 \(\prec\) 休, 木 \(\prec\) 休.
+  \item 木 \(\prec\) 相, 目 \(\prec\) 相, 相 \(\prec\) 想, 心 \(\prec\) 想.
+  \item 日 \(\prec\) 明, 言 \(\prec\) 語, 口 \(\prec\) 語.
+  \item 女 \(\prec\) 媚, 目 \(\prec\) 媚.
+\end{itemize}
+Every edge points from a smaller component to a character containing that component. Transitive edges are omitted. For example, 木 \(\preceq\) 相 \(\preceq\) 想 implies 木 \(\preceq\) 想, but 木 \(\prec\) 想 is not drawn as a cover.
+\end{solution}
+
+\begin{explanation}
+A Hasse diagram records cover relations, not every comparable pair. The interpretation of components can depend on how finely a character is decomposed; this solution follows the examples in the prompt and records the diagram as a precise mathematical list of covers.
+\end{explanation}
+
+\begin{exerciseblock}[Homework 4 Problem 3]
+For each listed relation on \(\Z\), decide whether it is an equivalence relation, and list the equivalence classes when it is.
+\end{exerciseblock}
+
+\begin{solution}
+\begin{enumerate}[label=(\alph*)]
+  \item \(xRy\) iff \(x-y\) is odd. This is not reflexive, because \(x-x=0\) is not odd.
+  \item \(xRy\) iff \(x+y\) is even. This is an equivalence relation. Reflexivity holds because \(x+x=2x\) is even. Symmetry holds because \(x+y=y+x\). For transitivity, if \(x+y\) and \(y+z\) are even, then \(x\) has the same parity as \(y\), and \(y\) has the same parity as \(z\), so \(x\) has the same parity as \(z\), which means \(x+z\) is even. The classes are \(2\Z\) and \(2\Z+1\).
+  \item \(xRy\) iff \(x+y=0\). This is not reflexive, because \(1+1\neq0\).
+  \item \(xRy\) iff \(x|y|=|x|y\). This is not transitive: \(1R0\) and \(0R(-1)\), but \(1R(-1)\) is false because \(1|-1|=1\) while \(|1|(-1)=-1\).
+\end{enumerate}
+\end{solution}
+
+\begin{explanation}
+Equivalence relation requires reflexive, symmetric, and transitive all at once. Part (b) is equality of parity, so the quotient has exactly two classes: even integers and odd integers. The other parts fail by direct counterexample to a required universal property.
+\end{explanation}
+
+\begin{exerciseblock}[Homework 4 Problem 4]
+Let \(A=\{1,2,3\}\), and let \(X\) be all bijections \(A\to A\). Define \(fRg\) iff there exists \(h\in X\) such that \(h\circ f=g\circ h\). Count \(X\), prove \(R\) is an equivalence relation, and describe the classes.
+\end{exerciseblock}
+
+\begin{solution}
+\(X=S_3\), so \(|X|=3!=6\). The equation \(h\circ f=g\circ h\) is equivalent to
+\[
+g=h\circ f\circ h^{-1}.
+\]
+Thus \(R\) is conjugacy in \(S_3\).
+
+Reflexivity: take \(h=\id_A\). Symmetry: if \(g=hfh^{-1}\), then \(f=h^{-1}gh\). Transitivity: if \(g=hfh^{-1}\) and \(k=\ell g\ell^{-1}\), then
+\[
+k=\ell(hfh^{-1})\ell^{-1}=(\ell h)f(\ell h)^{-1}.
+\]
+So \(R\) is an equivalence relation.
+
+The classes are classified by cycle type:
+\[
+\{\id\},\qquad \{(12),(13),(23)\},\qquad \{(123),(132)\}.
+\]
+\end{solution}
+
+\begin{explanation}
+The relation says two permutations are the same after relabeling the underlying set. Relabeling preserves cycle type, and in \(S_3\) the only cycle types are identity, transposition, and three-cycle.
+\end{explanation}
+
+\begin{exerciseblock}[Homework 4 Problem 5]
+Solve the previous problem for \(A=\{1,2,3,4\}\).
+\end{exerciseblock}
+
+\begin{solution}
+\(X=S_4\), so \(|X|=4!=24\). The same conjugacy proof from Homework 4 Problem 4 shows that \(R\) is an equivalence relation.
+
+The conjugacy classes are classified by cycle type:
+\[
+\{\id\},
+\]
+\[
+\{(12),(13),(14),(23),(24),(34)\},
+\]
+\[
+\{(12)(34),(13)(24),(14)(23)\},
+\]
+\[
+\{(123),(132),(124),(142),(134),(143),(234),(243)\},
+\]
+\[
+\{(1234),(1243),(1324),(1342),(1423),(1432)\}.
+\]
+The class sizes are \(1,6,3,8,6\), and their sum is \(24\).
+\end{solution}
+
+\begin{explanation}
+Conjugacy in a symmetric group is relabeling. Relabeling cannot change cycle lengths, and any two permutations with the same cycle lengths are conjugate. Therefore the classes correspond to the partitions of \(4\): \(1+1+1+1\), \(2+1+1\), \(2+2\), \(3+1\), and \(4\).
+\end{explanation}
