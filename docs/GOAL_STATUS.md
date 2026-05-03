@@ -2,7 +2,7 @@
 
 ## Current Goal State
 
-Ready for commit and push. The repository has been initialized on `main` and connected to `git@github.com:mixuanda/MATH1090_final_review.git`. The authored LaTeX project now builds a textbook-like Chinese MATH1090 final-review PDF with English mathematical terminology, exact exercise coverage, and per-exercise `Solution` plus `Explanation` structure.
+Completed and published. The repository is initialized on `main`, tracks `origin/main`, and has been pushed to `git@github.com:mixuanda/MATH1090_final_review.git`. The authored LaTeX project builds a textbook-like Chinese MATH1090 final-review PDF with English mathematical terminology, exact exercise coverage, and per-exercise `Solution` plus `Explanation` structure.
 
 ## Completed Deliverables
 
@@ -35,6 +35,10 @@ Ready for commit and push. The repository has been initialized on `main` and con
   - Result: passed with no matches.
 - `git status --short --ignored`
   - Result: tracked candidates are authored project files only; `reference/`, `build/`, and LaTeX auxiliary files remain ignored.
+- `git push -u origin main`
+  - Result: passed.
+- `git ls-remote origin main`
+  - Result: passed; remote `refs/heads/main` resolved to the pushed branch.
 
 ## Known Non-Blocking Build Warnings
 
@@ -43,4 +47,4 @@ Ready for commit and push. The repository has been initialized on `main` and con
 
 ## Remaining Action
 
-Commit the authored files and `main.pdf`, push `main` to `origin`, and verify the remote branch.
+No remaining required action for this round. Future rounds should rerun `python3 scripts/qa_exercise_coverage.py` after edits and then rebuild `main.pdf`.

@@ -27,8 +27,8 @@ Objective: create and publish a textbook-like Chinese MATH1090 final-review note
 - [x] `latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex` passes.
 - [x] LaTeX log has no missing-character, undefined-control-sequence, runaway-argument, fatal, or emergency-stop errors.
 - [x] Git status contains only intentional authored files; `reference/`, `build/`, and auxiliary LaTeX files remain ignored.
-- [ ] Changes are committed and pushed to `git@github.com:mixuanda/MATH1090_final_review.git`.
-- [ ] Remote `origin/main` is verified after push.
+- [x] Changes are committed and pushed to `git@github.com:mixuanda/MATH1090_final_review.git`.
+- [x] Remote `origin/main` is verified after push.
 
 ## Evidence Commands
 
