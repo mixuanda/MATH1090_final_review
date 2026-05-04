@@ -2,7 +2,7 @@
 
 ## Current Goal State
 
-Refinement round completed locally and ready to publish. The repository is initialized on `main`, tracks `origin/main`, and targets `git@github.com:mixuanda/MATH1090_final_review.git`. This round deepens the textbook-style exposition, especially later theorem and definition sections, and replaces repeated or thin exercise explanations with item-specific method guidance.
+Refinement round completed and published. The repository is initialized on `main`, tracks `origin/main`, and has been pushed to `git@github.com:mixuanda/MATH1090_final_review.git`. This round deepens the textbook-style exposition, especially later theorem and definition sections, and replaces repeated or thin exercise explanations with item-specific method guidance.
 
 ## Completed Deliverables
 
@@ -42,8 +42,10 @@ Refinement round completed locally and ready to publish. The repository is initi
   - Result: passed with no matches.
 - `git status --short --ignored`
   - Result: tracked candidates are authored project files only; `reference/`, `build/`, and LaTeX auxiliary files remain ignored.
-- Publish step
-  - Result: pending for this refinement commit.
+- `git push`
+  - Result: passed.
+- `git ls-remote origin main`
+  - Result: passed; remote `refs/heads/main` resolved to the pushed refinement branch.
 
 ## Known Non-Blocking Build Warnings
 
@@ -52,4 +54,4 @@ Refinement round completed locally and ready to publish. The repository is initi
 
 ## Remaining Action
 
-Commit the refinement, push `main` to `origin`, and verify the remote branch.
+No remaining required action for this round. Future rounds should rerun `python3 scripts/qa_exercise_coverage.py` after edits and then rebuild `main.pdf`.
