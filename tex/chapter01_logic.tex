@@ -57,7 +57,7 @@ F\lor G\lor H.
 \end{solution}
 
 \begin{explanation}
-Exercise 1 是 open-ended。关键不是猜唯一答案，而是每个 formula 都要对应一个明确 English assumption。最后两个 formulas 使用额外 background assumptions，写答案时必须说明。
+本题的 key idea 是把 English dependency 翻译成 implication：先找出 ``if'' 后面的 condition 作为 antecedent，再把被迫发生的 statement 放在 consequent。做类似 translation exercise 时，不要把没有写出的 background assumption 偷偷放进 formula；若要使用 ``at least one suspect'' 或 ``exactly one murderer''，必须像本解答一样额外声明。排他性条件通常要写成 pairwise exclusion，而不是只写一个含糊的 English sentence。
 \end{explanation}
 
 \section{Truth tables and logical equivalence}
@@ -144,7 +144,7 @@ T&T&T&T
 \end{solution}
 
 \begin{explanation}
-证明 logical equivalence 的标准方法是比较 final columns。三变量 laws 需要八行 truth table；若两边每一行都相同，就说明它们定义同一个 truth function。
+本题的 key idea 是：logical equivalence 比较的是两个 formulas 在所有 truth assignments 下的 final columns，而不是某一行的 coincidence。做类似 truth-table proof 时，先列 variables，再按 connectives 的依赖顺序增加 intermediate columns；两变量 formulas 有四行，三变量 formulas 有八行。若 final columns 每一行相同，就得到 equivalence；若有一行不同，那一行就是 counterexample。
 \end{explanation}
 
 \section{Valid deductions}
@@ -169,7 +169,7 @@ A\to B,\quad B\to C,\quad \therefore A\to C
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 validity test：不能只检查 conclusion 是否有时 true，而要排除 ``premises 全 true 但 conclusion false'' 的 row。第一条是 hypothetical syllogism，沿着 \(A\to B\) 和 \(B\to C\) 把 \(A\) 的 truth 传到 \(C\)。第二条是 modus tollens 的形式；做类似题时，可以假设 conclusion false，然后看 premises 是否被迫互相冲突，若冲突则 deduction valid。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 4]
@@ -194,7 +194,7 @@ premise true 的唯一 row 是 \(A=T,B=F\)，所以 conclusion \(A\) 必然 true
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 disjunctive syllogism：\((A\lor B)\) 说明至少一个 disjunct true，而 \(\lnot B\) 排除了 \(B\)，所以剩下的 \(A\) 必须 true。做类似 validity exercise 时，truth table 不一定要解释所有 rows；重点是筛出所有 premises 同时 true 的 rows，再检查 conclusion 在这些 rows 中是否全部 true。若找到一行 premises true、conclusion false，就立刻得到 invalid。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 5]
@@ -216,7 +216,7 @@ A\to B,\qquad B\to C,\qquad C\to A
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是三条 implications 组成一个 cycle，cycle 会把一个 variable 的 truth value 传回自己并迫使 \(A,B,C\) 同真或同假。做类似 equivalence proof 时，要先消除 notation ambiguity；这里把 chained biconditional 读成 \((A\leftrightarrow B)\land(B\leftrightarrow C)\)。然后证明 two directions：cycle implications 推出 same truth value；same truth value 又保证每条 implication 都为 true。
 \end{explanation}
 
 \section{Tautology and contradiction}
@@ -240,7 +240,7 @@ Formula 若每一行都 true，称为 tautology；若每一行都 false，称为
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 proposition 必须在给定语境下有 definite truth value。做类似 classification 时，对每个 sentence 问两个问题：它是不是 assertion，而不是 command/question；其中的 variables 和 domain 是否已经固定。像 \(x+1=3\) 这种 open sentence 要等 \(x\) 被指定后才可能成为 proposition。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 2]
@@ -256,7 +256,7 @@ Formula 若每一行都 true，称为 tautology；若每一行都 false，称为
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是按 main connective 翻译整句。做类似 connective translation 时，\(\land\) 读作 both，\(\lor\) 在本课程中读作 inclusive or，\(\lnot\) 改变 truth value，\(\to\) 把 left side 作为 condition，\(\leftrightarrow\) 表示 if and only if。遇到复杂 formula 时，先用 parentheses 找 main connective，再逐层翻译 subformulas。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 3]
@@ -271,7 +271,7 @@ P\land Q,\qquad P\land\lnot Q,\qquad Q\to P,\qquad Q\leftrightarrow P.
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 English word order 不一定等于 formula 中 \(P,Q\) 的顺序，尤其是 conditional。``If the homework is graded, then it is submitted'' 的 antecedent 是 graded，所以写 \(Q\to P\)。做类似 translation exercise 时，先给每个 atomic statement 标号，再标出 and、not、if、only if、if and only if 这些 signal words，最后按 signal word 组合成 Boolean formula。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 4]
@@ -292,7 +292,7 @@ T&T&F&T&T&T&T&T
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 truth table 要按 subformula 的 construction order 填。做类似 computation 时，先列出 \(P,Q\) 的四个 truth assignments，再填 \(\lnot P\)、\(P\land Q\)、\(Q\to P\) 这类 intermediate columns，最后才填 compound formula。Implication column 的唯一 false case 是 antecedent true 且 consequent false，这个规则能快速检查 \(P\to Q\) 和 \(P\to(Q\to P)\)。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 5]
@@ -312,7 +312,7 @@ P\to Q\text{ is neither}.
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 classification 取决于 final column 的整体形状：all true 是 tautology，all false 是 contradiction，mixed true/false 是 neither。做类似题时，先找是否存在 forced pattern，例如 \(P\lor\lnot P\) 每个 row 总有一边 true，\(P\land\lnot P\) 每个 row 总有一边 false。若公式不是这种 fixed pattern，就找一行 true 和一行 false 来证明它是 neither。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 6]
@@ -324,7 +324,7 @@ P\to Q\text{ is neither}.
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 implication \(P\to Q\) 不 assert \(P\)，它只禁止 \(P=T,Q=F\) 这一种情况。做类似解释题时，要区分 statement 本身和它的 antecedent 是否真的发生；\(P=F\) 的 rows 会让 implication true，这叫 vacuous truth。用现实例子检查时，只需问：有没有 ``下雨但地面不湿'' 的情况；有的话 formula false，没有的话 formula true。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 7]
@@ -343,7 +343,7 @@ P\to Q,\quad \lnot P,\quad \therefore \lnot Q
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 invalid deduction 只需要一个 counterexample row。Affirming the consequent 和 denying the antecedent 都犯了同一个错误：从 \(Q\) 或 \(\lnot P\) 回推 \(P\) 或 \(\lnot Q\)，但 implication 没有给出这种 reverse information。做类似 validity 反例时，目标是让 premises true、conclusion false；这里 \(P=F,Q=T\) 同时满足这两个 fallacies 的 premises。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 8]
@@ -360,7 +360,7 @@ P\to Q\equiv\lnot P\lor Q,\quad
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是把 known equivalences 当作 rewrite rules，但每一步仍然要保留相同 truth function。\(P\to Q\) 可改写为 \(\lnot P\lor Q\)，因为两者唯一 false row 都是 \(P=T,Q=F\)。De Morgan's laws 的类似题可以用 English 检查：``not at least one'' 变成 ``both not''，``not both'' 变成 ``at least one not''。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 1 Exercise 9]
@@ -382,7 +382,7 @@ Negate and simplify \(P\land Q\), \(P\lor Q\), \(P\to Q\), \(P\leftrightarrow Q\
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 negation simplification 要把 outer negation 推到 atomic variables 附近。做类似题时，先识别 main connective：negating conjunction 用 de Morgan's law 变成 disjunction，negating disjunction 变成 conjunction，negating implication 保留它 false 的唯一 row \(P\land\lnot Q\)。Negating biconditional 则表示 truth values different，所以可写成两个 asymmetric cases 的 disjunction。
 \end{explanation}
 
 \section{Homework 1: propositional logic}
@@ -408,7 +408,7 @@ A\to(B\land\lnot C),
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是先用 precedence 加 parentheses，再把 main connective 翻译成 English。做类似 parsing exercise 时，不要直接从左到右读；先处理 \(\lnot\)，再处理 \(\land,\lor\)，最后处理 \(\to,\leftrightarrow\)。一旦 parentheses 固定，translation 就按 formula tree 进行：main connective 给出整句结构，subformulas 填入对应 clauses。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 1 Problem 2]
@@ -433,7 +433,7 @@ T&T&T&T&T&T&T&T&T&T
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是三变量 truth table 必须覆盖 \(2^3=8\) 个 assignments，并且每个 compound column 都应由已经填好的 simpler columns 得到。做类似题时，使用固定 row order 可以减少漏行；先填 \(A\lor B\)、\(B\to A\)、\(A\land B\)、\(B\land A\)，再填 final columns。若 final column all true，就可同时识别 tautology 或 equivalence；若 mixed，就保留 false rows 作为诊断。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 1 Problem 3]
@@ -445,7 +445,7 @@ Classify \(A\lor\lnot A\), \(A\land\lnot A\), \((A\to B)\lor(B\to A)\)。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是用 false pattern 快速分类。\(A\lor\lnot A\) 覆盖 \(A\) 的两种 truth values，\(A\land\lnot A\) 要求 \(A\) 同时 true 和 false。对 \((A\to B)\lor(B\to A)\)，做类似题时可问两个 disjunct 是否可能同时 false；第一条 false 要 \(A=T,B=F\)，第二条 false 要 \(B=T,A=F\)，两个要求不能同时满足，所以整个 disjunction 总是 true。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 1 Problem 4]
@@ -460,7 +460,7 @@ A\leftrightarrow B\equiv\lnot A\leftrightarrow\lnot B.
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是区分 connective 的 meaning 和 formula 的 surface form。De Morgan's law 说明 negation 会把 \(\lor\) 换成 \(\land\)，并分别否定每个 part。Biconditional 检查的是 ``same truth value''；做类似 equivalence 时，如果一个 operation 同时作用在两边且不改变 sameness/difference，就可以证明两个 biconditional formulas 有相同 final column。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 1 Problem 5]
@@ -475,7 +475,7 @@ Rewrite \(\lnot(A\to B)\) without \(\to\)。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 implication 的 negation 描述 implication failure，而不是把箭头两边分别否定。做类似 rewrite 时，可以先用 equivalence \(A\to B\equiv\lnot A\lor B\)，再对 \(\lnot(\lnot A\lor B)\) 使用 de Morgan's law；也可以直接记住 false row：antecedent true、consequent false。因此 final answer 是 \(A\land\lnot B\)，不是 \(\lnot A\to\lnot B\)。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 1 Problem 6]
@@ -491,7 +491,7 @@ Decide valid deductions。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是同一组 validity problems 中要分别处理 valid proof 和 invalid counterexample。对 (a) 使用 implication chain；对 (b) 使用 disjunctive syllogism，从 \(A\lor B\) 和 \(\lnot A\) 锁定 \(B\)；对 (c) 给出 \(A=F,B=T\) 使 premises true、conclusion false。做类似题时，valid 的答案要说明为什么所有 premise-true rows 都支持 conclusion，invalid 的答案要给出具体 row。
 \end{explanation}
 
 \section{Predicate logic}
@@ -523,7 +523,7 @@ Translate three English sentences into predicate formulas。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 predicate translation 要先声明 domain、predicates 和 variables，然后再写 quantifiers。``Every couple has fights'' 是 universal conditional；``everyone is reading at least two books'' 需要两个 witnesses \(y,z\) 并加入 \(y\ne z\)；``exactly one friend'' 需要 existence 加 uniqueness。做类似题时，at least one 用 \(\exists\)，at least two 要写 distinct witnesses，exactly one 要写 ``exists and all other witnesses equal it''。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 7]
@@ -538,7 +538,7 @@ Rewrite \(\lnot\forall xP(x)\) using \(\exists\)。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 ``not for all'' 等于 ``there is a counterexample''。做类似 quantified negation 时，negation 穿过 quantifier 会交换 \(\forall\) 和 \(\exists\)，然后继续作用在 predicate 上：\(\lnot\forall xP(x)\) 变成 \(\exists x\lnot P(x)\)。English 检查法是把原句读成 ``every object has property \(P\)''，它失败就表示至少一个 object 没有 property \(P\)。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 8]
@@ -564,7 +564,7 @@ Give examples of laws of predicate logic。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 predicate-logic laws 有适用范围。Universal quantifier distributes over conjunction，因为同一个 \(x\) 必须同时满足 \(P\) 和 \(Q\)；existential quantifier distributes over disjunction，因为有一个 witness 满足其中一边就够。做类似 law-checking 时，要特别警惕 \(\forall\) over \(\lor\)、\(\exists\) over \(\land\)、以及 mixed quantifier swaps；这些通常需要 countermodel，而不是套用 propositional laws。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 9]
@@ -581,7 +581,7 @@ Translate and compare
 \end{solution}
 
 \begin{explanation}
-Mixed quantifiers 的 order 不能随便交换。\(\forall x\exists y\) 允许 \(y\) depend on \(x\)；\(\exists y\forall x\) 要求同一个 \(y\) 同时服务所有 \(x\)。
+本题的 key idea 是 mixed quantifiers 的 order 不能随便交换。\(\forall x\exists y\) 允许 \(y\) depend on \(x\)，所以在 ordered sets 中可以针对每个 \(x\) 选 \(y=x+1\)。\(\exists y\forall x\) 要求同一个 \(y\) 同时服务所有 \(x\)，这相当于要求 greatest element 严格大于每个 object。做类似题时，先逐字按 quantifier order 翻译，再问后面的 witness 是否可以依赖前面的 variable。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 10]
@@ -605,7 +605,7 @@ Countermodel：domain \(\{1,2\}\)，令 \(P(1)\) true, \(P(2)\) false, \(Q(1)\) 
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 invalid predicate equivalence 往往来自 witness 被错误地合并或 quantifier order 被错误地交换。做类似 countermodel 题时，小 domain 通常足够：用两个 elements 让 \(P\) 在一个 element true、\(Q\) 在另一个 element true，就能破坏 \(\forall\) over \(\lor\) 和 \(\exists\) over \(\land\) 的错误分配。对于 \(\forall x\exists y\) versus \(\exists y\forall x\)，用 \(\N\) 和 \(x<y\) 展示 ``每个 \(x\) 有自己的 \(y\)'' 不等于 ``有一个统一的 \(y\)''。
 \end{explanation}
 
 \section{Homework 2: predicate logic and quantifiers}
@@ -624,7 +624,7 @@ Domain 是 all students at a university，\(S(x)\): \(x\) studies mathematics，
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是 domain 已经限定为 all students，所以 formula 里不需要再加 \(Student(x)\)。做类似 predicate translation 时，先看 universal statement 是否只针对某个 subgroup；若是，就常写成 \(\forall x(S(x)\to P(x))\)，因为非 mathematics students 不受结论约束。Existential statement 要求同一个 witness 满足所有 conjuncts，所以 ``a mathematics student did not pass'' 必须写成 \(\exists x(S(x)\land\lnot P(x))\)。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 2 Problem 2]
@@ -641,7 +641,7 @@ Translate into English：
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是先按 quantifier order 逐字翻译，再根据 domain 解释整句含义。\(\forall x\exists y(x\ne y)\) 中的 \(y\) 可以 depend on \(x\)，所以它表达每个 object 都有另一个不同 object；这等价于 domain 至少有两个 elements。\(\exists y\forall x(x\le y)\) 中的 \(y\) 是 single witness，做类似题时要把它读成一个共同 upper bound，这里就是 greatest element。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 2 Problem 3]
@@ -660,7 +660,7 @@ Negate and move negation inside quantifiers。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：先判断题目要求的是 translation, truth-table computation, validity test, or quantified statement，然后逐步展开对应 definition。这样的写法把每一个 conclusion 都连接到 truth value、counterexample row、witness, or universal instantiation，避免用直觉替代 formal reasoning。
+本题的 key idea 是把 negation 逐步推到 atomic predicates。做类似 quantified-negation exercise 时，每跨过一个 quantifier 就交换 \(\forall\) 与 \(\exists\)，然后继续处理括号内的 connective；\(\lnot(P(x)\land Q(x))\) 要用 de Morgan's law 改成 \(\lnot P(x)\lor\lnot Q(x)\)。最终形式通常不应该让 outer negation 停在 quantifier 或 compound connective 外面。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 2 Problem 4]
@@ -675,5 +675,5 @@ Valid。由 \(\exists xP(x)\)，取 witness \(a\) 使 \(P(a)\) true。由 \(\for
 \end{solution}
 
 \begin{explanation}
-这题的关键是 witness reasoning：existential premise 给出某个 \(a\)，universal premise 可以用于同一个 \(a\)。不能把 witness 随意换成另一个 object。
+本题的 key idea 是 witness reasoning：existential premise \(\exists xP(x)\) 给出某个 \(a\)，universal premise \(\forall x(P(x)\to Q(x))\) 可以用于这个同一个 \(a\)。做类似 predicate validity proof 时，先从 existential statement 取 witness，再用 universal instantiation 把 universal rule 应用到该 witness，最后用 existential generalization 回到 \(\exists xQ(x)\)。不能把 witness 随意换成另一个 object，也不能从 \(\exists xP(x)\) 推出所有 objects 都有 \(P\)。
 \end{explanation}

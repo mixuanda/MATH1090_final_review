@@ -2,6 +2,8 @@
 
 Objective: create and publish a textbook-like Chinese MATH1090 final-review note as a compiled PDF, using the lecture notes, worksheets, homework, midterm solution, and set-theory references. Every Lecture Notes exercise, worksheet exercise, homework problem, and visible midterm problem must have detailed mathematical solution and explanation blocks.
 
+Refinement objective on 2026-05-04: make the existing notes more detailed and more textbook-like, especially in later theorem and definition sections; ensure exercises include item-specific explanations and guidance for solving similar problems.
+
 ## Deliverables
 
 - [x] `main.tex` exists and inputs all authored chapters.
@@ -15,13 +17,18 @@ Objective: create and publish a textbook-like Chinese MATH1090 final-review note
 - [x] Chapter 7 covers Sets with Structure, Lecture Notes Exercises 65--72, and Worksheet 10.
 - [x] Midterm review covers all visible problems from `midterm_1090B_sol.pdf`, including the optional Von Neumann/transitive set problem.
 - [x] `main.pdf` is generated from the current source.
+- [x] Later theorem-heavy chapters now include more surrounding Chinese exposition and proof-pattern guidance, especially in Chapters 4--7.
+- [x] Exercise explanations in Chapters 1 and 2 no longer reuse generic templates.
+- [x] Chapter 3 exercise explanations and quotient-construction prose have been deepened.
 
 ## Quality Gates
 
 - [x] Mathematical technical terms are written in English while explanatory prose is Chinese.
 - [x] Starred Lecture Notes sections are included.
 - [x] Exercises are not only listed; each required item has exact `exerciseblock` title, `solution`, and `explanation`.
-- [x] The QA script checks all 158 required exercise items and rejects duplicate item labels.
+- [x] The QA script checks all 158 required exercise items, rejects duplicate item labels, enforces longer explanation blocks, and rejects repeated explanation text.
+- [x] An explanation audit confirms zero repeated explanation groups and zero short explanation blocks under the current threshold.
+- [x] A late-chapter exposition audit confirms Chapters 4--7 include method markers, review/proof-pattern material, and expanded theorem context.
 - [x] Banned handwaving phrases listed in `scripts/qa_exercise_coverage.py` are absent from authored text.
 - [x] Known mojibake markers from the earlier corrupted draft are absent from authored text.
 - [x] `latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex` passes.
@@ -39,3 +46,5 @@ Objective: create and publish a textbook-like Chinese MATH1090 final-review note
 - `latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex`
 - `rg -n 'Missing character|LaTeX Error|Undefined control sequence|Runaway argument|Fatal|Emergency stop' main.log`
 - `gs -q -dNOSAFER -dNODISPLAY -c '(main.pdf) (r) file runpdfbegin pdfpagecount = quit'`
+- explanation-length and repetition audit over `tex/*.tex`
+- late-chapter theorem/exposition audit over Chapters 4--7

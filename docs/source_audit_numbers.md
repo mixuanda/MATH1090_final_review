@@ -78,3 +78,4 @@ Sources used:
 - Required exercise titles are intentionally exact and discoverable, for example `\begin{exerciseblock}[Lecture Notes Exercise 25]`, `\begin{exerciseblock}[Worksheet 5 Exercise 1]`, and `\begin{exerciseblock}[Homework 6 Problem 1]`.
 - Each required exercise block is followed by non-empty `solution` and `explanation` environments.
 - Targeted grep should be run after edits for banned handwaving phrases and mojibake markers in the two owned files.
+- Final-review refinement pass deepened Chapter 3 explanation blocks with transfer guidance for induction-variable choice, quotient representatives, well-definedness, gcd/divisibility, rational order, supremum arguments, and Von Neumann model verification.

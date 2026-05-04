@@ -24,6 +24,13 @@ Primary chapter file: `tex/chapter07_structure.tex`.
 | Lecture Notes Exercise 71 | Covered | Lists all bijections of two- and three-element sets. |
 | Lecture Notes Exercise 72 | Covered | Explicit isomorphism `S_2 -> Z_2`. |
 
+## Final-review Refinement Notes
+
+- 2026-05-04 Worker C pass deepened `tex/chapter07_structure.tex` with textbook-style Chinese prose and English mathematical terms.
+- Added method-oriented explanations for structured sets, binary operation closure, Cayley-style tables, monoid and group checklists, homomorphism/isomorphism verification, symmetric groups, conjugacy, and Worksheet 10 problem-solving patterns.
+- Added expanded theorem/proposition discussion for identity uniqueness, inverse behavior, socks-shoes property, cancellation, homomorphism preservation of identity/inverses, and `S_X` as a group.
+- Preserved the existing Chapter 7 `exerciseblock` labels and all `solution` / `explanation` environments.
+
 ## Worksheet 10 Coverage
 
 | Item | Status | Notes |

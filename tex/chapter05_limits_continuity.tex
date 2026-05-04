@@ -25,6 +25,10 @@ error bound。证明 sequence limit 时，通常先从
 Function limit 的输入不是离散的 \(n=0,1,2,\ldots\)，而是实数 \(x\) 从
 一段 interval 内靠近某一点 \(a\)。因此 \(N\) 被替换成 \(\delta\)：\(\delta\)
 控制 input distance，\(\varepsilon\) 控制 output distance。
+这两个 definitions 的 quantifier order 完全平行：证明者先听到任意给定的
+error tolerance，再回应一个足够严格的 input tolerance。不能先固定一个
+\(\delta\) 或 \(N\) 再要求它适合所有 \(\varepsilon\)，因为越小的
+\(\varepsilon\) 需要越精细的控制。
 
 \begin{definition}[function limit]
 设 \(I\) 是包含 \(a\) 的 open interval，且
@@ -60,6 +64,22 @@ Function limit 的输入不是离散的 \(n=0,1,2,\ldots\)，而是实数 \(x\) 
 \[
   |f(x)-L|<\varepsilon.
 \]
+
+\begin{reviewbox}{Epsilon-delta proof template}
+写 \(\varepsilon\)-\(\delta\) proof 时，可以按四步组织。第一步，写清楚
+``Let \(\varepsilon>0\) be given''，并声明目标是找到 \(\delta>0\)。第二步，
+在 scratch work 中从 \(|f(x)-L|\) 出发，把它化成
+``constant \(\times |x-a|\)'' 或者
+``bounded factor \(\times |x-a|\)''。第三步，若表达式中有 denominator,
+square root, 或其它可能变化的 factor，先用一个小的固定条件如
+\(\delta\leq1\) 或 \(\delta\leq1/2\) 把这些 factor bounded。第四步，把所有
+条件合并成
+\[
+  \delta=\min\{\text{固定控制},\varepsilon\text{-控制}\}.
+\]
+正式 proof 中不需要展示所有倒推过程，但必须展示 chosen \(\delta\) 如何让
+每个 inequality 成立。
+\end{reviewbox}
 
 例如
 \[
@@ -129,6 +149,15 @@ Function limit 的输入不是离散的 \(n=0,1,2,\ldots\)，而是实数 \(x\) 
 存在的背景下，为指定的 tolerance 找一个 input tolerance。线性函数的误差
 正好是 \(4|x+2|\)，所以 \(\delta\) 只需要把这个四倍关系抵消掉。任何
 \(0<\delta\leq 0.025\) 也都可以使用；选择最大这个数只是最直接。
+遇到 affine function \(mx+b\) 的同类问题，先计算
+\[
+  |(mx+b)-(ma+b)|=|m|\,|x-a|.
+\]
+若题目给定一个具体 \(\varepsilon_0\)，就取
+\(\delta\leq \varepsilon_0/|m|\)。若题目要求证明所有
+\(\varepsilon>0\)，就把同一个式子写成
+\(\delta=\varepsilon/|m|\)；当 \(m=0\) 时 function 是 constant，任意正
+\(\delta\) 都可用。
 \end{explanation}
 
 \begin{example}[constant function]
@@ -232,6 +261,15 @@ Function limit 的输入不是离散的 \(n=0,1,2,\ldots\)，而是实数 \(x\) 
 分母 \(\sqrt{x}+2\) 不会接近 \(0\)；它至少是 \(2\)，所以可以用
 \(|x-4|/2\) 控制整个 error。这里不需要让 \(\delta\leq1\)，因为分母的下界
 已经由 \(x\geq0\) 给出。
+解决类似 radical limit 时，先寻找能把 radical difference 变成 polynomial
+difference 的 conjugate。一般地，
+\[
+  |\sqrt{x}-\sqrt{a}|=\frac{|x-a|}{\sqrt{x}+\sqrt{a}}
+\]
+在 \(a>0\) 时会有分母下界；在 \(a=0\) 时则不能用同一套 estimate，需要从
+\(|\sqrt{x}|<\varepsilon\) 倒推出 \(|x|<\varepsilon^2\)。因此方法不是记住
+某个 \(\delta\)，而是先判断 denominator 是否能在 limiting point 附近远离
+\(0\)。
 \end{explanation}
 
 \section{When Limits Do Not Exist}
@@ -251,6 +289,16 @@ definition：
 证明 limit does not exist 更强：我们要说明没有任何 \(L\in\R\) 能通过这个
 definition。常用方法是找两列靠近同一点的 inputs，但对应的 function values
 靠近不同的 numbers。
+
+\begin{reviewbox}{How to prove nonexistence of a function limit}
+有两种常见路线。第一种是直接使用 negation of the definition：选定一个
+\(\varepsilon_0>0\)，证明每个 \(\delta>0\) 都允许某个
+\(0<|x-a|<\delta\) 使 \(|f(x)-L|\geq\varepsilon_0\)。这通常用于否定某个
+指定的 candidate \(L\)。第二种是 sequential test：构造
+\(x_n\to a\) and \(y_n\to a\)，但 \(f(x_n)\to A\)、\(f(y_n)\to B\)，其中
+\(A\neq B\)。这同时排除所有 candidate limits，因为同一个 function limit
+会迫使所有 approaching sequences 的 images 收敛到同一个 number。
+\end{reviewbox}
 
 \begin{example}
 定义
@@ -337,6 +385,11 @@ definition 无法容纳的冲突。两列 inputs 都趋向 \(0\)，但 outputs �
 \(1\) 和 \(-1\)。若同一个 \(L\) 是 limit，那么足够靠近 \(0\) 的这两类
 outputs 都必须落在半径 \(1\) 的 interval \((L-1,L+1)\) 中；这个 interval
 长度为 \(2\)，不能同时严格包含距离为 \(2\) 的两个端点 \(1\) 和 \(-1\)。
+做类似 \(f(x)=\sin(1/x)\), \(\cos(1/x)\), 或 sign-changing oscillation
+的题时，先选让 inner angle 命中特殊值的 inputs。这里我们不是随机取
+sequence，而是解方程 \(1/x=2\pi n+\pi/2\) 和
+\(1/x=2\pi n+3\pi/2\)。这种做法同时保证 \(x\to0\) 和 outputs 固定在两
+个互不相容的值。
 \end{explanation}
 
 \section{Limit Laws}
@@ -390,6 +443,16 @@ Quotient law 的核心是 denominator。若 \(M\neq0\)，先让
 \]
 所以 \(g(x)\) 在 \(a\) 附近不会等于 \(0\)，且 \(1/g(x)\) 的大小可控。
 之后把 quotient 写成 product 来处理。
+
+\begin{reviewbox}{Using limit laws without hiding the proof}
+Limit laws 是 theorem，不是 algebra shortcut。使用它们之前要确认每个
+component limit 都已经存在，并且 quotient 的 limiting denominator
+不是 \(0\)。如果题目要求 ``不用 limit laws''，就回到
+\(\varepsilon\)-\(\delta\) proof：先把目标 expression 与 candidate limit
+相减，通分或展开，直到出现一个会趋向 \(0\) 的 factor，再控制剩余 factors。
+如果题目问某个 law 是否能反向使用，优先寻找 cancellation example，因为
+两个不存在的 limits 可能在 sum 或 product 中互相抵消。
+\end{reviewbox}
 
 \begin{exerciseblock}[Lecture Notes Exercise 60]
 找一对 functions，使得
@@ -480,6 +543,11 @@ Quotient law 的核心是 denominator。若 \(M\neq0\)，先让
 各自有 limit，则 sum 有 limit。反过来，sum 有 limit 并不强迫每个 summand
 都有 limit。这里 \(g=-f\) 把 \(f\) 的所有震荡完全抵消，所以 sum 变成
 constant zero。
+解决类似题目时，先决定想让 sum 变成什么简单 function。若目标是 constant
+zero，可以直接取 \(g=-f\)。剩下的任务是挑一个没有 two-sided limit 的
+\(f\)，例如 sign function \(|x|/x\) 或 oscillatory function
+\(\sin(1/x)\)。然后必须分别证明 \(f\) 和 \(g\) 没有 limit，不能只展示
+sum 的计算。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 61]
@@ -548,10 +616,16 @@ Rational function 的 direct proof 通常要先处理 denominator。这里
 之后 numerator 中剩下一个 \(|x|\)，它会随 \(x\to0\) 变小；另一个因子
 \(|x-4|\) 在小 interval 内被 \(9/2\) 控制。于是整个 error 被 \(9|x|\)
 控制，再用 \(\delta\leq\varepsilon/9\) 完成证明。
+类似 rational function 的 proof 可以先写成一个 checklist：candidate
+limit 由代入分子分母得到；error 通分后找出 \(|x-a|\)；对 denominator
+设定远离 \(0\) 的固定条件；对其它 bounded factors 设定粗略上界；最后由
+\(\varepsilon\) 决定 \(\delta\) 的可变部分。固定条件不必最优，只要能让
+后续 inequality 完整成立。
 \end{explanation}
 
 \section{Sequential Characterization and Continuity}
 
+\begin{theorem}[sequential characterization of function limits]
 Function limit 也可以用 sequences 来刻画：
 \[
   \lim_{x\to a}f(x)=L
@@ -564,9 +638,43 @@ Function limit 也可以用 sequences 来刻画：
 \[
   f(x_n)\to L.
 \]
+\end{theorem}
+
+\begin{proof}
+先证明 forward direction。假设 \(\lim_{x\to a}f(x)=L\)，并取任意
+sequence \(x_n\in I\setminus\{a\}\) with \(x_n\to a\)。给定
+\(\varepsilon>0\)，由 function limit 可取 \(\delta>0\)，使得
+\[
+  0<|x-a|<\delta \Longrightarrow |f(x)-L|<\varepsilon.
+\]
+又因为 \(x_n\to a\)，存在 \(N\) 使得 \(n\geq N\) 时
+\(|x_n-a|<\delta\)。每个 \(x_n\neq a\)，所以此时
+\[
+  |f(x_n)-L|<\varepsilon.
+\]
+这正是 \(f(x_n)\to L\)。
+
+再证明 reverse direction，使用 contrapositive。若
+\(\lim_{x\to a}f(x)\neq L\)，则存在 \(\varepsilon_0>0\)，使得对每个
+\(\delta>0\) 都能找到 \(x\in I\setminus\{a\}\) with
+\[
+  0<|x-a|<\delta
+  \quad\text{and}\quad
+  |f(x)-L|\geq\varepsilon_0.
+\]
+对每个 \(n\geq1\)，令 \(\delta=1/n\)，选择这样的 \(x_n\)。于是
+\(0<|x_n-a|<1/n\)，所以 \(x_n\to a\)，但
+\(|f(x_n)-L|\geq\varepsilon_0\) 对所有 \(n\) 成立，因此
+\(f(x_n)\) 不收敛到 \(L\)。这与 sequential condition 矛盾。故 reverse
+direction 成立。
+\end{proof}
+
 这个 theorem 的用途有两个。若要证明 limit 存在，可以证明所有靠近
 \(a\) 的 sequences 都被送到同一个 \(L\)。若要证明 limit 不存在，可以找两列
-都趋向 \(a\) 的 inputs，使得对应 outputs 有不同 limits。
+都趋向 \(a\) 的 inputs，使得对应 outputs 有不同 limits。第二种用法在
+oscillation、jump discontinuity、piecewise definition 的题目中最常见。
+选择 sequence 时应当让 inputs 自动满足 domain restriction，并让 outputs
+落在容易比较的 fixed values 或 known limits。
 
 Continuity 把 limit 和 function value 接起来。若 \(f:I\to\R\) 且
 \(a\in I\)，则 \(f\) is continuous at \(a\) 的意思是
@@ -582,6 +690,13 @@ Continuity 把 limit 和 function value 接起来。若 \(f:I\to\R\) 且
 这里不再排除 \(x=a\)，因为 continuity 必须同时检查 \(f(a)\) 本身。
 若 function 在 \(a\) 没有定义，它不能 continuous at \(a\)，但它仍可能有
 limit。
+
+Continuity proof 与 function limit proof 的差别只有 target value。Limit
+proof 的 target \(L\) 可以先猜；continuity proof 的 target 被固定为
+\(f(a)\)。因此证明 continuity at \(a\) 时，先计算
+\(|f(x)-f(a)|\)，再用与 limit proof 相同的 inequality method 控制它。
+证明 discontinuity 时，可以证明 limit 不存在，也可以证明 limit 存在但不等
+于 \(f(a)\)，还可以证明 \(f(a)\) 没有定义。
 
 \section{Homework 9}
 
@@ -660,6 +775,11 @@ limit。
 \(n^2\leq2^n\)。这样原式被压到 \(1/2^n\) 以下。最后选择 \(N>1/\varepsilon\)
 是为了保证 \(1/2^n<\varepsilon\)。每一步都服务于
 \(\varepsilon\)-\(N\) definition 中的目标 inequality。
+以后遇到 \(\frac{\text{polynomial}}{\text{exponential}}\) 的 sequence，
+常用路线是先把 polynomial eventually bound by a smaller exponential。
+例如 \(n^k\leq c\,2^n\) for sufficiently large \(n\)，然后把原式压成
+\(c/2^n\)。真正写 proof 时，需要给出一个可验证的 eventually bound，
+可以用 induction，也可以引用课堂已经证明过的 exponential domination。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 9 Problem 2]
@@ -719,4 +839,8 @@ Denominator 需要先远离 \(0\)。若 \(|x|<1/2\)，则
 \(\delta\leq1/2\) 是为了保证 \(|1+x|>1/2\)，从而把 quotient error 控制为
 小于 \(2|x|\)。再选择 \(\delta\leq\varepsilon/2\)，就完成
 \(\varepsilon\)-\(\delta\) estimate。
+类似 \(\frac{p(x)}{q(x)}\) 的问题中，候选值来自 \(p(a)/q(a)\)，前提是
+\(q(a)\neq0\)。正式 proof 的关键不是候选值本身，而是把 denominator
+在 \(a\) 附近隔离开 \(0\)。通常先要求 \(|x-a|\leq\eta\)，使
+\(|q(x)|\geq |q(a)|/2\)，然后把剩余 error 化成常数倍的 \(|x-a|\)。
 \end{explanation}

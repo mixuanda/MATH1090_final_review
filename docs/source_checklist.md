@@ -51,4 +51,4 @@ This file tracks the source coverage required before the goal can be marked comp
 
 - Ghostscript text extraction succeeded for all PDFs.
 - Some extracted files contain NUL bytes or OCR noise, especially scanned/annotated homework PDFs. These must be treated cautiously and cross-checked against visible problem statements or available `.tex` files.
-- The GitHub remote exists and currently has no tracked files.
+- The GitHub remote exists and `origin/main` now tracks the authored LaTeX source, documentation, QA script, and compiled `main.pdf`.

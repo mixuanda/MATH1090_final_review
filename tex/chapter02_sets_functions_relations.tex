@@ -24,7 +24,7 @@ Prove that \(A\subset B\) and \(B\subset A\) imply \(A=B\)。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是把 set equality 翻译成 element-level biconditional。类似题要先写任取 \(x\)，再分别证明 \(x\in A\Rightarrow x\in B\) 和 \(x\in B\Rightarrow x\in A\)；两条 inclusion 合在一起才可以用 Axiom of Extension 得到 \(A=B\)。
 \end{explanation}
 
 常用 set operations 是
@@ -52,7 +52,7 @@ If \(|A|=5\) and \(|B|=3\)，how many elements does \(A\times B\) have？
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 Cartesian product 的 element 是 ordered pair。类似 counting 题先固定第一坐标：每个 \(a\in A\) 都能配上 \(|B|\) 个 second coordinates；再把 \(|A|\) 个互不重复的 choices 相加，得到乘法规则 \(|A\times B|=|A||B|\)。
 \end{explanation}
 
 Power set 是
@@ -98,7 +98,7 @@ x\in A\cap(B\cap C)
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 intersection 的 laws 都是 logical ``and'' 的 laws。类似 set algebra 证明不要只引用图像直觉；把 \(x\in A\cap B\) 展开成 \(x\in A\land x\in B\)，再用 logic 的 commutativity、associativity 或 idempotence 逐步改写。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 14]
@@ -125,7 +125,7 @@ x\in A\land(x\in B\lor x\in C),
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 ``iff'' 要分成两边证明，而且 \(C\subset A\) 正是让右边保留所有 \(C\)-elements 的条件。类似题先从 claimed equality 推出必要的 containment，再用这个 containment 回到 element chasing，证明两个 set expressions 对任意 \(x\) 给出同一个 membership condition。
 \end{explanation}
 
 Complement laws 和 de Morgan's laws 在 universal set \(E\) 中成立：
@@ -161,7 +161,7 @@ B^A=\setbuilder{F\in\calP(A\times B)}{\forall a\in A,\ \exists!b\in B\text{ such
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是先找到一个 ambient set，再用 Comprehension 选出真正的 functions。类似 existence 题可以先把每个 function 看成 \(A\times B\) 的 graph，也就是 \(\calP(A\times B)\) 的 element；最后把 function condition 写成每个 input 有 exactly one output。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 16]
@@ -188,7 +188,7 @@ R=\setbuilder{(x,y)\in\R^2}{y^2=x}
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 function 不是任意 relation，而是每个 input 都有且只有一个 output。类似判断题要分别检查 existence 和 uniqueness：没有 output 会破坏 existence，两个不同 outputs 会破坏 uniqueness；给 examples 时写清楚 domain、target 和 rule。
 \end{explanation}
 
 对于 \(f:X\to Y\)，image 和 preimage 是
@@ -230,7 +230,7 @@ is injective but not surjective。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 injective 关注不同 inputs 会不会合并，surjective 关注 target 里的每个 element 是否被 hit。类似题要把 domain 和 target 一起读；同一个 formula \(x^2\) 改变 target 后，surjectivity 的结论会改变，但 \(1\) 与 \(-1\) 的 collision 仍然说明它不是 injective。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 18]
@@ -250,7 +250,7 @@ g(y)=g(\id_Y(y))=g(f(h(y)))=(g\circ f)(h(y))=\id_X(h(y))=h(y).
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 uniqueness proof 先假设有两个 candidates，然后证明它们 pointwise equal。类似 inverse function 题要善用 identity equations：把 \(y\) 写成 \(f(h(y))\)，再套入另一个 inverse 的 equation，就能把 \(g(y)\) 化到 \(h(y)\)。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 19]
@@ -264,7 +264,7 @@ Show that inverse function exists iff \(f\) is bijective。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 inverse function 的存在同时包含 cancellation 和 unique preimage。类似 ``iff'' 题分两边：有 inverse 时用 apply inverse 证明 injective、用 \(f(g(y))=y\) 证明 surjective；有 bijection 时用 surjectivity 找 preimage，再用 injectivity 保证这个 preimage unique。
 \end{explanation}
 
 \section{Cardinality, operations, and relations}
@@ -289,7 +289,7 @@ Find the domain and range of \(R=\setbuilder{(x,y)\in\Z\times\Z}{y^2=x}\)。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 relation 的 domain 和 range 都由 existential condition 决定。类似题要分别问：哪些 first coordinates \(x\) 能找到某个 \(y\) 使 \((x,y)\in R\)，以及哪些 second coordinates \(y\) 能找到某个 \(x\)。本题的 equation \(y^2=x\) 让 domain 变成 integer squares，而每个 integer \(y\) 都能出现为 second coordinate。
 \end{explanation}
 
 对于 relation \(R\subset X\times X\)，常见性质是：
@@ -321,7 +321,7 @@ Relation \(xRy\) iff \(x<y\) is transitive, but not reflexive and not symmetric�
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 relation properties 都是 quantified statements。类似题若要证明一个 property，就展开 definition 检查任意 elements；若要否定一个 property，只需要给出一个 witness，例如 not symmetric 要找 \(xRy\) 但 \(yRx\) false，not antisymmetric 要找 distinct \(x,y\) 互相 related。
 \end{explanation}
 
 \section{Partial orders and equivalence relations}
@@ -338,7 +338,7 @@ Reflexivity 和 transitivity 不是这道题要指出的失败点；只要找到
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 partial order 的 antisymmetry 禁止两个 distinct elements 双向 comparable。类似题判断 partial order 时，找到 \(a\preceq b\) 和 \(b\preceq a\) 且 \(a\ne b\) 就足以否定 antisymmetry；本题的 \(1\) 与 \(3\) 就是这个 witness。
 \end{explanation}
 
 An equivalence relation is reflexive, symmetric, and transitive。
@@ -357,7 +357,7 @@ Give examples that fail one of each equivalence-relation property but satisfy th
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是要为每个 failed equivalence-relation property 单独设计 relation，同时保护另外两个 properties。类似构造题可以从小 finite set 开始：缺少某个 loop 会破坏 reflexive；只放单向 pair 会破坏 symmetric；放 \(1R2\) 和 \(2R3\) 但不放 \(1R3\) 会破坏 transitive。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 24]
@@ -379,7 +379,7 @@ a-c=(a-b)+(b-c)=m(k+\ell),
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 congruence modulo \(m\) 可以完全翻译成 divisibility of differences。类似 equivalence relation 证明要逐项处理：reflexive 用 \(a-a=0\)，symmetric 用负号把 \(a-b\) 变成 \(b-a\)，transitive 用 addition of multiples 把 \(a-b\) 和 \(b-c\) 合成 \(a-c\)。
 \end{explanation}
 
 若 \(R\) 是 equivalence relation，equivalence class 是
@@ -406,7 +406,7 @@ By inclusion-exclusion，
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是把文字题翻译成 two-set counting。类似 inclusion-exclusion 题先定义 sets，再找 \(|S|\)、\(|H|\)、\(|S\cup H|\)；``no sun protection'' 给的是 complement of union，所以要先用总人数扣掉它，再代入 \(|S\cap H|=|S|+|H|-|S\cup H|\)。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 3 Exercise 2]
@@ -424,7 +424,7 @@ Draw Venn diagrams for four configurations。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 Venn diagram 只是 set constraints 的图像表示。类似题先把每一句转成 containment、empty intersection 或 nonempty intersection，再决定哪些 regions 必须存在、哪些 regions 必须留空；画图时要同时满足所有 constraints，而不是逐句孤立处理。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 3 Exercise 3]
@@ -446,7 +446,7 @@ So \(g\circ h=\id_X\)，and \(h\) is also a right inverse。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 left inverse 对应 injective，right inverse 对应 surjective。类似题要从 equations 读信息：\(l\circ f=\id_X\) 强迫 \(f\) 不合并 inputs，\(f\circ r=\id_Y\) 强迫 \(f\) hit every target element；在 finite same-set case，injective 还会推出 surjective，所以 one-sided inverse 变成 two-sided inverse。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 3 Exercise 4]
@@ -470,7 +470,7 @@ Every nonnegative integer \(k\) is hit by \(2k\)，and every negative integer \(
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是把 \(\Z\) 排成一个 sequence，并让 \(\N\) 按顺序 enumerate 它。类似 countability 题不能只列开头几项；还要给 formula，并证明每个 target integer 有 preimage 且 preimage unique。这里 even \(n\) 负责 nonnegative integers，odd \(n\) 负责 negative integers。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 3 Exercise 5]
@@ -486,7 +486,7 @@ If \(2^a3^b=2^c3^d\)，unique prime factorization gives \(a=c\) and \(b=d\)。He
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是用 unique prime factorization 把两个 coordinates 编码进一个 natural number。类似 injection construction 可以选择互不相同的 primes 或 pairing function；证明 injective 时从 equality of outputs 出发，说明编码能被唯一解码回原来的 ordered pair。
 \end{explanation}
 
 \section{Homework 3: sets and functions}
@@ -516,7 +516,7 @@ has two elements。Finite sets cardinalities different，所以 no bijection。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是要否定 ``there has to exist''，只需给一个 counterexample。类似 cardinality 题不要被 expressions 的形式相似误导；选 small finite sets，分别计算左右两边的 cardinalities。若 finite cardinalities 不同，就没有 bijection。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 3 Problem 2]
@@ -536,7 +536,7 @@ Let \(f(x)=x+1\), \(g(x)=x^2\), \(h(x)=x-7\)。Calculate compositions。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 composition 的顺序是 inner function first。类似计算题建议先写 \((p\circ q)(x)=p(q(x))\)，再把 \(q(x)\) 代入 \(p\) 的 formula；不要把 \(f\circ g\) 和 \(g\circ f\) 混成同一个 expression，因为 composition 通常不 commutative。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 3 Problem 3]
@@ -552,7 +552,7 @@ Classify three functions as injective or surjective。
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 injective 和 surjective 要针对指定 domain 与 target 判断。类似题先找 collisions 来否定 injective，再检查 target 中是否每个 element 被 hit；finite domain 对 infinite target 不可能 surjective，而 polynomial examples 常可用 monotonicity、parity 或 explicit witnesses 来分类。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 3 Problem 4]
@@ -567,7 +567,7 @@ Yes。For any element \(x\)，\(x\in A\triangle B\) iff \(x\) belongs to exactly
 \end{solution}
 
 \begin{explanation}
-本题的解释是：证明时必须回到 set, function, relation, or quotient definition。Set equality 用任意 element 的双向蕴含，function 题检查 existence and uniqueness，relation 题逐条检查 reflexive, symmetric, antisymmetric, transitive, and well-definedness。
+关键 idea 是 symmetric difference 记录 membership parity。类似 set-operation associativity 题可以固定任意 \(x\)，把 \(x\) 属于哪些 sets 转成 truth values；两种括号方式都表示 \(x\) 属于 odd number of \(A,B,C\)，所以 membership condition 相同。
 \end{explanation}
 
 \section{Homework 4: relations}
@@ -591,7 +591,7 @@ Antisymmetry fails. Let \(x=\{1\}\) and \(y=\{2\}\). Then \(x\cap y=\emptyset\) 
 \end{solution}
 
 \begin{explanation}
-Disjointness is naturally symmetric because \(x\cap y=y\cap x\). It does not force equality, so antisymmetry fails, and it does not compose through a middle set, so transitivity fails. Each failed universal property is disproved by one explicit counterexample.
+关键 idea 是 relation \(xRy\) 的 meaning 是 disjointness。类似 relation-classification 题要对四个 properties 分开处理：symmetry 来自 \(x\cap y=y\cap x\)；reflexive、transitive、antisymmetric 都是 universal statements，否定时各自给一个 explicit counterexample，并说明它违反的是哪一条 definition。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 4 Problem 2]
@@ -611,7 +611,7 @@ Every edge points from a smaller component to a character containing that compon
 \end{solution}
 
 \begin{explanation}
-A Hasse diagram records cover relations, not every comparable pair. The interpretation of components can depend on how finely a character is decomposed; this solution follows the examples in the prompt and records the diagram as a precise mathematical list of covers.
+关键 idea 是 Hasse diagram 只画 cover relations，不画所有 comparable pairs。类似 poset diagram 题先列出哪些 elements 是 immediate components，再删去由 transitivity 已经 implied 的 edges；如果 prompt 给了 component interpretation，就按该 interpretation 写成 covers list，避免把 diagram 画法变成含糊描述。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 4 Problem 3]
@@ -628,7 +628,7 @@ For each listed relation on \(\Z\), decide whether it is an equivalence relation
 \end{solution}
 
 \begin{explanation}
-Equivalence relation requires reflexive, symmetric, and transitive all at once. Part (b) is equality of parity, so the quotient has exactly two classes: even integers and odd integers. The other parts fail by direct counterexample to a required universal property.
+关键 idea 是 equivalence relation 要同时满足 reflexive、symmetric、transitive，成功时还要读出 quotient classes。类似题先逐项检查三个 properties；若 relation 本质上是 ``same parity''，quotient set 就由 parity classes 组成，即 even integers 和 odd integers。失败的小问要指出具体 property 和 witness。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 4 Problem 4]
@@ -655,7 +655,7 @@ The classes are classified by cycle type:
 \end{solution}
 
 \begin{explanation}
-The relation says two permutations are the same after relabeling the underlying set. Relabeling preserves cycle type, and in \(S_3\) the only cycle types are identity, transposition, and three-cycle.
+关键 idea 是这个 relation 是 conjugacy，也就是 relabeling 后得到同一个 permutation structure。类似题先把 \(h\circ f=g\circ h\) 改写为 \(g=hfh^{-1}\)，再用 identity、inverse、composition 证明 equivalence relation；quotient classes 按 cycle type 分类。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 4 Problem 5]
@@ -685,5 +685,5 @@ The class sizes are \(1,6,3,8,6\), and their sum is \(24\).
 \end{solution}
 
 \begin{explanation}
-Conjugacy in a symmetric group is relabeling. Relabeling cannot change cycle lengths, and any two permutations with the same cycle lengths are conjugate. Therefore the classes correspond to the partitions of \(4\): \(1+1+1+1\), \(2+1+1\), \(2+2\), \(3+1\), and \(4\).
+关键 idea 是 \(S_4\) 的 conjugacy classes 由 cycle lengths 决定。类似 symmetric group quotient 题先列 partitions of \(n\)，再把每个 partition 翻译成 cycle type，并检查 class sizes 加起来等于 \(|S_n|\)。这个总数检查可以发现遗漏的 cycle type 或重复计数。
 \end{explanation}

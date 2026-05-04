@@ -101,14 +101,25 @@ Every required item below has a discoverable `exerciseblock` title, a non-empty 
 
 ## Validation Notes
 
-Checks run after this rewrite:
+Final-review refinement round on 2026-05-04:
+
+- Expanded Chapter 4 prose around ordered fields, completeness, Dedekind cuts, operations on cuts, decimal expansions, sequence limits, Cauchy sequences, and Homework 8 theorem patterns.
+- Added exercise-method guidance inside existing `explanation` environments while preserving all exact `exerciseblock` labels and every existing `solution` / `explanation` environment.
+- Corrected the additive-inverse gap argument in Worksheet 6 Exercise 3 so the inequality uses \(x<a-b\) after choosing \(0<b-a<-x\).
+
+Checks run in this final-review refinement:
 
 - Targeted grep for the banned handwaving phrases listed in the task, limited to the two owned files.
   - Result: no matches.
 - Targeted grep for the known mojibake characters used by the local QA script, limited to the two owned files.
   - Result: no matches.
-- Scoped Chapter 4 Python check for the 35 required items in this task.
-  - Result: passed; every required Chapter 4 item has an exact `exerciseblock` title, a `solution`, and an `explanation`.
+- Scoped Chapter 4 Python count for all exercise blocks.
+  - Result: passed; `exerciseblocks=35 missing_solution_or_explanation=0`.
+- `git diff --check -- tex/chapter04_reals_dedekind.tex docs/source_audit_reals.md`
+  - Result: passed; no whitespace errors.
+
+Earlier validation retained from the previous Chapter 4 rewrite:
+
 - `python3 scripts/qa_exercise_coverage.py`
   - Result: whole-repo check currently fails on older missing/short items outside this task's ownership scope, mostly earlier chapters and homework items. Chapter 4's required items were checked separately as above.
 - Full-document `latexmk` was attempted with temporary output under `/private/tmp/math1090-build`.

@@ -189,18 +189,23 @@ def item_unit(text: str, start: int) -> str:
     return text[start:end]
 
 
-def nonempty_environment(unit: str, environment: str) -> bool:
+def environment_content(unit: str, environment: str) -> str | None:
     match = re.search(
         rf"\\begin\{{{re.escape(environment)}\}}(.*?)\\end\{{{re.escape(environment)}\}}",
         unit,
         flags=re.DOTALL,
     )
     if not match:
-        return False
+        return None
     content = re.sub(r"%.*", "", match.group(1))
     content = re.sub(r"\\[A-Za-z]+\*?(?:\[[^\]]*\])?(?:\{[^{}]*\})?", "", content)
     content = re.sub(r"\s+", " ", content).strip()
-    return len(content) >= 80
+    return content
+
+
+def nonempty_environment(unit: str, environment: str, min_length: int) -> bool:
+    content = environment_content(unit, environment)
+    return content is not None and len(content) >= min_length
 
 
 def check_items(text: str) -> list[str]:
@@ -215,10 +220,33 @@ def check_items(text: str) -> list[str]:
             failures.append(f"duplicate item: {item.item_id} at lines {lines}")
         match = matches[0]
         unit = item_unit(text, match.start())
-        if not nonempty_environment(unit, "solution"):
+        if not nonempty_environment(unit, "solution", min_length=80):
             failures.append(f"missing or too short solution: {item.item_id}")
-        if not nonempty_environment(unit, "explanation"):
+        if not nonempty_environment(unit, "explanation", min_length=120):
             failures.append(f"missing or too short explanation: {item.item_id}")
+    return failures
+
+
+def check_explanation_repetition(text: str) -> list[str]:
+    failures: list[str] = []
+    explanations: dict[str, list[str]] = {}
+    for match in EXERCISE_BLOCK_RE.finditer(text):
+        title = match.group("title") or "(untitled)"
+        unit = item_unit(text, match.start())
+        content = environment_content(unit, "explanation")
+        if content is None:
+            continue
+        normalized = re.sub(r"\s+", " ", content).strip()
+        explanations.setdefault(normalized, []).append(title)
+
+    for titles in explanations.values():
+        if len(titles) >= 3:
+            shown = ", ".join(titles[:5])
+            if len(titles) > 5:
+                shown += f", ... {len(titles) - 5} more"
+            failures.append(
+                "repeated explanation block used for multiple items: " + shown
+            )
     return failures
 
 
@@ -265,6 +293,7 @@ def main() -> int:
 
     failures = []
     failures.extend(check_items(combined))
+    failures.extend(check_explanation_repetition(combined))
     failures.extend(check_style(files_for_style))
     failures.extend(check_font_shell(files_by_name))
 

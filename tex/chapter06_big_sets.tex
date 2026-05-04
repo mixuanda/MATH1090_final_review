@@ -26,12 +26,24 @@ Lemma, density, and well-ordering。写证明时要分清两件事：一个 set 
 称为 uncountable。
 \end{definition}
 
+\begin{reviewbox}{Cardinality proof language}
+Cardinality proof 不是比较长度、面积、density 或 visual size，而是比较
+functions。要证明 \(\card{X}\leq\card{Y}\)，写出 injection
+\(X\to Y\)，并解释不同 inputs 为什么不会撞到同一个 output。要证明
+\(X\) is countable，可以给出 enumeration \(x_0,x_1,\ldots\)，也可以给出
+surjection \(\N\to X\)。要证明 uncountable，通常假设存在 enumeration，
+然后用 diagonal argument 构造一个不在 list 中的 object。
+\end{reviewbox}
+
 \begin{reviewbox}{How to prove equal cardinality}
 证明 \(\card{X}=\card{Y}\) 有两条常用路线。第一条是直接构造
 bijection \(X\to Y\)，然后分别验证 injectivity and surjectivity。第二条
 是分别构造 injections \(X\to Y\) and \(Y\to X\)，再引用
 Cantor--Bernstein theorem。第二条在处理 intervals 和删去少数点的
-uncountable sets 时尤其方便。
+uncountable sets 时尤其方便。选择路线时先看哪一边更容易嵌入另一边：若
+两个 sets 本来就互相包含在某个 ambient set 中，Cantor--Bernstein 往往比
+写 explicit bijection 更稳；若题目要求 enumeration，则应给出具体顺序或
+formula。
 \end{reviewbox}
 
 \subsection{Countable examples}
@@ -75,6 +87,10 @@ Prove that \(\card{\N}=\card{\Z}\).
 这个 proof 的重点不是说两个 infinite sets ``一样多''，而是给出一条
 明确的 enumeration。正整数和负整数若分别排在两段，负整数永远等不到；
 交替列出 \(1,-1,2,-2,\ldots\) 可以保证每个 integer 在有限步内出现。
+类似证明中，surjectivity 的检查必须覆盖 \(0\)、positive integers 和
+negative integers 三类；injectivity 的检查则要说明这三类 images 互不重叠。
+只写出前几项 pattern 不足以成为 proof，必须把第 \(m\) 个正整数和第
+\(-m\) 个负整数对应到明确的 natural number。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 8 Exercise 1]
@@ -104,10 +120,14 @@ Worksheet 8 Exercise 1 与 Lecture Notes Exercise 62 是同一个 cardinality
 statement，只是等号两边顺序相反。cardinality equality 是 symmetric：
 若 \(X\) 与 \(Y\) 之间有 bijection，则把箭头反过来得到 \(Y\) 与 \(X\)
 之间的 bijection。
+因此处理反向 statement 时不要重新设计 enumeration，先检查上一题的
+bijection 是否已经有 inverse。若写 explicit inverse，最安全的方法是按
+output 的类别分 cases，并代回原 function 验证 \(f(g(z))=z\) and
+\(g(f(n))=n\)。
 \end{explanation}
 
 \begin{theorem}[\(\Q\) is countable]
-The rational numbers form a countable set.
+Rational numbers 组成 countable set。
 \end{theorem}
 
 \begin{proof}
@@ -132,6 +152,10 @@ infinite grid 的第 \(p\) 行第 \(q\) 列，然后按 diagonal
 diagonal argument 在这里解决的是 ``每一行无限长'' 的问题。若逐行扫描，
 第一行永远不会结束；按 \(p+q\) 扫描时，第 \(s\) 条 diagonal 只有
 \(s-1\) 个 pairs，因此可以在有限时间内进入下一条 diagonal。
+解决 ``countable union of countable-looking objects'' 时，可以先把对象编码
+成 \(\N\times\N\)，再用 diagonal enumeration。对于 rationals，分子和分母
+给出 pair；对于 finite strings，可以用 length 和字典序位置给出 pair。重复
+表示不会破坏 countability，因为跳过重复项仍然留下一个 enumeration。
 \end{explanation}
 
 \subsection{Cardinal inequalities and Cantor--Bernstein}
@@ -162,6 +186,14 @@ Cantor--Bernstein theorem 允许我们避免寻找 complicated explicit
 bijection。很多时候，两个 injections 很容易构造：例如 inclusion 给出
 \((0,1)\to[0,1]\)，linear compression 给出 \([0,1]\to(0,1)\)。theorem
 保证这已经足以证明 equal cardinality。
+
+它的 proof idea 是把 \(X\) 中的 elements 分成几类：有些 elements 应该沿
+\(f:X\to Y\) 前进，有些 elements 应该沿 \(g^{-1}\) 从 \(X\) 回到 \(Y\)。
+分类依据不是任意选择，而是看一个 element 是否位于由
+\(X\setminus g(Y)\) 出发、反复应用 \(g\circ f\) 得到的 chains 上。这样定义
+出来的 map 会在每条 chain 上使用同一个方向，避免两个 different elements
+被送到同一个 \(Y\)-element，也避免漏掉某些 \(Y\)-elements。练习中的错误
+formula 往往就是在 stable part 或 chain part 上用错方向。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 9 Problem 3]
@@ -220,6 +252,11 @@ Cantor--Bernstein 的正确 proof 会精细地区分哪些 \(x\in X\) 应该用
 错误 formula 把 stable intersection \(A\) 处理错了。本 counterexample
 让 \(A=\{0\}\)，并让 \(f\) 缺少一个 image point \(1\)，这样 proposed map
 会退化成 \(f\) 或几乎退化成 \(f\)，surjectivity 立即失败。
+做 ``disprove a proposed construction'' 的题时，不需要寻找复杂 sets。
+先试 \(X=Y=\N\)，让其中一个 injection 是 identity，另一个 injection
+故意漏掉一个 point。接着计算 proposed construction 在这个简单模型上的
+实际 image。若 image 少了某个 element，就已经证明它不可能是 general
+bijection。
 \end{explanation}
 
 \subsection{Products of countable sets}
@@ -264,6 +301,10 @@ Prove that \(\card{\N\times\N}=\card{\N}\).
 \((m,n)\) 有唯一的 diagonal number \(m+n\)，每条 diagonal 有有限多个
 pairs，因此可以把二维 grid 排成一条 sequence。surjectivity 的关键是：
 任意 natural number \(r\) 都落在唯一一个 diagonal 的 code interval 中。
+解决类似 \(\N^2\)、\(\Z^2\)、\(\Q^2\) 的 countability 题时，不必画完整
+grid。先把每个对象转成有限 tuple of natural numbers，再用 pairing
+function 或按 coordinate sum 分层。验证时要说明每一层 finite，并且每个
+对象出现在某一层；这两点合起来才给出 countable enumeration。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 9 Problem 4]
@@ -306,6 +347,10 @@ surjectivity，存在 \(a,b\in\N\) 使得 \(u=\pi(a,b)\)。于是
 \((a,b)\) pair 成一个 natural number，再把这个 number 与第三个
 coordinate \(c\) pair。bijection 的 injectivity and surjectivity 在
 composition 中逐层传递。
+同样方法可以 induction 到任意 finite product：若 \(\N^k\) countable，则
+\(\N^{k+1}\cong\N^k\times\N\cong\N\times\N\cong\N\)。注意这里是 finite
+product；countably infinite product \(\N^\N\) 是另一类对象，通常会用
+diagonal argument 证明 uncountable。
 \end{explanation}
 
 \section{Cantor's theorem and uncountability}
@@ -343,6 +388,10 @@ diagonal set \(T\) 的定义故意在第 \(x\) 个位置与 \(f(x)\) 相反：�
 \(x\in f(x)\)，则 \(x\notin T\)；若 \(x\notin f(x)\)，则 \(x\in T\)。
 因此 \(T\) 与 list 中每一个 \(f(x)\) 至少在 \(x\) 这个 membership
 question 上不同。这个机制是 diagonal argument 的核心。
+使用 diagonal argument 时要先确认 list 的第 \(x\) 项本身是一个 subset of
+\(X\)，这样才可以询问 ``\(x\in f(x)\) 吗''。构造出的 \(T\) 不是随意的
+counterexample，而是逐项反转 membership 的 set；因此无论 list 怎样排列，
+\(T\) 都会在对应 index 上逃出那一项。
 \end{explanation}
 
 \begin{theorem}[The reals are uncountable]
@@ -382,6 +431,10 @@ injective。于是 \(\card{\Pow(\N)}\le\card{\R}\)。结合
 这里使用 ternary digits \(0\) and \(1\)，而不是 binary digits，是为了
 避免不同 expansions 产生同一个 real number 的麻烦。第一个不同 digit
 造成的差大于后续 tail 的总可能抵消量，所以 encoding 是 injective。
+解决从 \(\Pow(\N)\) 到 real interval 的 injection 时，可以把 subset
+\(S\) 看成 infinite \(0/1\)-sequence。选择 base \(3\) 并只用 digits
+\(0,1\) 或 \(0,2\)，目的是让第一个不同 digit 的影响压过所有后续 digits。
+这样就不必处理 \(0.01111\ldots=0.10000\ldots\) 这类二进制表示冲突。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 8 Exercise 3]
@@ -414,6 +467,13 @@ proof 实际构造了 injection \(\Pow(\N)\to[0,1]\)，所以
 这道题的易错点是把 \([0,1]\) 的有限长度误读成有限或 countable。
 cardinality 不测量 length；它只问是否存在 bijection。Cantor's theorem
 说明 even the unit interval already has strictly more points than \(\N\)。
+遇到选择题式的 cardinality comparison，先排除 impossible equality。
+\(\N\subseteq[0,1]\) 并不成立，所以不能用 inclusion；更好的路线是使用
+已经建立的 chain
+\[
+  \card{\N}<\card{\Pow(\N)}\leq\card{[0,1]}.
+\]
+一旦知道右边至少和 \(\Pow(\N)\) 一样大，就可以排除 countable 的选项。
 \end{explanation}
 
 \section{Continuum hypothesis \optional}
@@ -424,51 +484,51 @@ State the Continuum Hypothesis and explain its role in comparing
 \end{exerciseblock}
 
 \begin{solution}
-Continuum Hypothesis, abbreviated CH, states that there is no set \(S\) such
-that
+Continuum Hypothesis, abbreviated CH，断言不存在 set \(S\) 使得
 \[
   \card{\N}<\card{S}<\card{\R}.
 \]
-Equivalently, if \(\aleph_0=\card{\N}\) and
-\(\mathfrak c=\card{\R}\), then CH says that the next uncountable cardinal is
-already \(\mathfrak c\). In the common notation \(\mathfrak c=2^{\aleph_0}\),
-CH is often written as
+换言之，如果 \(\aleph_0=\card{\N}\) 且
+\(\mathfrak c=\card{\R}\)，那么 CH 说第一个 uncountable cardinal 已经是
+\(\mathfrak c\)。在常见 notation \(\mathfrak c=2^{\aleph_0}\) 下，CH 常写成
 \[
   2^{\aleph_0}=\aleph_1.
 \]
 
-The lecture notes emphasize that CH is not a theorem of the usual ZFC axioms.
-If ZFC is consistent, then adding CH does not produce a contradiction, and
-adding the negation of CH also does not produce a contradiction. Godel proved
-the consistency direction for CH relative to ZFC, and Cohen proved the
-corresponding consistency direction for \(\lnot\mathrm{CH}\) using forcing.
-Thus, within this course, CH should be treated as an important independent
-statement about cardinality, not as a tool that may be freely used in ordinary
-proofs.
+Lecture notes 的重点是：CH 不是 usual ZFC axioms 的 theorem。若 ZFC
+consistent，则在 ZFC 中加入 CH 不会产生 contradiction；在 ZFC 中加入
+\(\lnot\mathrm{CH}\) 也不会产生 contradiction。Godel 证明了 CH 相对于 ZFC
+的 consistency direction，Cohen 用 forcing 证明了
+\(\lnot\mathrm{CH}\) 的 corresponding consistency direction。因此在本课程
+中，CH 应被看作关于 cardinality 的重要 independent statement，而不是普通
+proof 中可以自由调用的工具。
 \end{solution}
 
 \begin{explanation}
-Cantor's theorem gives a strict jump \(\card{\N}<\card{\Pow(\N)}\), and the
-standard encodings identify \(\card{\Pow(\N)}\) with \(\card{\R}\). CH asks
-whether there is any cardinality strictly between those two. The answer cannot
-be forced by the usual axioms alone, so a proof in this course should not assume
-CH unless the problem explicitly grants it.
+Cantor's theorem 给出 strict jump \(\card{\N}<\card{\Pow(\N)}\)，而 standard
+encodings 把 \(\card{\Pow(\N)}\) 与 \(\card{\R}\) 识别起来。CH 问的是这两者
+之间是否存在 strictly intermediate cardinality。Usual axioms alone 不能决定
+答案，所以本课程中的 proof 不应假设 CH，除非题目明确允许。
+理解 CH 时要分清 theorem 和 axiom extension。Cantor's theorem 已经证明
+\(\R\) uncountable，但没有告诉我们 \(\card{\N}\) 与 \(\card{\R}\) 之间是否
+还有 intermediate cardinality。CH 正是在回答这个缺口；independence 结果说
+usual axioms 本身无法决定这个答案。
 \end{explanation}
 
 \section{Axiom of Choice and Zorn's Lemma \optional}
 
 \begin{definition}[choice function]
-Let \(\mathcal S\) be a set whose elements are non-empty sets. A choice
-function for \(\mathcal S\) is a function
+设 \(\mathcal S\) 是一个 set，其 elements 本身都是 non-empty sets。
+\(\mathcal S\) 的 choice function 是一个 function
 \[
   c:\mathcal S\to\bigcup\mathcal S
 \]
-such that \(c(A)\in A\) for every \(A\in\mathcal S\).
+满足对每个 \(A\in\mathcal S\)，都有 \(c(A)\in A\)。
 \end{definition}
 
 \begin{theorem}[Axiom of Choice]
-If \(\mathcal S\) is a set whose elements are non-empty sets, then
-\(\mathcal S\) has a choice function.
+若 \(\mathcal S\) 是一个由 non-empty sets 组成的 set，则 \(\mathcal S\)
+存在 choice function。
 \end{theorem}
 
 \begin{exerciseblock}[Lecture Notes Section 6.3 Axiom of choice and Zorn's Lemma]
@@ -477,61 +537,73 @@ Zorn's Lemma.
 \end{exerciseblock}
 
 \begin{solution}
-The Axiom of Choice says that for any family \(\mathcal S\) of non-empty sets
-one may choose one element from each member simultaneously. Formally, there is a
-choice function \(c\) with \(c(A)\in A\) for every \(A\in\mathcal S\). For a
-finite family this can be done by finitely many ordinary choices; the axiom is
-needed when no explicit rule is available for infinitely many choices.
+Axiom of Choice 说：对任意由 non-empty sets 组成的 family
+\(\mathcal S\)，可以同时从每个 member \(A\in\mathcal S\) 中选出一个
+element。形式上，就是存在 choice function \(c\) 使
+\(c(A)\in A\)。有限 family 不需要新的 axiom，因为可以逐个选择；Axiom of
+Choice 处理的是无限多个 choices 且没有 uniform rule 的情况。
 
-First consequence: if \(f:X\to Y\) is surjective, then
-\(\card{Y}\le\card{X}\). For every \(y\in Y\), the fiber
+第一个 cardinality consequence：若 \(f:X\to Y\) is surjective，则
+\(\card{Y}\le\card{X}\)。对每个 \(y\in Y\)，fiber
 \[
   f^{-1}(\{y\})=\setbuilder{x\in X}{f(x)=y}
 \]
-is non-empty. By the Axiom of Choice, choose \(g(y)\in f^{-1}(\{y\})\) for
-each \(y\). Then \(g:Y\to X\) is injective: if \(g(y)=g(y')=x\), then
+是 non-empty。由 Axiom of Choice，可为每个 \(y\) 选择
+\[
+  g(y)\in f^{-1}(\{y\}).
+\]
+于是 \(g:Y\to X\) is injective：若 \(g(y)=g(y')=x\)，则
 \[
   y=f(x)=y'.
 \]
-Therefore \(\card{Y}\le\card{X}\).
+所以 \(\card{Y}\le\card{X}\)。这条结论可以理解为：surjection
+\(X\to Y\) 说明 \(X\) 至少有足够多的 elements 来覆盖 \(Y\)，而 choice
+function 把每个 \(Y\)-element 选一个 preimage，变成 injection \(Y\to X\)。
 
-Second consequence: a countable union of countable sets is countable. Let
-\(\{A_n\}_{n\in\N}\) be countable sets. For each \(n\), choose a surjection
-\(f_n:\N\to A_n\); for finite non-empty \(A_n\), repeat one element after all
-elements have been listed, and if \(A_n=\emptyset\), omit it from the union.
-Choice is used to select the whole family \(\{f_n\}\) at once. Define
+第二个 cardinality consequence：countable union of countable sets is
+countable。设 \(\{A_n\}_{n\in\N}\) 是 countable sets。对每个 \(n\)，选择
+surjection \(f_n:\N\to A_n\)；若 \(A_n\) 是 finite non-empty set，可以在列完
+所有 elements 后重复某个 element；若 \(A_n=\emptyset\)，它不影响 union。
+这里的 choice 用来一次性选择整族 enumerations \(\{f_n\}\)。定义
 \[
   F:\N\times\N\to\bigcup_{n\in\N}A_n,\qquad F(n,m)=f_n(m).
 \]
-This \(F\) is surjective. Since \(\N\times\N\) is countable, there is a
-surjection \(\N\to\N\times\N\). Composing gives a surjection from \(\N\) onto
-\(\bigcup_n A_n\), so the union is countable.
+这个 \(F\) is surjective。因为 \(\N\times\N\) is countable，存在
+surjection \(\N\to\N\times\N\)。composition 给出从 \(\N\) 到
+\(\bigcup_n A_n\) 的 surjection，所以 union is countable。
 
-Zorn's Lemma is the following statement, equivalent to the Axiom of Choice. Let
-\((P,\le)\) be a non-empty partially ordered set. If every chain
-\(C\subseteq P\) has an upper bound in \(P\), then \(P\) has a maximal element.
-Here a chain means a subset in which any two elements are comparable; an upper
-bound of \(C\) is an element \(u\in P\) satisfying \(c\le u\) for all
-\(c\in C\); a maximal element \(m\) means there is no \(p\in P\) with \(m<p\).
+Zorn's Lemma 是与 Axiom of Choice equivalent 的 order-theoretic statement。
+设 \((P,\le)\) 是 non-empty partially ordered set。若每个 chain
+\(C\subseteq P\) 都在 \(P\) 中有 upper bound，则 \(P\) 有 maximal element。
+这里 chain 指任意两个 elements 都 comparable 的 subset；upper bound 指
+\(u\in P\) 满足 \(c\le u\) for all \(c\in C\)；maximal element \(m\) 指不
+存在 \(p\in P\) 使 \(m<p\)。
 \end{solution}
 
 \begin{explanation}
-The Axiom of Choice turns many local non-empty statements into one global
-function. In the surjection result, the local objects are fibers
-\(f^{-1}(\{y\})\). In the countable-union result, the local objects are
-enumerations of the sets \(A_n\). Zorn's Lemma is the order-theoretic form of
-the same principle: instead of choosing elements directly, one proves that every
-totally ordered partial construction has an upper bound, then obtains a maximal
-construction.
+Axiom of Choice 把许多 local non-empty statements 合成一个 global function。
+在 surjection result 中，local objects 是 fibers
+\(f^{-1}(\{y\})\)；在 countable-union result 中，local objects 是每个
+\(A_n\) 的 enumerations。遇到需要使用 choice 的证明时，先明确写出
+``我要从哪些 non-empty sets 中各选一个 object''，再把这些 choices 组织成
+function。
+
+Zorn's Lemma 是同一原则的 order-theoretic form。它不直接选出很多
+elements，而是研究 partial constructions：若任何 totally ordered family of
+partial constructions 都可以合并成一个 upper bound，那么就存在一个无法再
+扩大的 maximal construction。使用 Zorn 时，最后还要证明 maximal 不只是
+``不能再大''，而是具有题目要求的 global property；否则可以扩张它并得到
+contradiction。
 \end{explanation}
 
 \begin{reviewbox}{Zorn proof pattern}
-A typical Zorn proof has four steps. Choose \(P\), usually a set of partial
-objects ordered by inclusion. Verify \(P\ne\emptyset\). Prove that every chain
-has an upper bound, often by taking the union of the chain. Apply Zorn's Lemma
-to obtain a maximal object. The final step is to prove that this maximal object
-has the desired global property; otherwise it could be extended, contradicting
-maximality.
+典型 Zorn proof 有五步。第一，选择 partially ordered set \(P\)，通常是某种
+partial objects，order 多数是 inclusion 或 extension。第二，验证
+\(P\neq\emptyset\)，例如 empty partial object 属于 \(P\)。第三，取任意
+chain \(C\)，构造 upper bound，常见做法是取 union \(\bigcup C\)，再检查它仍
+满足 \(P\) 的 defining conditions。第四，引用 Zorn's Lemma 得到 maximal
+object。第五，用 contradiction 解释 maximal object 为什么已经满足目标：
+若还缺某个性质，就可以添加一个 piece 得到更大的 object，违背 maximality。
 \end{reviewbox}
 
 \section{Intervals}
@@ -543,15 +615,16 @@ maximality.
 \end{theorem}
 
 \begin{proof}
-The function
+定义 function
 \[
   f:(0,1)\to\R,\qquad
   f(x)=\tan\bigl(\pi(x-\tfrac12)\bigr)
 \]
-is bijective. Indeed, \(x-\tfrac12\) maps \((0,1)\) onto
-\((-\tfrac12,\tfrac12)\), multiplication by \(\pi\) maps this interval onto
-\((-\pi/2,\pi/2)\), and tangent maps \((-\pi/2,\pi/2)\) bijectively onto
-\(\R\). The composition is therefore a bijection.
+它是 bijection。理由是：\(x-\tfrac12\) 把 \((0,1)\) bijectively 送到
+\((-\tfrac12,\tfrac12)\)，乘以 \(\pi\) 把这个 interval bijectively 送到
+\((-\pi/2,\pi/2)\)，而 tangent function 把
+\((-\pi/2,\pi/2)\) bijectively 送到 \(\R\)。Bijections 的 composition 仍是
+bijection，所以 \(\card{(0,1)}=\card{\R}\)。
 \end{proof}
 
 \begin{exerciseblock}[Worksheet 8 Exercise 4]
@@ -560,17 +633,17 @@ Let \((0,1)=\{x\in\R:0<x<1\}\). Prove that
 \end{exerciseblock}
 
 \begin{solution}
-Use Cantor--Bernstein theorem. The inclusion map
+使用 Cantor--Bernstein theorem。Inclusion map
 \[
   i:(0,1)\to[0,1],\qquad i(x)=x
 \]
-is injective, so \(\card{(0,1)}\le\card{[0,1]}\)。Conversely, define
+is injective，所以 \(\card{(0,1)}\le\card{[0,1]}\)。反向定义
 \[
   j:[0,1]\to(0,1),\qquad j(x)=\frac{x+1}{3}.
 \]
-For \(0\le x\le 1\), one has \(1/3\le j(x)\le 2/3\), so \(j(x)\in(0,1)\)。
-If \(j(x)=j(y)\), then \((x+1)/3=(y+1)/3\)，hence \(x=y\)。Thus \(j\) is
-injective, and \(\card{[0,1]}\le\card{(0,1)}\)。
+若 \(0\le x\le 1\)，则 \(1/3\le j(x)\le 2/3\)，所以 \(j(x)\in(0,1)\)。
+若 \(j(x)=j(y)\)，则 \((x+1)/3=(y+1)/3\)，从而 \(x=y\)。因此 \(j\) is
+injective，且 \(\card{[0,1]}\le\card{(0,1)}\)。
 Cantor--Bernstein theorem gives
 \[
   \card{(0,1)}=\card{[0,1]}.
@@ -578,10 +651,11 @@ Cantor--Bernstein theorem gives
 \end{solution}
 
 \begin{explanation}
-Adding endpoints \(0\) and \(1\) changes topology and compactness, but it does
-not change cardinality. The injection \(j(x)=(x+1)/3\) places the whole closed
-interval inside the smaller open interval \((1/3,2/3)\)，which is why
-Cantor--Bernstein applies.
+添加 endpoints \(0\) and \(1\) 会改变 topology and compactness，但不会改变
+cardinality。关键技巧是 compression：把整个 closed interval 缩放平移到
+open interval 内部的一个 smaller interval \((1/3,2/3)\)。类似题目中，若
+很难写出处理 endpoints 的 bijection，就构造两个 injections，然后让
+Cantor--Bernstein 负责把它们合成为 cardinality equality。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 63]
@@ -589,46 +663,50 @@ Show that all intervals have the same cardinality.
 \end{exerciseblock}
 
 \begin{solution}
-The literal sentence needs the standard non-degenerate interpretation. Empty
-intervals and singleton intervals do not have the same cardinality as
-\((0,1)\)。For non-empty intervals with at least two points, all usual real
-intervals have cardinality \(\card{\R}\)。
+这句话需要采用标准的 non-degenerate interpretation。Empty intervals 和
+singleton intervals 不可能与 \((0,1)\) 有相同 cardinality。对至少含有两个
+points 的 non-empty real intervals，所有 usual intervals 都有 cardinality
+\(\card{\R}\)。
 
-First, every bounded open interval \((a,b)\) with \(a<b\) is in bijection with
-\((0,1)\) by
+第一，若 \(a<b\)，bounded open interval \((a,b)\) 与 \((0,1)\) 之间有
+bijection
 \[
   \ell:(0,1)\to(a,b),\qquad \ell(x)=a+(b-a)x.
 \]
-The inverse is \(y\mapsto (y-a)/(b-a)\)，so \(\ell\) is bijective.
+inverse 是 \(y\mapsto (y-a)/(b-a)\)，所以 \(\ell\) is bijective。
 
-Second, a bounded closed or half-closed interval with \(a<b\) has the same
-cardinality as \((0,1)\)。For example, \((a,b)\subseteq[a,b]\) gives an
-injection \((a,b)\to[a,b]\)。The map
+第二，bounded closed 或 half-closed interval 在 \(a<b\) 时也与
+\((0,1)\) 有相同 cardinality。以 \([a,b]\) 为例，
+\((a,b)\subseteq[a,b]\) 给出 injection \((a,b)\to[a,b]\)。另一个 map
 \[
   [a,b]\to(a,b),\qquad x\mapsto a+\frac{b-a}{4}+\frac{x-a}{2}
 \]
-has image \([a+(b-a)/4,a+3(b-a)/4]\subset(a,b)\) and is injective. By
-Cantor--Bernstein, \(\card{[a,b]}=\card{(a,b)}\)。The same compression works
-for \([a,b)\) and \((a,b]\)。
+的 image 是 \([a+(b-a)/4,a+3(b-a)/4]\subset(a,b)\)，并且它 is injective。
+由 Cantor--Bernstein，\(\card{[a,b]}=\card{(a,b)}\)。同样的 compression
+也适用于 \([a,b)\) and \((a,b]\)。
 
-Third, unbounded intervals have cardinality \(\card{\R}\)。For instance,
+第三，unbounded intervals 有 cardinality \(\card{\R}\)。例如
 \[
   (a,\infty)\to\R,\qquad x\mapsto \log(x-a)
 \]
-is bijective, and \((-\infty,b)\to\R\), \(x\mapsto \log(b-x)\), followed by
-negation if desired, gives the left-unbounded case. Endpoints can again be
-added or removed by the same Cantor--Bernstein compression argument.
+is bijective；对于 \((-\infty,b)\)，可用 \(x\mapsto \log(b-x)\)，必要时再
+乘以 \(-1\)，得到 left-unbounded case。Endpoints 仍可用同样的
+Cantor--Bernstein compression argument 添加或移除。
 
-Since \((0,1)\) is bijective with \(\R\)，all non-degenerate standard intervals
-are mutually equipotent.
+因为 \((0,1)\) 与 \(\R\) bijective，所有 non-degenerate standard intervals
+mutually equipotent。
 \end{solution}
 
 \begin{explanation}
-The proof separates intervals by shape: bounded open, bounded with endpoints,
-and unbounded. Affine maps handle bounded open intervals. Cantor--Bernstein
-handles endpoints because a finite endpoint change can be absorbed by an
-injection into a smaller subinterval. Logarithm handles rays because it sends a
-positive distance from the endpoint onto all real numbers.
+这个 proof 按 interval shape 分三类：bounded open, bounded with endpoints,
+and unbounded。Affine maps 处理 bounded open intervals；Cantor--Bernstein
+处理 endpoints，因为 finite endpoint change 可以通过 injection 吸收到较小的
+subinterval 内；logarithm 处理 rays，因为它把 endpoint 右侧的 positive
+distance bijectively 送到 all real numbers。
+
+解决类似问题时，先排除 degenerate cases，再把 interval 化到已知模型
+\((0,1)\) 或 \(\R\)。如果 interval 只差 endpoints，不要强行写 explicit
+bijection；compression injection 加 Cantor--Bernstein 通常更清楚。
 \end{explanation}
 
 \section{Cantor set \optional}
@@ -639,35 +717,34 @@ intuition with its cardinality, and prove \(\card{C}=\card{\R}\).
 \end{exerciseblock}
 
 \begin{solution}
-Start with
+从
 \[
   C_0=[0,1].
 \]
-At stage \(1\), remove the open middle third \((1/3,2/3)\), leaving
+开始。Stage \(1\) 移除 open middle third \((1/3,2/3)\)，留下
 \[
   C_1=[0,1/3]\cup[2/3,1].
 \]
-At each later stage, remove the open middle third of every closed interval that
-remained at the previous stage. Thus \(C_n\) is a union of \(2^n\) closed
-intervals, each of length \(3^{-n}\)。The Cantor set is
+之后每个 stage 都从前一 stage 留下的每个 closed interval 中移除 open
+middle third。因此 \(C_n\) 是 \(2^n\) 个 closed intervals 的 union，每个
+interval 长度为 \(3^{-n}\)。Cantor set 定义为
 \[
   C=\bigcap_{n=0}^{\infty}C_n.
 \]
 
-Every \(x\in[0,1]\) has a ternary expansion
+每个 \(x\in[0,1]\) 都有 ternary expansion
 \[
   x=\sum_{k=1}^{\infty}\frac{a_k}{3^k},
   \qquad a_k\in\{0,1,2\}.
 \]
-When a point has two ternary expansions, choose the expansion that avoids an
-eventual tail of all \(2\)'s when possible. Under this convention, \(x\in C\)
-exactly when \(x\) has a ternary expansion using only digits \(0\) and \(2\)。
-The reason is stage-by-stage: the first removed middle third consists of points
-whose first ternary digit is \(1\); at stage \(n\), the removed middle thirds
-are exactly the points whose first digit equal to \(1\) occurs at position
-\(n\), after the previous digits have avoided \(1\)。
+当某个 point 有两个 ternary expansions 时，尽量选择不以 all \(2\)'s
+eventual tail 结尾的 expansion。在这个 convention 下，\(x\in C\) 当且仅当
+\(x\) 有只使用 digits \(0\) and \(2\) 的 ternary expansion。理由按 stage
+检查：第一次移除的 middle third 正是 first ternary digit 为 \(1\) 的
+points；第 \(n\) 次移除的 middle thirds 正是前面 digits 避开 \(1\)，但第
+\(n\) 个 digit 第一次等于 \(1\) 的 points。
 
-The removed total length is
+被移除的 total length 是
 \[
   \frac13+\frac{2}{9}+\frac{4}{27}+\cdots
   =
@@ -676,45 +753,50 @@ The removed total length is
   \frac13\sum_{k=0}^{\infty}\left(\frac23\right)^k
   =1.
 \]
-So length intuition says the remaining set is extremely small.
+因此 length intuition 会说剩下的 set 很小。
 
-Now prove its cardinality. Let \(\{0,1\}^{\N_+}\) be the set of infinite binary
-sequences indexed by positive integers. Define
+现在证明 cardinality。令 \(\{0,1\}^{\N_+}\) 表示 positive integers indexed
+的 infinite binary sequences。定义
 \[
   F:\{0,1\}^{\N_+}\to C,\qquad
   F((s_1,s_2,\ldots))
   =
   \sum_{k=1}^{\infty}\frac{2s_k}{3^k}.
 \]
-This maps binary digit \(0\) to ternary digit \(0\)，and binary digit \(1\) to
-ternary digit \(2\)。The image lies in \(C\)。If two binary sequences first
-differ at position \(k\)，their ternary expansions first differ by \(2/3^k\)，
-while the later tail can contribute at most
+这个 map 把 binary digit \(0\) 送成 ternary digit \(0\)，把 binary digit
+\(1\) 送成 ternary digit \(2\)。因此 image lies in \(C\)。若两个 binary
+sequences 第一次在 position \(k\) 不同，则对应 ternary expansions 在该位的
+差是 \(2/3^k\)，而后续 tail 最多贡献
 \[
   \sum_{j=k+1}^{\infty}\frac{2}{3^j}=\frac{1}{3^k},
 \]
-which is smaller than \(2/3^k\)。Thus \(F\) is injective. Conversely, every
-point of \(C\) has a chosen ternary expansion using only \(0\) and \(2\)，so
-dividing each ternary digit by \(2\) gives a binary sequence mapping to that
-point. Hence \(F\) is surjective. Therefore
+这个上界小于 \(2/3^k\)。所以 \(F\) is injective。反过来，每个
+point of \(C\) 都有 chosen ternary expansion using only \(0\) and \(2\)，把每
+个 ternary digit 除以 \(2\) 就得到一个 binary sequence，并且它映到该 point。
+因此 \(F\) is surjective。于是
 \[
   \card{C}=\card{\{0,1\}^{\N_+}}=\card{\Pow(\N)}=\card{\R}.
 \]
 \end{solution}
 
 \begin{explanation}
-The Cantor set separates two notions of size. Its total removed length is \(1\),
-so in measure language it has length \(0\)。But cardinality counts possible
-infinite digit sequences. There are as many \(0/2\)-ternary sequences as binary
-sequences, and binary sequences are equivalent to subsets of \(\N\)，which have
-cardinality \(\card{\Pow(\N)}=\card{\R}\)。
+Cantor set 把两种 size 概念分开。被移除的 total length 是 \(1\)，所以在
+measure language 中它有 length \(0\)。但 cardinality 计算的是可能的
+infinite digit sequences。\(0/2\)-ternary sequences 与 binary sequences 一样
+多，而 binary sequences 等价于 subsets of \(\N\)，cardinality 为
+\(\card{\Pow(\N)}=\card{\R}\)。
+
+处理 Cantor set 题时，先问问题属于哪一种 size：若问 length，就求 removed
+middle thirds 的 geometric series；若问 membership，就看 ternary digits
+是否出现 \(1\)；若问 cardinality，就把 \(0/2\)-ternary digits 编码成 binary
+sequences，再连接到 \(\Pow(\N)\)。
 \end{explanation}
 
 \section{Density \optional}
 
 \begin{definition}[dense subset of \(\R\)]
-A subset \(S\subseteq\R\) is dense in \(\R\) if for every \(r\in\R\) and every
-\(\eps>0\)，there exists \(s\in S\) such that
+Subset \(S\subseteq\R\) is dense in \(\R\) 的意思是：对每个 \(r\in\R\) 和每个
+\(\eps>0\)，都存在 \(s\in S\) 使得
 \[
   |r-s|<\eps.
 \]
@@ -726,31 +808,31 @@ Explain density, prove that \(\Z\) is not dense in \(\R\), prove that
 \end{exerciseblock}
 
 \begin{solution}
-Density asks whether elements of \(S\) can approximate every real number with
-arbitrarily small error. It is not a cardinality notion.
+Density 问的是 \(S\) 的 elements 能否用 arbitrarily small error 逼近每个
+real number。它不是 cardinality notion。
 
-The integers are not dense in \(\R\)。Take \(r=1/2\) and \(\eps=1/4\)。For any
-\(n\in\Z\)，the number \(n-1/2\) is a half-integer, so
+Integers are not dense in \(\R\)。取 \(r=1/2\) and \(\eps=1/4\)。对任意
+\(n\in\Z\)，数 \(n-1/2\) 是 half-integer，所以
 \[
   |n-1/2|\ge 1/2>1/4.
 \]
-Thus no integer lies within distance \(1/4\) of \(1/2\)，so \(\Z\) is not
-dense.
+因此没有 integer 落在 \(1/2\) 的 distance \(1/4\) 以内，所以 \(\Z\) is not
+dense。
 
-The rationals are dense in \(\R\)。Let \(r\in\R\) and \(\eps>0\)。By the
-Archimedean property, choose \(n\in\N\) with \(n>1/\eps\)，so \(1/n<\eps\)。
-Choose an integer \(m\) satisfying
+Rationals are dense in \(\R\)。取任意 \(r\in\R\) and \(\eps>0\)。由
+Archimedean property，选择 \(n\in\N\) with \(n>1/\eps\)，于是
+\(1/n<\eps\)。再选择 integer \(m\) 满足
 \[
   m\le nr<m+1.
 \]
-Then \(q=m/n\in\Q\)，and
+令 \(q=m/n\in\Q\)，则
 \[
   0\le r-q=r-\frac{m}{n}<\frac1n<\eps.
 \]
-Therefore \(|r-q|<\eps\)，so \(\Q\) is dense in \(\R\)。
+因此 \(|r-q|<\eps\)，所以 \(\Q\) is dense in \(\R\)。
 
-If \(T\subseteq\R\)，then \(S\subseteq T\) is dense in \(T\) if for every
-\(t\in T\) and every \(\eps>0\)，there exists \(s\in S\) with
+若 \(T\subseteq\R\)，则 \(S\subseteq T\) is dense in \(T\) 的意思是：对每个
+\(t\in T\) 和每个 \(\eps>0\)，存在 \(s\in S\) 使得
 \[
   |t-s|<\eps.
 \]
@@ -761,6 +843,10 @@ If \(T\subseteq\R\)，then \(S\subseteq T\) is dense in \(T\) if for every
 interior and length \(0\)。These examples show why density cannot be inferred
 from cardinality. Density depends on the order and distance inherited from
 \(\R\)，not only on how many elements a set has.
+证明某个 set 不 dense，只需找到一个 point 和一个 positive radius，使对应
+open interval 完全避开该 set。证明 dense，则要从任意 \(r\) and arbitrary
+\(\eps\) 出发构造 approximating element。对 \(\Q\)，denominator \(n\) 控制
+mesh size \(1/n\)，integer \(m\) 选择落在 \(nr\) 左侧的 grid point。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 64]
@@ -769,37 +855,38 @@ there exists \(n\in\N\) such that \(n>x\).
 \end{exerciseblock}
 
 \begin{solution}
-We prove the statement using the least upper bound property of \(\R\)。Assume
-for contradiction that there exists \(x>0\) such that \(n\le x\) for every
-\(n\in\N\)。Then \(\N\) is bounded above in \(\R\)。Let
+我们用 \(\R\) 的 least upper bound property 证明。假设存在 \(x>0\)，使得对
+每个 \(n\in\N\) 都有 \(n\le x\)。那么 \(\N\) 在 \(\R\) 中 bounded above。令
 \[
   \alpha=\sup\N.
 \]
-Because \(\alpha\) is the least upper bound, \(\alpha-1\) is not an upper bound
-of \(\N\)。Therefore there exists \(n\in\N\) such that
+因为 \(\alpha\) 是 least upper bound，\(\alpha-1\) 不是 \(\N\) 的 upper
+bound。因此存在 \(n\in\N\) 使得
 \[
   n>\alpha-1.
 \]
-Adding \(1\) gives \(n+1>\alpha\)。Since \(n+1\in\N\)，this contradicts the
-fact that \(\alpha\) is an upper bound of \(\N\)。Hence \(\N\) is not bounded
-above in \(\R\)。Consequently, for every \(x>0\)，there exists \(n\in\N\) with
-\(n>x\)。
+两边加 \(1\) 得到 \(n+1>\alpha\)。但 \(n+1\in\N\)，这与 \(\alpha\) 是
+\(\N\) 的 upper bound 矛盾。因此 \(\N\) 在 \(\R\) 中 not bounded above。
+于是对每个 \(x>0\)，都存在 \(n\in\N\) with \(n>x\)。
 \end{solution}
 
 \begin{explanation}
-The proof converts Archimedean property into a statement about boundedness. If
-some positive \(x\) were at least every natural number, then \(\N\) would have a
-supremum \(\alpha\)。The defining property of supremum says anything smaller
-than \(\alpha\)，including \(\alpha-1\)，fails to be an upper bound. That gives a
-natural number \(n>\alpha-1\)，and then \(n+1\) passes \(\alpha\)，contradicting
-the role of \(\alpha\)。
+这个 proof 把 Archimedean property 转换成 boundedness statement。若某个
+positive \(x\) 大到压住所有 natural numbers，则 \(\N\) 会有 supremum
+\(\alpha\)。Supremum 的定义说任何小于 \(\alpha\) 的数都不是 upper bound，
+特别是 \(\alpha-1\)。于是存在 natural number \(n>\alpha-1\)，而 \(n+1\)
+超过 \(\alpha\)，矛盾。
+
+以后使用 Archimedean property 时，常见目标是制造很小的 mesh：给定
+\(\eps>0\)，选 \(n>1/\eps\)，就得到 \(1/n<\eps\)。Density of \(\Q\) 的证明
+正是这个模式。
 \end{explanation}
 
 \section{Well-ordering \optional}
 
 \begin{definition}[well-ordered set]
-Let \((X,\le)\) be a totally ordered set. It is well-ordered if every non-empty
-subset \(S\subseteq X\) has a minimum element.
+设 \((X,\le)\) 是 totally ordered set。若每个 non-empty subset
+\(S\subseteq X\) 都有 minimum element，则称 \((X,\le)\) is well-ordered。
 \end{definition}
 
 \begin{exerciseblock}[Lecture Notes Section 6.7 Well-ordering]
@@ -808,77 +895,78 @@ countable sets can be well-ordered, and state the Well-Ordering Theorem.
 \end{exerciseblock}
 
 \begin{solution}
-A well-ordering is stronger than a total order. A total order compares every
-pair of elements. A well-ordering additionally requires every non-empty subset
-to have a first element.
+Well-ordering 比 total order 更强。Total order 只要求任意两个 elements 可以
+比较；well-ordering 还要求每个 non-empty subset 都有 first element。
 
-Every finite ordinal \(n=\{0,1,\ldots,n-1\}\) is well-ordered by its usual
-order. Let \(S\subseteq n\) be non-empty. Since \(S\) is finite, list its
-elements as natural numbers below \(n\)。Among these finitely many indices,
-there is a smallest one; that element is the minimum of \(S\)。
+每个 finite ordinal \(n=\{0,1,\ldots,n-1\}\) 在 usual order 下
+well-ordered。取 non-empty \(S\subseteq n\)。因为 \(S\) finite，可以把它的
+elements 看成小于 \(n\) 的 natural numbers；在有限多个 indices 中存在最小
+index，对应 element 就是 \(S\) 的 minimum。
 
-\((\N,\le)\) is well-ordered. Let \(S\subseteq\N\) be non-empty. Suppose \(S\)
-has no minimum. We prove by induction that no \(n\in\N\) belongs to \(S\)。
-For \(n=0\)，if \(0\in S\)，then \(0\) would be the minimum of \(S\)。For the
-induction step, assume no \(k<n\) lies in \(S\)。If \(n\in S\)，then \(n\)
-would be the minimum of \(S\)，because no smaller natural number lies in
-\(S\)。This contradicts the supposition. Therefore \(n\notin S\)。By induction,
-\(S=\emptyset\)，contrary to the assumption that \(S\) is non-empty. Hence
-\(S\) has a minimum.
+\((\N,\le)\) is well-ordered。取 non-empty \(S\subseteq\N\)。假设 \(S\)
+没有 minimum。我们用 induction 证明没有 \(n\in\N\) 属于 \(S\)。当
+\(n=0\) 时，若 \(0\in S\)，则 \(0\) 会是 \(S\) 的 minimum。Induction step：
+假设没有 \(k<n\) 属于 \(S\)。若 \(n\in S\)，因为没有更小的 natural number
+位于 \(S\)，所以 \(n\) 会是 \(S\) 的 minimum。这与假设矛盾。因此
+\(n\notin S\)。由 induction，\(S=\emptyset\)，与 \(S\) non-empty 矛盾。
+所以 \(S\) has a minimum。
 
-\((\Z,\le)\) is not well-ordered. The subset \(\Z\) itself has no minimum:
-for any \(z\in\Z\)，the integer \(z-1\) also lies in \(\Z\) and satisfies
-\(z-1<z\)。
+\((\Z,\le)\) is not well-ordered。\(\Z\) 这个 subset 本身没有 minimum：
+对任意 \(z\in\Z\)，integer \(z-1\) 也在 \(\Z\) 中且满足 \(z-1<z\)。
 
-\((\Q^+,\le)\) is not well-ordered. The subset \(\Q^+\) itself has no minimum:
-for any \(q\in\Q^+\)，the rational number \(q/2\) also lies in \(\Q^+\) and
-satisfies \(q/2<q\)。
+\((\Q^+,\le)\) is not well-ordered。\(\Q^+\) 这个 subset 本身没有 minimum：
+对任意 \(q\in\Q^+\)，rational number \(q/2\) 也在 \(\Q^+\) 中且满足
+\(q/2<q\)。
 
-Every countable set can be well-ordered. If \(X\) is finite, write
-\(X=\{x_0,\ldots,x_{n-1}\}\) and define \(x_i\le_X x_j\) iff \(i\le j\)。
-Every non-empty subset has an element with smallest index. If \(X\) is
-countably infinite, choose a bijection \(f:\N\to X\)。Define
+每个 countable set 都可以被 well-ordered。若 \(X\) finite，写
+\(X=\{x_0,\ldots,x_{n-1}\}\)，并定义 \(x_i\le_X x_j\) iff \(i\le j\)。
+每个 non-empty subset 都有 smallest index 对应的 element。若 \(X\) is
+countably infinite，选择 bijection \(f:\N\to X\)，定义
 \[
   x\le_X y
   \quad\text{iff}\quad
   f^{-1}(x)\le f^{-1}(y)\text{ in }\N.
 \]
-For any non-empty \(S\subseteq X\)，the preimage \(f^{-1}(S)\subseteq\N\) is
-non-empty, hence has a minimum \(m\)。Then \(f(m)\) is the minimum of \(S\)
-under \(\le_X\)。
+对任意 non-empty \(S\subseteq X\)，preimage \(f^{-1}(S)\subseteq\N\) is
+non-empty，因此有 minimum \(m\)。于是 \(f(m)\) 是 \(S\) 在 \(\le_X\) 下的
+minimum。
 
-The Well-Ordering Theorem states that every set can be well-ordered. It is
-equivalent to the Axiom of Choice. One direction is direct: if every set can be
-well-ordered and \(\mathcal S\) is a family of non-empty sets, well-order
-\(\bigcup\mathcal S\) and choose from each \(A\in\mathcal S\) its minimum
-element. The converse direction, from the Axiom of Choice to well-ordering
-every set, requires transfinite recursion: repeatedly choose the next element
-from the remaining non-empty subset until all elements have been chosen.
+Well-Ordering Theorem 断言 every set can be well-ordered。它与 Axiom of
+Choice equivalent。一个方向较短：若每个 set 都可以被 well-ordered，且
+\(\mathcal S\) 是 non-empty sets 的 family，则 well-order
+\(\bigcup\mathcal S\)，并从每个 \(A\in\mathcal S\) 中选它在该 well-ordering
+下的 minimum element。反方向，从 Axiom of Choice 推出 every set can be
+well-ordered，需要 transfinite recursion：不断从 remaining non-empty subset
+中选择 next element，直到所有 elements 都被选入 order。
 \end{solution}
 
 \begin{explanation}
-Well-ordering is about the existence of first elements in all non-empty
-subsets, not about the familiar visual order of a set. The usual order on
-\(\Z\) fails because one can always move left. The usual order on \(\Q^+\)
-fails because one can always halve. A countable set can be well-ordered by
-transporting the usual well-ordering of \(\N\) through an enumeration.
+Well-ordering 关心的是所有 non-empty subsets 是否都有 first element，而不是
+某个 set 看起来是否排成一行。Usual order on \(\Z\) 失败，因为总能向左移动；
+usual order on \(\Q^+\) 失败，因为总能把 positive rational 减半。Countable
+set 可以通过 enumeration 把 \(\N\) 的 usual well-ordering transport 过去。
+
+做 well-ordering 题时，证明 positive example 要从 arbitrary non-empty
+subset 出发找 minimum；证明 negative example 只需展示一个 non-empty subset
+没有 minimum。不要只说 order 没有 first element，要指出对每个 candidate
+都能在同一 subset 中找到更小 element。
 \end{explanation}
 
 \section{Review checklist}
 
 \begin{itemize}
-  \item To prove equal cardinality, construct a bijection or use two injections
-  plus Cantor--Bernstein theorem.
-  \item To prove countability of a product such as \(\N\times\N\), enumerate
-  by diagonals or use Cantor pairing.
-  \item To prove uncountability, use Cantor's theorem or a diagonal argument
-  that constructs an object missing from any proposed list.
-  \item To compare intervals, use affine bijections, compression injections,
-  and Cantor--Bernstein theorem.
-  \item To use the Axiom of Choice, identify the family of non-empty sets from
-  which simultaneous choices are required.
-  \item To use Zorn's Lemma, identify the partially ordered set, prove every
-  chain has an upper bound, then interpret maximality.
-  \item To discuss density or well-ordering, keep the order or metric structure
-  separate from cardinality.
+  \item 证明 equal cardinality 时，构造 bijection，或构造两个 injections 再用
+  Cantor--Bernstein theorem。
+  \item 证明 \(\N\times\N\) 这类 product countable 时，用 diagonal
+  enumeration 或 Cantor pairing。
+  \item 证明 uncountability 时，用 Cantor's theorem，或用 diagonal argument
+  从任意 proposed list 中构造漏掉的 object。
+  \item 比较 intervals 时，用 affine bijections, compression injections,
+  and Cantor--Bernstein theorem。
+  \item 使用 Axiom of Choice 时，先指出需要 simultaneous choices 的
+  non-empty sets family。
+  \item 使用 Zorn's Lemma 时，先确定 partially ordered set，证明每个 chain
+  有 upper bound，再解释 maximality 如何给出目标结论。
+  \item 讨论 density 或 well-ordering 时，把 order or metric structure 与
+  cardinality 分开。
 \end{itemize}

@@ -3,7 +3,9 @@
 
 \section{从 set 到 structured set}
 
-在前面的章节中，一个 set 主要由它的 elements 决定。若 \(X=\{5,\mathrm{dog}\}\) 而 \(B=\{0,1\}\)，则从纯粹 set-theoretic 的角度看，只要存在 bijection \(X\to B\)，两个集合的 cardinality 就相同。但是 \(B\) 上还可以定义 Boolean addition and multiplication；这些 binary operations 是额外的 structure。因此，本章研究的对象不只是一个 set，而是一个 set together with operations, distinguished elements, and maps preserving those operations。
+在前面的章节中，一个 set 主要由它的 elements 决定。若 \(X=\{5,\mathrm{dog}\}\) 而 \(B=\{0,1\}\)，则从纯粹 set-theoretic 的角度看，只要存在 bijection \(X\to B\)，两个集合的 cardinality 就相同。但是数学中常见的对象通常不只是集合本身。我们还会指定怎样合并元素、怎样比较元素、哪些元素有特别角色，以及哪些 functions 被允许当作 preserving structure 的 maps。因此，本章研究的对象是 structured set：a set together with extra data。
+
+例如 \(B=\{0,1\}\) 与 \(\{5,\mathrm{dog}\}\) 作为 bare sets 都有两个元素，但 \(B\) 上有 addition modulo \(2\) 与 Boolean multiplication。若只看 cardinality，我们看不到 \(1+1=0\) 这类信息；若把 operations 一起记录下来，就能讨论 additive inverse, identity, homomorphism, isomorphism 等 algebraic questions。本章的主题就是把这些额外资料写成精确的 definitions，然后用 definitions 推出 consequences。
 
 \begin{definition}[binary operation]
 设 \(X\) 是集合。一个 binary operation on \(X\) 是函数
@@ -12,6 +14,8 @@
 \]
 若 \(a,b\in X\)，通常把 \(*(a,b)\) 写成 \(a*b\)。定义中的 codomain 是 \(X\)，所以 operation 的 closure 已经包含在定义中。
 \end{definition}
+
+Binary operation 的检查有两个层次。第一，rule 必须吃两个 \(X\) 中的 inputs；第二，output 必须仍在 \(X\) 中。很多错误例子都失败在第二点。例如 subtraction 是 \(\Z\) 上的 binary operation，但不是 \(\N\) 上的 binary operation，因为 \(2-5\notin\N\)。同一个公式放在不同集合上，可能给出不同的结构。
 
 \begin{definition}[Boolean integers]
 令 \(B=\{0,1\}\)。在 \(B\) 上定义
@@ -31,6 +35,8 @@
 则 \((B,+,\cdot)\) 称为 Boolean integers。这里 \(+\) 是 addition modulo \(2\)，而 \(\cdot\) 是 usual Boolean multiplication。
 \end{definition}
 
+这些表格是 Cayley-style tables。左边第一列记录第一个 input，顶部第一行记录第二个 input，交叉位置给出 operation 的值。例如 \(1+1=0\) 位于 addition table 的 \(1\)-row 与 \(1\)-column 交叉处。Finite algebraic structure 经常用这种方式描述，因为一张表同时记录 closure、identity candidate、inverse pattern、commutativity 等信息。若表格关于主对角线对称，则对应 operation commutative；若某一行和某一列复制表头，则对应元素可能是 identity。
+
 \begin{exerciseblock}[Lecture Notes Exercise 65]
 Prove the following fact about the Boolean integers:
 \[
@@ -39,7 +45,9 @@ Prove the following fact about the Boolean integers:
 \end{exerciseblock}
 
 \begin{solution}
-由于 \(B=\{0,1\}\)，证明全称命题只需要分别处理 \(x=0\) 与 \(x=1\)。若 \(x=0\)，取 \(y=0\)。由 Boolean addition table 得
+由于 \(B=\{0,1\}\)，证明全称命题只需要分别处理 \(x=0\) 与 \(x=1\)。
+
+若 \(x=0\)，取 \(y=0\)。由 Boolean addition table 得
 \[
   x+y=0+0=0.
 \]
@@ -47,11 +55,12 @@ Prove the following fact about the Boolean integers:
 \[
   x+y=1+1=0.
 \]
-因此对于每个 \(x\in B\)，都存在 \(y\in B\) 使得 \(x+y=0\)，命题成立。
+在两个可能的 cases 中，我们都找到 \(y\in B\) 使得 \(x+y=0\)。因此对于每个 \(x\in B\)，都存在这样的 \(y\)，命题成立。
 \end{solution}
 
 \begin{explanation}
-该题的核心不是寻找复杂公式，而是严格展开 finite set 上的 quantified statement。因为 \(B\) 只有两个元素，\(\forall x\in B\) 的证明等价于列出两个 cases。这里的 \(y\) 实际上就是 \(x\) 本身，说明在 Boolean addition 下每个元素都是自己的 additive inverse。
+该题的核心不是寻找复杂公式，而是严格展开 finite set 上的 quantified statement。遇到
+\(\forall x\in B,\exists y\in B\) 时，先按 \(x\) 的可能取值分 case；每个 case 中只需要给出一个 witness \(y\)，再用 operation table 检查等式。这里的 witness 可以统一写成 \(y=x\)，说明在 Boolean addition 下每个元素都是自己的 additive inverse。做类似题时，不要只说“存在 inverse”，而要写出候选元素并代入表格或定义验证。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 66]
@@ -70,11 +79,12 @@ Come up with more examples of binary operations.
   \]
   是 \(X^X\) 上的 binary operation，因为 \(f:X\to X\) 且 \(g:X\to X\) 推出 \(f\circ g:X\to X\)。
   \item 在 \(\R\) 上，\((a,b)\mapsto \max\{a,b\}\) 是 binary operation，因为两个实数的 maximum 仍是实数。
+  \item 在 \(\Z/n\Z\) 上，\((\overline a,\overline b)\mapsto \overline{a+b}\) 是 binary operation，因为 residue classes 的和仍是一个 residue class modulo \(n\)。
 \end{enumerate}
 \end{solution}
 
 \begin{explanation}
-验证 binary operation 时必须检查 closure。也就是说，题目要求的不只是写出一个二元规则，而是证明该规则对任意输入 \((a,b)\in X\times X\) 都给出 \(X\) 中的输出。集合运算与函数复合是本课程最重要的例子，因为它们直接连接 set theory, function, and algebraic structure。
+验证 binary operation 时必须检查 closure。也就是说，题目要求的不只是写出一个二元规则，而是证明该规则对任意输入 \((a,b)\in X\times X\) 都给出 \(X\) 中的输出。做同类题时可以使用三步模板：先写清楚 underlying set \(X\)，再写清楚 operation rule，最后用一句完整的 closure argument 说明 output belongs to \(X\)。集合运算与函数复合是本课程最重要的例子，因为它们直接连接 set theory, function, and algebraic structure。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 67]
@@ -98,10 +108,12 @@ Look up what a ring is.
 \end{solution}
 
 \begin{explanation}
-Boolean integers \((B,+,\cdot)\) 是 ring 的小型模型：\(+\) 给出 additive group structure，\(\cdot\) 给出 associative multiplication，并且 multiplication distributes over addition。课程暂时不需要 ring theory 的完整发展，但该定义说明一个 structured set 可以同时携带多个 operations，并且不同 operations 之间需要满足 compatibility laws。
+Boolean integers \((B,+,\cdot)\) 是 ring 的小型模型：\(+\) 给出 additive group structure，\(\cdot\) 给出 associative multiplication，并且 multiplication distributes over addition。课程暂时不需要 ring theory 的完整发展，但该定义说明一个 structured set 可以同时携带多个 operations，并且不同 operations 之间需要满足 compatibility laws。查找 algebraic definition 时，建议把信息拆成 underlying set、operations、axioms、optional extra assumptions 四栏，这样能区分 ring, commutative ring, and ring with identity。
 \end{explanation}
 
 \section{Monoids}
+
+Monoid 是研究单一 binary operation 的第一个稳定框架。它抽象了“可以连续合并多个元素，并且有一个什么都不改变的元素”这件事。因为 operation associative，表达式 \(a*b*c\) 的括号不会影响结果；因为存在 identity，元素 \(e\) 的作用类似加法中的 \(0\) 或乘法中的 \(1\)。
 
 \begin{definition}[monoid]
 一个 monoid 是一对 \((M,*)\)，其中 \(M\) 是集合，\(*:M\times M\to M\) 是 binary operation，并且满足：
@@ -115,15 +127,29 @@ Boolean integers \((B,+,\cdot)\) 是 ring 的小型模型：\(+\) 给出 additiv
 元素 \(e\) 称为 identity element。
 \end{definition}
 
+检查 monoid 时，closure, associativity, and identity 都不能省略。Closure 来自 binary operation；associativity 是三元素等式；identity 必须左右两边都成立。常见 examples 包括 \((\N,+)\) with identity \(0\)、\((\N,\times)\) with identity \(1\)、\((\Z,+)\)、\((\Z,\times)\)、以及 \(X^X\) under composition with identity function \(\mathrm{id}_X\)。常见 non-examples 也很有教学价值：\((\Z_{>0},+)\) 没有 additive identity 留在集合内；\((\Z,-)\) 有 closure 但 subtraction not associative。
+
 \begin{proposition}[identity 的唯一性]
 一个 monoid 至多有一个 identity element。
 \end{proposition}
 
 \begin{proof}
-设 \(e\) 与 \(e'\) 都是 identities。由于 \(e\) 是 identity，代入 \(a=e'\) 得 \(e*e'=e'\)。由于 \(e'\) 是 identity，代入 \(a=e\) 得 \(e*e'=e\)。因此 \(e=e'\)。
+设 \(e\) 与 \(e'\) 都是 identities。由于 \(e\) 是 identity，把右侧输入取为 \(e'\) 得
+\[
+  e*e'=e'.
+\]
+由于 \(e'\) 是 identity，把左侧输入取为 \(e\) 得
+\[
+  e*e'=e.
+\]
+同一个元素 \(e*e'\) 同时等于 \(e\) 与 \(e'\)，因此 \(e=e'\)。
 \end{proof}
 
+这个证明展示了 algebraic uniqueness proof 的常用形状：如果有两个候选对象，就把它们放进同一个 expression 中，并用各自的 defining property 从两边读出结果。以后证明 inverse uniqueness、identity-preservation 等命题时，也会反复使用这种“同一表达式两种读法”的方法。
+
 \section{Groups}
+
+Group 比 monoid 多了 invertibility。直观上，group 用来记录 symmetry：做完一个 operation 后，还能通过另一个 operation 回到原来的状态。例如整数加法中，先加 \(n\) 再加 \(-n\) 会回到起点；正方形的旋转或反射也都可以撤销。这个可撤销性是 group theory 的核心。
 
 \begin{definition}[group]
 一个 group 是集合 \(G\)，配备 identity element \(e\) 与 binary operation \((a,b)\mapsto a\cdot b\)，满足：
@@ -139,6 +165,72 @@ Boolean integers \((B,+,\cdot)\) 是 ring 的小型模型：\(+\) 给出 additiv
 \]
 在完整的 group theory 语言中，\(b\) 称为 \(a\) 的 inverse；Worksheet 10 Exercise 1 会证明在这些公理下也有 \(b\cdot a=e\)。
 \end{definition}
+
+本讲义采用的 inverse axiom 只直接给出 right inverse。由于 identity 是 two-sided，且 operation associative，right inverse 会自动成为 left inverse。证明这件事很重要，因为它说明 group definition 中的某些公理互相配合后会产生额外结论。做 group 证明时，通常不能交换因子顺序，除非题目已经给出 abelian 或 commutative 条件；因此所有乘法等式都要保留顺序。
+
+\begin{proposition}[inverse 的唯一性]
+在 group 中，每个元素的 inverse 至多有一个。
+\end{proposition}
+
+\begin{proof}
+设 \(b\) 与 \(c\) 都是 \(a\) 的 two-sided inverses，即
+\[
+  a\cdot b=e=b\cdot a,\qquad a\cdot c=e=c\cdot a.
+\]
+利用 identity, associativity, and inverse equations，
+\[
+  b=b\cdot e=b\cdot(a\cdot c)=(b\cdot a)\cdot c=e\cdot c=c.
+\]
+因此 inverse 唯一。
+\end{proof}
+
+\begin{proposition}[socks-shoes property]
+若 \(a,b\in G\)，则
+\[
+  (a\cdot b)^{-1}=b^{-1}\cdot a^{-1}.
+\]
+\end{proposition}
+
+\begin{proof}
+要证明某个元素是 \(a\cdot b\) 的 inverse，只需要把它与 \(a\cdot b\) 相乘并得到 identity。计算
+\[
+  (a\cdot b)\cdot(b^{-1}\cdot a^{-1})
+  =a\cdot(b\cdot b^{-1})\cdot a^{-1}
+  =a\cdot e\cdot a^{-1}
+  =a\cdot a^{-1}
+  =e.
+\]
+同理
+\[
+  (b^{-1}\cdot a^{-1})\cdot(a\cdot b)
+  =b^{-1}\cdot(a^{-1}\cdot a)\cdot b
+  =b^{-1}\cdot e\cdot b
+  =e.
+\]
+由 inverse 的唯一性，\((a\cdot b)^{-1}=b^{-1}\cdot a^{-1}\)。
+\end{proof}
+
+\begin{proposition}[cancellation laws]
+若 \(a\cdot b=a\cdot c\)，则 \(b=c\)。若 \(b\cdot a=c\cdot a\)，则 \(b=c\)。
+\end{proposition}
+
+\begin{proof}
+证明 left cancellation。由 \(a\cdot b=a\cdot c\)，在等式两边左乘 \(a^{-1}\)，并用 associativity 保持括号顺序：
+\[
+  a^{-1}\cdot(a\cdot b)=a^{-1}\cdot(a\cdot c).
+\]
+于是
+\[
+  (a^{-1}\cdot a)\cdot b=(a^{-1}\cdot a)\cdot c,
+\]
+即
+\[
+  e\cdot b=e\cdot c.
+\]
+所以 \(b=c\)。Right cancellation 的证明相同，只是在等式两边右乘 \(a^{-1}\)。
+\end{proof}
+
+这些命题的共同思想是：group 中的 algebraic equation 可以通过 inverse 消去相同因子，但消去的方向必须与因子所在位置匹配。左边的 \(a\) 要左乘 \(a^{-1}\) 消去；右边的 \(a\) 要右乘 \(a^{-1}\) 消去。这个规则是后面处理 conjugacy 与 homomorphism 计算的基础。
 
 \begin{exerciseblock}[Lecture Notes Exercise 68]
 Find an example of a monoid that is not a group.
@@ -163,7 +255,7 @@ Find an example of a monoid that is not a group.
 \end{solution}
 
 \begin{explanation}
-构造 “monoid but not group” 的标准方法是保留 associativity and identity，同时找出一个没有 inverse 的元素。自然数加法有 identity \(0\)，但正整数不能通过加另一个自然数回到 \(0\)。这个例子说明 group 比 monoid 多出的关键限制是 invertibility。
+构造 “monoid but not group” 的标准方法是保留 associativity and identity，同时找出一个没有 inverse 的元素。自然数加法有 identity \(0\)，但正整数不能通过加另一个自然数回到 \(0\)。做类似题时，先完成 monoid checklist，再挑一个具体元素作为 obstruction；只说“不是每个元素都有 inverse”不够，需要指出哪个元素没有 inverse，并解释为什么任何候选都失败。这个例子说明 group 比 monoid 多出的关键限制是 invertibility。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 69]
@@ -197,10 +289,12 @@ Show that \(GL(2,\R)\) is not abelian.
 \end{solution}
 
 \begin{explanation}
-证明一个 group 不是 abelian，只需要给出一个 counterexample pair。选择 shear matrices 的原因是它们 determinant 非零，保证属于 \(GL(2,\R)\)，同时矩阵乘法的顺序会改变输出。这里的计算完整展示了 non-commutativity，而不是只引用矩阵乘法一般不交换。
+证明一个 group 不是 abelian，只需要给出一个 counterexample pair。选择 shear matrices 的原因是它们 determinant 非零，保证属于 \(GL(2,\R)\)，同时矩阵乘法的顺序会改变输出。做同类题时，第一步先确认两个候选元素真的属于 group；第二步分别计算 \(ab\) 与 \(ba\)；第三步指出一个具体 entry 或具体 image 不同。这样的 counterexample 比引用“矩阵乘法通常不交换”更完整。
 \end{explanation}
 
 \section{Homomorphisms and Isomorphisms}
+
+当我们研究 structured sets 时，也需要研究哪些 functions 尊重这些 structures。Bare set theory 中的 function 只需要把元素送到元素；group theory 中的 homomorphism 还要保留 multiplication。也就是说，它不能随意改写 operation 的结果。
 
 \begin{definition}[group homomorphism]
 设 \((G,*)\) 与 \((H,*')\) 是 groups。函数 \(\varphi:G\to H\) 称为 group homomorphism，若对所有 \(a,b\in G\)，
@@ -209,9 +303,43 @@ Show that \(GL(2,\R)\) is not abelian.
 \]
 \end{definition}
 
+这个公式要从两边同时理解。左边先在 \(G\) 中做 operation，再把结果送到 \(H\)。右边先把 \(a,b\) 分别送到 \(H\)，再在 \(H\) 中做 operation。Homomorphism property 说两条路径的结果相同。常见 examples 包括 constant-to-identity homomorphism \(g\mapsto e_H\)、identity homomorphism \(\mathrm{id}_G\)、modulo map \(\Z\to\Z_2\)、以及 \(\exp:(\R,+)\to(\R_{>0},\times)\)。
+
+\begin{proposition}[homomorphism preserves identity and inverse]
+若 \(\varphi:G\to H\) 是 group homomorphism，则
+\[
+  \varphi(e_G)=e_H
+\]
+且对每个 \(g\in G\)，
+\[
+  \varphi(g^{-1})=\varphi(g)^{-1}.
+\]
+\end{proposition}
+
+\begin{proof}
+因为 \(e_G*e_G=e_G\)，homomorphism property 给出
+\[
+  \varphi(e_G)=\varphi(e_G*e_G)=\varphi(e_G)*'\varphi(e_G).
+\]
+在 group \(H\) 中对等式左边消去 \(\varphi(e_G)\)，得到 \(\varphi(e_G)=e_H\)。
+
+再取 \(g\in G\)。由于 \(g*g^{-1}=e_G\)，
+\[
+  \varphi(g)*'\varphi(g^{-1})
+  =\varphi(g*g^{-1})
+  =\varphi(e_G)
+  =e_H.
+\]
+同样由 \(g^{-1}*g=e_G\) 得到 \(\varphi(g^{-1})*'\varphi(g)=e_H\)。因此 \(\varphi(g^{-1})\) 是 \(\varphi(g)\) 的 inverse，即 \(\varphi(g^{-1})=\varphi(g)^{-1}\)。
+\end{proof}
+
+这个 proposition 说明 homomorphism 的乘法保留条件会自动保留 identity and inverse。做 homomorphism 题时，通常不需要另外猜 identity 的 image；先验证 multiplication preservation，identity 与 inverse behavior 会跟随而来。
+
 \begin{definition}[isomorphism]
 一个 group homomorphism \(\varphi:G\to H\) 若同时是 bijection，则称为 isomorphism。若存在 isomorphism \(G\to H\)，则称 \(G\) 与 \(H\) isomorphic。
 \end{definition}
+
+Isomorphism 的意思不是两个 groups 的元素完全相同，而是它们的 multiplication pattern 相同。Finite groups 的 isomorphism 可以通过 Cayley table 理解：若重新命名元素后，一张 table 变成另一张 table，那么这两个 groups 就有相同的 structure。证明 isomorphism 一般要完成两件事：证明 map 是 bijection；证明 map preserves operation。
 
 \begin{exerciseblock}[Lecture Notes Exercise 70]
 Show that \((C,\clubsuit)\) is isomorphic to \((B,+)\).
@@ -245,14 +373,47 @@ Show that \((C,\clubsuit)\) is isomorphic to \((B,+)\).
 \end{solution}
 
 \begin{explanation}
-构造 finite group 的 isomorphism 时，最直接的方法是把 identity 映到 identity，把另一个元素映到另一个元素，然后验证 operation table 被保留。这里 \(\clubsuit\) 的表与 Boolean addition 的表完全相同，只是元素名称从 \(F,T\) 改为 \(0,1\)。isomorphism 的意义是两组结构只有 labels 不同。
+构造 finite group 的 isomorphism 时，最直接的方法是把 identity 映到 identity，把生成 operation pattern 的元素映到对应元素，然后验证 operation table 被保留。这里 \(\clubsuit\) 的表与 Boolean addition 的表完全相同，只是元素名称从 \(F,T\) 改为 \(0,1\)。做类似题时，可以先画两张 Cayley-style tables：若每个 entry 在 relabeling 后一致，homomorphism property 就对所有 ordered pairs 成立。Isomorphism 的意义是两组结构只有 labels 不同。
 \end{explanation}
 
 \section{Symmetric Groups}
 
+Permutation 是 bijection from a set to itself。Symmetric group 把所有 permutations 收集起来，并用 function composition 作为 operation。它是 group theory 中最重要的例子之一，因为许多 symmetry 都能表示为某个集合上的 permutations。
+
 \begin{definition}[symmetric group]
 设 \(X\) 是集合。\(S_X\) 表示所有 bijections \(X\to X\) 的集合，operation 是 function composition。若 \(X=\{1,\ldots,n\}\)，则也写作 \(S_n\)。
 \end{definition}
+
+\begin{theorem}[\(S_X\) is a group]
+对任意集合 \(X\)，\((S_X,\circ)\) 是 group。
+\end{theorem}
+
+\begin{proof}
+首先，composition of bijections is a bijection。因此若 \(\sigma,\tau\in S_X\)，则 \(\sigma\circ\tau\in S_X\)，所以 closure 成立。
+
+其次，function composition associative：对所有 \(\rho,\sigma,\tau\in S_X\) 与所有 \(x\in X\)，
+\[
+  ((\rho\circ\sigma)\circ\tau)(x)
+  =\rho(\sigma(\tau(x)))
+  =(\rho\circ(\sigma\circ\tau))(x).
+\]
+两个 functions 在每个 \(x\in X\) 上取值相同，因此它们相等。
+
+第三，identity function \(\mathrm{id}_X:X\to X\), \(\mathrm{id}_X(x)=x\)，是 \(S_X\) 的 identity，因为
+\[
+  \sigma\circ\mathrm{id}_X=\sigma=\mathrm{id}_X\circ\sigma
+\]
+对所有 \(\sigma\in S_X\) 成立。
+
+最后，每个 \(\sigma\in S_X\) 是 bijection，所以存在 inverse function \(\sigma^{-1}:X\to X\)，并且 \(\sigma^{-1}\) 也是 bijection。于是
+\[
+  \sigma\circ\sigma^{-1}=\mathrm{id}_X
+  =\sigma^{-1}\circ\sigma.
+\]
+四项 group checklist 都成立，故 \((S_X,\circ)\) 是 group。
+\end{proof}
+
+这个 theorem 的重点是把 function theory 转换成 group axioms。Closure 使用“bijections 的复合仍是 bijection”；associativity 逐点验证；identity 是 identity function；inverse 来自 bijection 的 inverse function。以后证明某类 transformations 形成 group，也可以照这个 checklist 逐项检查。
 
 \begin{exerciseblock}[Lecture Notes Exercise 71]
 Write down all bijections of the sets \(\{1,2\}\) and \(\{1,2,3\}\).
@@ -284,7 +445,7 @@ Write down all bijections of the sets \(\{1,2\}\) and \(\{1,2,3\}\).
 \end{solution}
 
 \begin{explanation}
-列出 all bijections 的系统方法是先选择 \(1\) 的 image，再选择 \(2\) 的 image，最后剩余元素强制成为 \(3\) 的 image。对三元素集合，这给出 \(3\cdot2\cdot1=6\) 个 permutations。cycle notation 是 compact label；two-line notation 明确记录每个输入的输出。
+列出 all bijections 的系统方法是先选择 \(1\) 的 image，再选择 \(2\) 的 image，最后剩余元素强制成为 \(3\) 的 image。对三元素集合，这给出 \(3\cdot2\cdot1=6\) 个 permutations。做类似 enumeration 题时，先计算总数 \(n!\)，再列出 candidates，最后核对没有重复且数量正确。Cycle notation 是 compact label；two-line notation 明确记录每个输入的输出。当题目要求“write down all bijections”时，two-line notation 往往更适合检查完整性。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 72]
@@ -301,7 +462,21 @@ Show that \(S_2\) is isomorphic to \(\Z_2\).
   \varphi:S_2\to B,\qquad
   \varphi(\mathrm{id})=0,\quad \varphi((12))=1.
 \]
-该函数是 bijection。验证 homomorphism property：
+该函数是 bijection。为了看清 operation preservation，可以把两张 Cayley-style tables 对齐：
+\[
+\begin{array}{c|cc}
+\circ&\mathrm{id}&(12)\\ \hline
+\mathrm{id}&\mathrm{id}&(12)\\
+(12)&(12)&\mathrm{id}
+\end{array}
+\qquad
+\begin{array}{c|cc}
++&0&1\\ \hline
+0&0&1\\
+1&1&0
+\end{array}
+\]
+在 \(\varphi\) 的 relabeling 下，左表的每个 entry 都变成右表对应 entry。等价地，逐项检查为
 \[
   \varphi(\mathrm{id}\circ\mathrm{id})=\varphi(\mathrm{id})=0=0+0,
 \]
@@ -318,10 +493,12 @@ Show that \(S_2\) is isomorphic to \(\Z_2\).
 \end{solution}
 
 \begin{explanation}
-两个 order \(2\) 的 groups 若都由一个非 identity 元素生成，通常会同构。本题仍然需要写出具体 map 并检查 operation。关键计算是 transposition \((12)\) composed with itself gives identity，这与 \(1+1=0\) 完全对应。
+两个 order \(2\) 的 groups 若都由一个非 identity 元素生成，通常会同构。本题仍然需要写出具体 map 并检查 operation。关键计算是 transposition \((12)\) composed with itself gives identity，这与 \(1+1=0\) 完全对应。做有限 group 的 isomorphism 题时，Cayley table 是可靠工具：先找 identity，再配对非 identity 元素，最后逐格核对 multiplication pattern。
 \end{explanation}
 
 \section{Worksheet 10: groups and conjugacy}
+
+Worksheet 10 把前面的 definitions 用在 group proofs、conjugacy、dihedral group、symmetric group homomorphisms 上。这里的共同技能是把抽象定义变成可操作的证明步骤：对于 inverse 题，追踪 identity 与 associativity；对于 conjugacy 题，追踪 \(x^{-1}hx\) 的 conjugating element；对于 \(D_8\) 题，使用 generators and relations；对于 homomorphism 题，检查 operation preservation。
 
 \begin{exerciseblock}[Worksheet 10 Exercise 1]
 Let \((G,e,\cdot)\) be a group. Prove that for all \(a\in G\), there exists \(b\in G\) such that \(a\cdot b=b\cdot a=e\).
@@ -348,7 +525,11 @@ Let \((G,e,\cdot)\) be a group. Prove that for all \(a\in G\), there exists \(b\
 \end{solution}
 
 \begin{explanation}
-题目的难点在于公理只直接给出 right inverse \(a\cdot b=e\)，但目标要求 two-sided inverse。证明策略是先给 \(a\) 找到 \(b\)，再给 \(b\) 找到 right inverse \(c\)。等式 \(a=a(bc)=(ab)c=c\) 把 \(c\) 识别为 \(a\)，从而把 \(b c=e\) 转化为 \(b a=e\)。
+题目的难点在于公理只直接给出 right inverse \(a\cdot b=e\)，但目标要求 two-sided inverse。证明策略是先给 \(a\) 找到 \(b\)，再给 \(b\) 找到 right inverse \(c\)。等式
+\[
+  a=a\cdot(b\cdot c)=(a\cdot b)\cdot c=c
+\]
+把 \(c\) 识别为 \(a\)，从而把 \(bc=e\) 转化为 \(ba=e\)。做类似“one-sided condition implies two-sided condition”的题目时，先不要尝试交换顺序；应当寻找第二个由公理给出的 auxiliary element，然后用 associativity 把两个 inverse equations 接到同一条等式链里。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 10 Exercise 2]
@@ -358,7 +539,7 @@ Let \((G,e,\cdot)\) be a group. Define \(g\sim h\) if there exists \(x\in G\) su
 \begin{solution}
 我们分别证明 reflexive, symmetric, and transitive。
 
-Reflexive: 对任意 \(g\in G\)，取 \(x=e\)。则
+Reflexive: 对任意 \(g\in G\)，取 \(x=e\)。由于 \(e^{-1}=e\)，
 \[
   x^{-1}gx=e^{-1}ge=ege=g,
 \]
@@ -368,7 +549,7 @@ Symmetric: 设 \(g\sim h\)。则存在 \(x\in G\) 使得
 \[
   g=x^{-1}hx.
 \]
-两边左乘 \(x\)、右乘 \(x^{-1}\)，得到
+两边左乘 \(x\)、右乘 \(x^{-1}\)，并保持乘法顺序，得到
 \[
   xgx^{-1}=h.
 \]
@@ -392,7 +573,7 @@ Transitive: 设 \(g\sim h\) 且 \(h\sim k\)。则存在 \(x,y\in G\) 使得
 \end{solution}
 
 \begin{explanation}
-该关系是 conjugacy relation。Reflexive 使用 identity conjugation；symmetric 使用 inverse conjugating element；transitive 使用 conjugations 的复合。最容易出错的地方是乘法顺序：若 \(g=x^{-1}hx\) 且 \(h=y^{-1}ky\)，则新的 conjugating element 是 \(yx\)，因为 \((yx)^{-1}=x^{-1}y^{-1}\)。
+该关系是 conjugacy relation。Reflexive 使用 identity conjugation；symmetric 使用 inverse conjugating element；transitive 使用 conjugations 的复合。最容易出错的地方是乘法顺序：若 \(g=x^{-1}hx\) 且 \(h=y^{-1}ky\)，则新的 conjugating element 是 \(yx\)，因为 \((yx)^{-1}=x^{-1}y^{-1}\)。做类似 equivalence relation 题时，先写出三项 checklist，然后每一项都明确给出 witness：reflexive 的 witness 是 \(e\)，symmetric 的 witness 是 \(x^{-1}\)，transitive 的 witness 是 \(yx\)。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 10 Exercise 3]
@@ -408,7 +589,18 @@ Let \(D_8\) be the group of symmetries of a square. Describe its \(8\) elements 
 \[
   e,\ r,\ r^2,\ r^3,\ s,\ rs,\ r^2s,\ r^3s.
 \]
-其中 \(r^k(i)=i+k\)，而 \(r^k s(i)=k-i\)，所有运算都在 \(\Z/4\Z\) 中进行。
+其中 \(r^k(i)=i+k\)，而 \(r^k s(i)=k-i\)，所有运算都在 \(\Z/4\Z\) 中进行。前四个元素是 rotations；后四个元素是先反射再旋转得到的 reflections。
+
+这些元素满足 compressed Cayley-style rules
+\[
+  r^i r^j=r^{i+j},\qquad
+  r^i(r^j s)=r^{i+j}s,
+\]
+\[
+  (r^i s)r^j=r^{i-j}s,\qquad
+  (r^i s)(r^j s)=r^{i-j},
+\]
+其中指数都按 modulo \(4\) 计算。这四条规则可以代替完整 \(8\times 8\) Cayley table，并且来自关系 \(r^4=e\), \(s^2=e\), \(sr=r^{-1}s\)。
 
 令 \(\widehat D_8\) 为满足
 \[
@@ -426,7 +618,7 @@ Let \(D_8\) be the group of symmetries of a square. Describe its \(8\) elements 
 \end{solution}
 
 \begin{explanation}
-正方形对称群的本质是“保持相邻和相对关系的顶点 permutation”。条件 \(f(i+2)=f(i)+2\) 正是在 permutation language 中表达 opposite vertices remain opposite。先用 \(r\) 与 \(s\) 写出八个几何对称，再证明 permutation model 也只有这八个元素，就得到两个模型描述的是同一个 group structure。
+正方形对称群的本质是“保持相邻和相对关系的顶点 permutation”。条件 \(f(i+2)=f(i)+2\) 正是在 permutation language 中表达 opposite vertices remain opposite。做类似 dihedral group 题时，优先选择一套 labels，再用 \(r\) 表示 rotation、用 \(s\) 表示 reflection；随后把每个元素写成 \(r^k\) 或 \(r^k s\)。若需要验证 multiplication，可以使用上面的四条 Cayley-style rules，而不必手写完整 \(8\times8\) 表。证明与 permutation model isomorphic 时，要同时说明每个几何对称给出一个允许的 permutation，以及每个允许的 permutation 都来自某个几何对称。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 10 Exercise 4]
@@ -451,17 +643,37 @@ Describe the equivalence classes for the conjugacy relation in Worksheet 10 Exer
   \{rs,r^3s\}.
 \]
 
-验证旋转部分：\(e\) 与 \(r^2\) 属于 center，因为 \(r^2\) 是 \(180^\circ\) rotation，与所有对称 commute，所以它们各自形成 singleton class。又
+验证旋转部分：\(e\) 与 \(r^2\) 属于 center。对于 \(r^2\)，有
+\[
+  r(r^2)r^{-1}=r^2,
+  \qquad
+  s(r^2)s^{-1}=sr^2s=r^{-2}=r^2,
+\]
+所以 \(r^2\) 与所有由 \(r,s\) 生成的元素 commute，形成 singleton class。又
 \[
   srs=r^{-1}=r^3,
 \]
 所以 \(r\) 与 \(r^3\) conjugate。
 
-验证反射部分：由 \(r^k s r^{-k}=r^{2k}s\) 可知 \(s\) 与 \(r^2s\) conjugate；由同一公式乘上 \(r\) 的奇次幂版本可得 \(rs\) 与 \(r^3s\) conjugate。不同类型的 classes 不相交，因为 rotation 的 conjugate 仍是 rotation，而 reflection 的 conjugate 仍是 reflection；此外 \(s,r^2s\) 的反射轴经过对顶点，\(rs,r^3s\) 的反射轴经过对边中点，二者在 \(D_8\) 中不 conjugate。
+验证反射部分。对任意 \(k\)，
+\[
+  r^k s r^{-k}=r^{2k}s.
+\]
+取 \(k=1\) 得 \(rsr^{-1}=r^2s\)，所以 \(s\) 与 \(r^2s\) conjugate。对 \(rs\) 做同样计算，得到 \(rs\) 与 \(r^3s\) conjugate。
+
+最后说明没有遗漏也没有混合。Rotation 的 conjugate 仍是 rotation：若 \(x=r^k\)，则
+\[
+  x r^m x^{-1}=r^m;
+\]
+若 \(x=r^k s\)，则
+\[
+  x r^m x^{-1}=r^{-m}.
+\]
+Reflection 的 conjugate 仍是 reflection，而且 \(r^m s\) 中指数 \(m\) 的 parity 被保留：conjugation by \(r^k\) 给出 \(r^{m+2k}s\)，conjugation by \(r^k s\) 给出 \(r^{2k-m}s\)。因此 even-index reflections \(s,r^2s\) 彼此 conjugate，odd-index reflections \(rs,r^3s\) 彼此 conjugate，但两类不会混合。因此以上五个 classes 覆盖全部八个元素。
 \end{solution}
 
 \begin{explanation}
-Conjugacy class 记录的是元素在 group 内部改名以后保持的类型。对 \(D_8\)，rotations conjugate to rotations, reflections conjugate to reflections。反射再分成两类，因为正方形有两种反射轴：经过对顶点的轴与经过对边中点的轴。这个分类比逐个计算 \(8\) 个元素的 conjugates 更有效。
+Conjugacy class 记录的是元素在 group 内部改名以后保持的类型。对 \(D_8\)，rotations conjugate to rotations, reflections conjugate to reflections。反射再分成两类，因为正方形有两种反射轴：经过对顶点的轴与经过对边中点的轴。做类似分类题时，建议按 element type 先分组，再计算少量代表元的 conjugates，最后用元素总数核对 classes 是否覆盖整个 group。这个分类比逐个计算 \(8\) 个元素的 conjugates 更有效，也更能说明 conjugacy 的结构意义。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 10 Exercise 5]
@@ -480,6 +692,9 @@ Construct a group homomorphism \(f:S_2\to S_3\). Construct a group homomorphism 
 其中右边的 \((12)\) 视为 \(S_3\) 中交换 \(1,2\) 且固定 \(3\) 的 permutation。为了验证 homomorphism，只需检查 \(S_2\) 的四个乘法组合：
 \[
   f(\mathrm{id}\circ\sigma)=f(\sigma)=\mathrm{id}\circ f(\sigma),
+\]
+\[
+  f((12)\circ\mathrm{id})=f((12))=(12)\circ\mathrm{id}=f((12))\circ f(\mathrm{id}),
 \]
 \[
   f((12)\circ(12))=f(\mathrm{id})=\mathrm{id}=(12)\circ(12)=f((12))\circ f((12)).
@@ -506,5 +721,5 @@ Construct a group homomorphism \(f:S_2\to S_3\). Construct a group homomorphism 
 \end{solution}
 
 \begin{explanation}
-从 \(S_2\) 到 \(S_3\) 的例子使用 subgroup inclusion：把两个元素的 permutation 看成固定第三个点的 permutation。从 \(S_3\) 到 \(S_2\) 的例子使用 parity：两个 odd permutations 的复合是 even，odd 与 even 的复合是 odd，这与 \(S_2\) 的两元素 multiplication table 相同。
+从 \(S_2\) 到 \(S_3\) 的例子使用 subgroup inclusion：把两个元素的 permutation 看成固定第三个点的 permutation。从 \(S_3\) 到 \(S_2\) 的例子使用 parity：两个 odd permutations 的复合是 even，odd 与 even 的复合是 odd，这与 \(S_2\) 的两元素 multiplication table 相同。做 homomorphism 构造题时，可以先问 domain 是否由少数元素生成；若是，只要指定 generators 的 images 并检查 defining relations。另一个常用方法是寻找 invariant，例如 parity、determinant、modulo class；只要 invariant 在 multiplication 下相乘或相加，就会给出 homomorphism。
 \end{explanation}

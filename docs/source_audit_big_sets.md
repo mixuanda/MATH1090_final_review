@@ -110,6 +110,12 @@ Scope: `tex/chapter06_big_sets.tex`.
 
 ## Local Validation Notes
 
-- Run the required targeted banned-phrase grep on the two owned files.
-- Run a targeted mojibake/rare-garbage grep on the two owned files.
-- Run a LaTeX build after the grep checks.
+- Final-review refinement deepened the Chinese textbook prose for cardinality,
+  Cantor--Bernstein, Cantor diagonal arguments, Axiom of Choice, Zorn's Lemma,
+  Cantor set, density, and well-ordering.
+- Exercise explanations now include reusable method guidance for similar
+  cardinality, density, and well-ordering problems, while preserving every
+  existing `exerciseblock`, `solution`, and `explanation` environment.
+- Targeted validation for this refinement is the banned-phrase grep,
+  mojibake/rare-garbage grep, and exerciseblock environment check on Chapters
+  5--6.

@@ -23,8 +23,11 @@ model。
 \end{definition}
 
 这些 axioms 把 natural numbers 看成一条从 \(0\) 出发、不断取 successor 的链。
-前三条描述 successor 的 local behavior；induction 排除从 \(0\) 出发不能到达的
-额外 component。
+前三条描述 successor 的 local behavior：successor 不能把两个不同元素合并，
+不能把某个元素送回自身，也不能把任何元素送到 \(0\)。Induction 是 global
+condition。它可以改写成 subset 语言：若 \(A\subseteq N\) 包含 \(0\)，并且
+\(x\in A\Rightarrow S(x)\in A\)，则 \(A=N\)。因此检查 Peano-like examples 时，
+要把 local conditions 和 ``从 \(0\) 沿 successor 能否到达全部元素'' 分开处理。
 
 \begin{exerciseblock}[Lecture Notes Exercise 25]
 令 \(N=\{0,1,2\}\)，并定义
@@ -56,9 +59,12 @@ P(S(x))\)。由 \(P(0)\) 和 \(S(0)=1\) 得 \(P(1)\)；由 \(P(1)\) 和 \(S(1)=2
 \end{solution}
 
 \begin{explanation}
-这个例子说明 finite cycle 并不一定破坏 induction。Induction 只问从 \(0\) 开始
-沿 \(S\) 走能否覆盖所有元素；这里 \(0\to1\to2\) 已覆盖整个 set。真正的问题是
-cycle 又从 \(2\) 回到 \(0\)，这违反了 \(0\) 不能有 predecessor 的 axiom。
+判断这类 finite example 时，可以先列出 image table。Injectivity 看 image table
+中有没有重复；fixed point 看每个 row 是否满足 \(S(x)\neq x\)；\(0\) not successor
+看 \(0\) 是否出现在 image set。Induction 要换一个角度：从 \(0\) 开始反复应用
+\(S\)，记录能到达哪些元素。这里 \(0\to1\to2\) 已覆盖整个 set，所以任何满足
+base case 和 successor step 的 predicate 都会传到全部元素。真正的问题是 cycle
+又从 \(2\) 回到 \(0\)，这违反了 \(0\) 不能有 predecessor 的 axiom。
 \end{explanation}
 
 \section{Recursive arithmetic on \texorpdfstring{\(\N\)}{N}}
@@ -70,7 +76,9 @@ Addition 定义为
   a+0=a,\qquad a+S(b)=S(a+b).
 \]
 这是对第二个 variable 的 recursive definition。每次要求 \(a+S(b)\) 时，定义把
-问题换成已经早一步出现的 \(a+b\)。
+问题换成已经早一步出现的 \(a+b\)。所以凡是直接使用这个定义的 induction，通常
+应让第二个 variable 变化；若题目让第一个 variable 变化，往往要先建立额外 lemma
+把左边的 successor 移到右边或移到整个 expression 外。
 
 \begin{exerciseblock}[Lecture Notes Exercise 26]
 用 Peano axioms 说明 recursive addition 为什么合法。
@@ -102,8 +110,11 @@ nonzero natural number 都由有限次 successor 从 \(0\) 得到，规则不会
 
 \begin{explanation}
 Recursive definition 的难点是 well-definedness：同一个 input 不能因为不同的
-回溯路径得到不同答案。Peano induction 正是在这里发挥作用；它把 ``base value
-相同且 successor rule 相同'' 推广为 ``所有 values 相同''。
+回溯路径得到不同答案。处理类似题目时，把证明拆成两个问题。Existence 问规则是否
+给每个 natural number 一个 value；这依赖每个元素都从 \(0\) 经过有限次 successor
+生成。Uniqueness 问两个满足同一 base value 和同一 successor rule 的 functions
+能否不同；令 \(P(b)\) 表示两个 values 在 \(b\) 处相同，再用 induction 逐点比较。
+这样写能避免把 recursive notation 当作已经存在的 ordinary formula。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 27]
@@ -130,8 +141,10 @@ Induction step：假设 \(0+n=n\)。由 addition 的第二条定义，
 \end{solution}
 
 \begin{explanation}
-定义只给出 \(a+0=a\)，也就是 zero 在右边的情形。要把 zero 放到左边，必须让
-第二个 variable 变化，所以证明自然选择 induction on \(n\)。
+定义只给出 \(a+0=a\)，也就是 zero 在右边的情形。要证明 \(0+n=n\)，固定第一个
+input 为 \(0\)，让第二个 input \(n\) 沿 \(0,S(0),S(S(0)),\ldots\) 前进，正好
+匹配 \(a+S(n)=S(a+n)\)。类似题目中，先问 recursive definition 是按哪个 input
+定义的；induction variable 应尽量选那个 input。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 4 Exercise 1]
@@ -167,7 +180,9 @@ S(a)+S(b)
 \begin{explanation}
 递归定义控制的是右边 input 的 successor：\(x+S(b)=S(x+b)\)。题目把 successor
 放在左边的 \(a\) 上，因此需要先固定 \(a\)，再让右边的 \(b\) 通过 induction
-移动。
+移动。做类似 ``左边有 \(S(a)\)'' 的题目时，base case 通常由 \(x+0=x\) 直接
+收尾；step case 用 recursive definition 把两个 sides 都改写成某个 expression
+的 successor，然后套 induction hypothesis。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 4 Exercise 2]
@@ -200,7 +215,9 @@ addition is commutative。
 \begin{explanation}
 Exercise 1 的作用是把 ``左边加了一个 successor'' 转换成 ``整个和取 successor''。
 在 commutativity 的 induction step 中，我们正好需要把 \(S(b)+a\) 与 \(S(b+a)\)
-联系起来。
+联系起来。类似 proof 的常见路线是：先证明右 identity 或左 successor lemma，
+再证明 commutativity。不要在 commutativity 还未证明时交换 \(a+b\) 的顺序；每次
+换序都必须来自已经证明的 lemma 或 induction hypothesis。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 5 Problem 1]
@@ -235,7 +252,9 @@ predecessor 是 \(x\)。所以 \(P(S(x))\) 成立。
 \begin{explanation}
 这题把 ``每个 nonzero natural number 是 successor'' 写成 predicate。唯一性
 不能从存在性推出，必须单独使用 injectivity of \(S\)：相同 successor 只能来自
-相同 predecessor。
+相同 predecessor。处理含有 \(\exists!\) 的 induction 题时，step case 要分成
+existence 和 uniqueness 两段：existence 通常由当前元素本身给出，uniqueness 则
+要把任意另一个 candidate 与这个 candidate 比较。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 5 Problem 2]
@@ -258,7 +277,9 @@ predecessor 是 \(x\)。所以 \(P(S(x))\) 成立。
 \begin{explanation}
 Homework 题目强调 ``only Peano's axioms and the definition of addition''，所以
 证明中不能引用 commutativity。事实上，这个结论是之后证明 commutativity 的必要
-准备。
+准备。遇到这种 restriction 时，先列出当前已经允许使用的 facts：\(a+0=a\)、
+\(a+S(n)=S(a+n)\)、Peano induction。然后把 proof 写成 base case 加 successor
+step，避免借用还在后面才建立的 algebra laws。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 5 Problem 3]
@@ -296,7 +317,9 @@ Induction step：假设 \(1+n=S(n)\)。则
 
 \begin{explanation}
 \(n+1=S(n)\) 只需要展开 addition 的定义，因为 \(1=S(0)\)。但 \(1+n=S(n)\)
-让 \(n\) 出现在右边 input，因此必须用 induction 推动递归定义。
+让 \(n\) 出现在右边 input，因此必须用 induction 推动递归定义。做类似等式时，
+可以先把两边分别化到同一个 target，例如这里两边都化到 \(S(n)\)。这种 ``共同
+target'' 方法比直接在两边来回变形更不容易误用 commutativity。
 \end{explanation}
 
 \subsection{Multiplication}
@@ -332,7 +355,9 @@ definition：
 \begin{explanation}
 递归定义每一步只允许把第二个 factor 从 \(S(b)\) 降到 \(b\)。因此计算
 \(2\cdot3\) 的路线是 \(3\to2\to1\to0\)，到达 \(2\cdot0\) 后再把 addition
-逐层加回去。
+逐层加回去。类似计算题不要直接使用熟悉的乘法表；先按 recursive rule 展开到
+base case，再用已经定义好的 addition 收缩。这能显示计算确实来自 Peano-style
+definition。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 29]
@@ -448,7 +473,9 @@ Multiplication 的 commutativity 比 addition 更长，因为 recursive definiti
 factor 移到结果中；有了它，induction step 才能把 \(a\cdot S(b)\) 改写成
 \(S(b)\cdot a\)。Associativity 需要一个 distributive lemma，因为
 \(b\cdot S(c)=b+b\cdot c\) 后必须把外层的 \(a\cdot\) 分配进去；本解答在使用前
-先把这个 lemma 证明出来。
+先把这个 lemma 证明出来。写这种长 induction proof 时，最好先标明每个 lemma
+负责移动哪一个 successor，避免在 main proof 中同时处理左右 factor、括号和
+分配律。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 30]
@@ -495,7 +522,9 @@ distributivity 成立。
 \begin{explanation}
 证明按 \(c\) 做 induction，是因为 \(b+S(c)=S(b+c)\)，能把左边送进
 multiplication 的 recursive rule。中间的重新加括号不是省略步骤，而是连续使用
-addition 的 associativity 与 commutativity。
+addition 的 associativity 与 commutativity。类似 distributivity 题目中，先选
+能触发 recursive rule 的 variable，再在 step case 中把新增的一份 \(a\) 移到
+目标位置；这个移动通常正是 addition laws 发挥作用的地方。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 4 Exercise 3]
@@ -538,7 +567,9 @@ Induction fail。令 predicate
 第一个例子让两条从 \(0\) 出发的路径合并，所以 injectivity fail，但从 \(0\) 仍能
 到达所有元素。第二个例子保留了一条正常的 natural-number chain，同时加上一个
 与 \(0\) disconnected 的 cycle；local axioms 看不见这个问题，induction 会检测到
-它。
+它。构造 ``只 fail 某一条 axiom'' 的例子时，先决定要破坏哪一种结构：要破坏
+injectivity 就制造两个 inputs 有同一个 successor；要破坏 induction 就加入一个
+从 \(0\) 到不了的 closed component。之后逐条回查其他 axioms 是否仍然保留。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 31]
@@ -576,7 +607,10 @@ numeric elements，所以 \(P(a)\)、\(P(b)\)、\(P(c)\) 不成立。这个 pred
 \begin{explanation}
 这个 construction 把 Peano axioms 分成两类：injectivity、no fixed point、
 \(0\) not successor 都是 local 检查；induction 是 global 检查，它要求整个 set
-由 \(0\) 和 successor operation 生成。
+由 \(0\) 和 successor operation 生成。证明 induction fail 时，最有效的方法是
+给出一个 predicate，而不是只说有额外元素。该 predicate 应包含 \(0\)，对 numeric
+successor closed，却排除 disconnected component；这样 hypotheses 成立但
+conclusion 失败。
 \end{explanation}
 
 \section{Quotient construction and the integers}
@@ -588,7 +622,10 @@ relation，则每个 \(a\in A\) 有 equivalence class
 \]
 而 quotient set \(A/R\) 是所有 equivalence classes 的集合。定义 quotient 上的
 operation 时，必须证明 changing representatives does not change the class of the
-answer。
+answer。证明模板是：先选 arbitrary equivalent representatives，写出 relation
+给出的等式，再把 operation 的 output 代入同一个 relation。若 output pairs
+equivalent，operation 才真正定义在 classes 上，而不是只定义在某些 representatives
+上。
 
 \subsection{Constructing \texorpdfstring{\(\Z\)}{Z}}
 
@@ -601,6 +638,11 @@ answer。
   \Z=\N^2/\!\sim_{\Z},\qquad [(a,b)]=\{(c,d)\in\N^2:(c,d)\sim_{\Z}(a,b)\}.
 \]
 Natural number \(n\) 嵌入为 \([(n,0)]\)。
+
+这里的 relation 避免在 \(\N\) 中直接做 subtraction。等式 \(a-b=c-d\) 被改写成
+\(a+d=b+c\)，两边只含 natural-number addition。因此所有 well-definedness proofs
+都应该回到 \(\N\) 的 addition、multiplication、cancellation，而不是直接引用尚未
+构造好的 integer arithmetic。
 
 \begin{exerciseblock}[Lecture Notes Exercise 32]
 证明 \(\sim_{\Z}\) 是 equivalence relation。
@@ -649,7 +691,10 @@ Natural-number addition 有 cancellation law；两边同时取消 \(c+d\)，得�
 \begin{explanation}
 Transitivity 是本题的关键。两个已知等式中间的 pair \((c,d)\) 会在相加后出现为
 同一个 common summand \(c+d\)，然后通过 cancellation 消掉。这正是 formal
-difference \(a-b\) 的代数直觉在 \(\N^2\) 中的翻译。
+difference \(a-b\) 的代数直觉在 \(\N^2\) 中的翻译。类似 quotient relation
+题目中，reflexive 和 symmetric 往往只是改写定义；transitive 通常需要把两个
+relation equations 组合起来，并找出可以 cancellation 的 common factor 或 common
+summand。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 33]
@@ -684,7 +729,9 @@ Define subtraction on \(\Z\)。
 \begin{explanation}
 Integer \([(a,b)]\) 表示 \(a-b\)，它的 additive inverse 应表示 \(b-a\)，所以交换
 两个 coordinates 是自然的候选定义。Quotient set 中不能只凭这个直觉下定义；
-必须证明 equivalent pairs 交换后仍 equivalent。
+必须证明 equivalent pairs 交换后仍 equivalent。解决 similar quotient-definition
+problem 时，步骤是：先提出 representative-level formula，再假设
+\((a,b)\sim(c,d)\)，最后证明 formula 作用后的 representatives 仍在同一个 class。
 \end{explanation}
 
 \subsection{Integer arithmetic}
@@ -748,7 +795,9 @@ well-defined。
 Well-definedness 的逻辑是：输入的 equivalence class 不是单个 pair，而是一整类
 pairs。证明时不能假设 \((a,b)=(a',b')\)，只能使用代表同一个 class 的条件
 \(a+b'=b+a'\)。展开 product formula 后，这个条件正好以 common summand 的形式
-出现。
+出现。若两个 inputs 都是 quotient classes，通常先只换第一个 representative，
+再只换第二个 representative；最后用 transitivity 拼接。这种分步法能把一个复杂
+well-definedness proof 拆成两个只含一个 equivalence condition 的计算。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 5 Problem 4]
@@ -783,7 +832,9 @@ is well-defined。
 \begin{explanation}
 Homework 的题目只要求 multiplication。把两个代表同时换掉时，最稳妥的写法是分成
 两步：先换第一个 pair，再换第二个 pair。这样每一步只使用一个 equivalence
-condition，代数整理更可控。
+condition，代数整理更可控。检查答案时要确认最后证明的是 output pairs
+equivalent，而不是只证明两个 polynomial expressions 在普通整数直觉下相等；前者
+才是 quotient well-definedness 的目标。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 35]
@@ -875,6 +926,8 @@ Distributivity 同理。左边
 这些 ring laws 的证明不需要重新发明整数代数；但必须说明为什么可以在
 representatives 上展开。前面 well-definedness 已保证 representatives 的选择不会
 改变答案，因此展开 polynomial 后比较 positive part 与 negative part 是合法的。
+类似 quotient algebra laws 的证明顺序是先 well-defined，再 laws。若顺序反过来，
+就会在尚未证明 operation 合法之前使用它。
 \end{explanation}
 
 \section{Rational numbers}
@@ -894,6 +947,11 @@ Rational number 是 quotient set
   \Q=Y/\!\sim_{\Q}.
 \]
 我们把 \([(a,b)]\) 记作 \(\frac ab\)。
+
+Denominator 被限制为 nonzero integer，是因为 cross multiplication 和 cancellation
+都会用到这一点。代表元 \((a,b)\) 与 \((-a,-b)\) 可以表示同一个 rational number，
+所以任何 relation 或 operation 若直接读取 numerator 的大小或 denominator 的符号，
+都必须额外证明它不受换 representative 影响。
 
 \begin{exerciseblock}[Lecture Notes Exercise 36]
 证明 \(\sim_{\Q}\) 是 equivalence relation on \(Y\)。
@@ -949,6 +1007,9 @@ Transitive：若
 Transitivity 中不能把 \(d\) 当作 ordinary denominator 随手删除；删除 \(d\) 需要
 整数乘法的 cancellation property。这个 property 来自 \(\Z\) 没有 zero divisors：
 若 \(d\neq0\) 且 \(dx=dy\)，则 \(d(x-y)=0\)，从而 \(x-y=0\)。
+做 rational quotient 的 transitivity 时，常见策略是把两个 cross-product 等式
+乘到同一个中间项，例如这里的 \(bcf\)，再用 nonzero denominator cancellation
+去掉中间 denominator。
 \end{explanation}
 
 \subsection{Rational arithmetic}
@@ -998,7 +1059,9 @@ Rational addition is well-defined。
 \begin{explanation}
 Fraction addition 的 denominator 变成 \(bd\)。换 representatives 后 denominator
 也变成 \(b'd'\)。Well-definedness 要比较的不是 numerators 本身，而是 cross
-products；这正是 relation \(\sim_{\Q}\) 的定义。
+products；这正是 relation \(\sim_{\Q}\) 的定义。类似 fraction operation 题目中，
+先写出目标 equivalence condition，再把已知的 \(ab'=ba'\)、\(cd'=dc'\) 代入对应
+terms；不要只把分子化简到 ``看起来相同''，因为 denominator 已经改变。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 37]
@@ -1036,7 +1099,9 @@ products；这正是 relation \(\sim_{\Q}\) 的定义。
 \begin{explanation}
 Multiplication 的 proof 比 addition 短，因为两个 cross-product 条件可以直接相乘。
 这一步仍然是在证明 representative independence：\(\frac ab=\frac{a'}{b'}\) 和
-\(\frac cd=\frac{c'}{d'}\) 时，products 必须落在同一个 equivalence class。
+\(\frac cd=\frac{c'}{d'}\) 时，products 必须落在同一个 equivalence class。写类似
+证明时，先把需要证明的 relation 展开成一个 equality，再检查已知 equalities
+相乘后能否通过 associativity 和 commutativity 重排成目标 equality。
 \end{explanation}
 
 \begin{exerciseblock}[Lecture Notes Exercise 38]
@@ -1114,7 +1179,9 @@ Distributivity：左边为
 \begin{explanation}
 Rational laws 的形式证明总是回到 common denominator 或 cross multiplication。
 尤其 distributivity 中，左右两边的 displayed representatives 不一定相同，但
-relation \(\sim_{\Q}\) 只要求 cross products 相同。
+relation \(\sim_{\Q}\) 只要求 cross products 相同。对 quotient \(\Q\) 的等式，
+看到 representatives 不同并不表示结果不同；正确检查是把二者放进
+\(\sim_{\Q}\) 的定义，证明交叉相乘后的 products 相等。
 \end{explanation}
 
 \begin{proposition}[Multiplicative inverse in \(\Q\)]
@@ -1147,10 +1214,17 @@ representative。计算
 \begin{explanation}
 Inverse 的代表元把 numerator 和 denominator 交换。唯一性仍然是 quotient 语言：
 另一个 inverse 不一定等于同一个 pair \((b,a)\)，但必须属于同一个 equivalence
-class。
+class。类似 inverse problem 中，先确认 proposed denominator nonzero；这里
+\(q\neq0\) 的 meaning 是 numerator representative \(a\neq0\)，所以交换后
+\((b,a)\) 才是 \(Y\) 中的合法 pair。
 \end{explanation}
 
 \section{Relations, gcd, irrationality, and suprema}
+
+这一节的 exercises 都在训练同一个 proof habit：当 objects 是 equivalence classes
+或 ordered number systems 时，不能只检查一个 convenient notation。Relations on
+\(\Q\) 要对 all representatives 给出同一 truth value；gcd proofs 要比较 common
+divisor sets；supremum proofs 要同时证明 upper bound 和 leastness。
 
 \begin{exerciseblock}[Worksheet 5 Exercise 1]
 判断下列 relations on \(\Q\) 是否 well-defined：
@@ -1206,7 +1280,10 @@ representatives。因此第三条 well-defined。
 Well-defined relation 的测试方法是换 representative。前两条直接使用 numerator
 或未修正符号的 cross difference，denominator 的负号会改变判断。第三条乘上
 \(nq\)，把符号问题修正成正的 square factor，因此它表示 ordinary order on
-\(\Q\)。
+\(\Q\)。做类似 rational order 题目时，先找一个会改变 denominator signs 的
+equivalent representative，例如 \((p,q)\) 换成 \((-p,-q)\)。若 truth value 可能
+改变，relation not well-defined；若表达式能化成 positive factor 乘以
+\(\frac pq-\frac mn\)，就只依赖 rational numbers 本身。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 5 Exercise 2]
@@ -1246,7 +1323,9 @@ greatest common divisor 相同：
 \begin{explanation}
 Euclidean algorithm 的核心不是 remainder 小，而是 common divisor set 不变。
 等式 \(a=bk+c\) 可以双向使用：从 \(a,b\) 推出 \(c=a-bk\)，从 \(b,c\) 推出
-\(a=bk+c\)。
+\(a=bk+c\)。类似 gcd identity 的证明，最可靠的方法是证明两个 common-divisor
+sets 相等：任取一个 divisor，从一个 pair 推到另一个 pair；再反向推回来。最后
+因为 positive common divisors 完全相同，greatest element 也相同。
 \end{explanation}
 
 \begin{lemma}[Parity lemma]
@@ -1263,7 +1342,9 @@ Euclidean algorithm 的核心不是 remainder 小，而是 common divisor set �
 
 \begin{explanation}
 这条 lemma 避免了从 \(p^2\) even 直接跳到 \(p\) even 的断言。证明 odd 的平方仍
-odd 后，contrapositive 给出需要的结论。
+odd 后，contrapositive 给出需要的结论。类似 divisibility lemma 若正向证明较
+绕，可以改证 contrapositive；尤其 parity 问题中，odd 的 normal form
+\(2k+1\) 往往比 ``not even'' 更便于计算。
 \end{explanation}
 
 \begin{theorem}[\(\sqrt2\) is irrational]
@@ -1291,6 +1372,9 @@ odd 后，contrapositive 给出需要的结论。
 \begin{explanation}
 ``Lowest terms'' 是 irrationality proof 的关键。如果没有 \(\gcd(p,q)=1\)，推出
 \(p,q\) 都 even 只说明 fraction 可以约分；有了 lowest terms，这个结论变成矛盾。
+做类似 \(x^2=N\) 的 rational-solution 题时，先把 \(x\) 写成 lowest terms
+\(p/q\)，再把 equation 清 denominators。之后寻找一个 prime 或 parity condition
+同时逼迫 \(p\) 和 \(q\) 被同一个 integer 整除。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 6 Problem 1]
@@ -1323,7 +1407,10 @@ number 的平方等于 \(2026\)。
 
 \begin{explanation}
 不需要完全分解 \(2026\)。只要观察到 \(2026=2\cdot1013\) 且 \(1013\) is odd，
-就能用 parity argument 逼出 numerator 和 denominator 都 even。
+就能用 parity argument 逼出 numerator 和 denominator 都 even。类似题目中，
+重点不是求 decimal approximation，而是从 lowest-terms equation 中找出一个
+divisibility contradiction；一旦同一个 prime 同时整除 numerator 和 denominator，
+就与 \(\gcd(p,q)=1\) 冲突。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 6 Problem 2]
@@ -1350,7 +1437,9 @@ integer 定义，因此 \(d=1\)。所以
 \begin{explanation}
 这题使用 Bezout-type 思路：如果一个 integer 同时整除 \(x\) 和 \(y\)，它也整除
 任何 integer linear combination \(5x+7y\)。当某个 linear combination 等于 \(1\)
-时，common divisor 只能是 \(1\)。
+时，common divisor 只能是 \(1\)。解决类似问题时，不需要先求出 \(x,y\)；把
+\(\gcd(x,y)\) 记为 \(d\)，利用 \(d\mid x\) 和 \(d\mid y\) 推出 \(d\mid\) 给定的
+linear combination，通常就能得到答案。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 6 Problem 3]
@@ -1375,6 +1464,8 @@ solution。
 \begin{explanation}
 方程本身不是 \(u^2=2\)，但 completion of square 把它转化为同一个 irrationality
 obstruction。Rationals 对 addition 封闭，所以 \(x\in\Q\) 会推出 \(x+1\in\Q\)。
+类似 quadratic rational-solution 题目中，先尝试配方或变量替换，把问题化成
+已经知道没有 rational solution 的平方方程，再检查替换是否保持 rationality。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 5 Exercise 3]
@@ -1418,7 +1509,9 @@ denominator bound。于是
 \begin{explanation}
 Supremum proof 有两部分：先证明 \(2\) 确实压住所有 \(f(n)\)，再证明任何更小的
 rational 都压不住。第二部分使用的是 tail \(\frac1{2^n}\) 可以小于任意给定的
-positive rational gap \(2-u\)。
+positive rational gap \(2-u\)。做类似 geometric partial sums 时，先找 closed
+form，把 upper-bound claim 变成一个 visible positive tail；leastness 则通过让
+tail 小于任意给定 gap 来完成。
 \end{explanation}
 
 \begin{exerciseblock}[Worksheet 5 Exercise 4]
@@ -1469,7 +1562,9 @@ positive rational gap \(2-u\)。
 这题展示 \(\Q\) 的 gaps。我们把一个 irrational cut point \(\alpha\) 放在
 \((a,b)\) 里面，然后取所有小于 \(\alpha\) 的 rationals。这个 set 在 real line 中的
 least upper bound 是 \(\alpha\)，但 \(\alpha\) 不属于 \(\Q\)，所以 \(\Q\) 内没有
-可用的 supremum。
+可用的 supremum。类似题目要构造 ``bounded but no rational supremum'' 的 set，
+可先在 interval 内放一个 irrational cut，再取 cut 左侧的 rationals。证明时分
+\(s<\alpha\)、\(s>\alpha\)、\(s=\alpha\) 三种情况排除 rational supremum。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 6 Problem 4]
@@ -1519,6 +1614,9 @@ tail，且该 tail 随 \(n\) 增大趋向 \(0\)。取 \(n\) 使
 Supremum 不是要求 \(37/30\) 属于 \(X\)。它只要求 \(37/30\) 是所有 finite
 decimals 的 least upper bound。关键步骤是说明任何更小的 rational 与
 \(37/30\) 之间有 positive gap，而足够长的 finite decimal 可以进入这个 gap。
+类似 decimal-tail problems 中，先写出 infinite repeating decimal 的 rational
+value，再比较 finite truncations 与该 value 的 tail；tail 趋向 \(0\) 正是
+leastness 的证明工具。
 \end{explanation}
 
 \begin{exerciseblock}[Homework 6 Problem 5]
@@ -1601,7 +1699,10 @@ f(n)-f(m)
 这题的 part (b) 不是只说 partial sums converge to \(e\)。题目要求在 \(\Q\) 内做
 supremum contradiction。假设 rational supremum \(p/q\) 存在后，乘以 \(m!\) 把
 \(r-f(m)\) 变成 positive integer，从而得到一个至少 \(1/m!\) 的 gap；part (a) 又
-说明所有后续 terms 都落在更短的 tail 里，于是可以把 upper bound 往下移动。
+说明所有后续 terms 都落在更短的 tail 里，于是可以把 upper bound 往下移动。类似
+factorial-tail 题目中，denominator-clearing 是核心：选择 \(m\ge q\) 让 \(m!r\)
+和 \(m!f(m)\) 都是 integers，再用 tail estimate 制造一个 smaller rational upper
+bound。
 \end{explanation}
 
 \section{Von Neumann ordinals \optional}
@@ -1619,6 +1720,9 @@ Lecture Notes 3.7 的 starred section 说明 Peano model 不只是 axioms 的抽
 \[
   S(x)=x\cup\{x\}.
 \]
+这个 definition 同时完成两个任务：\(S(x)\) 包含原来的所有 predecessors，也把
+\(x\) 本身加入为新的最大 predecessor。因此在这个 model 中，order relation
+\(m<n\) 可以由 membership \(m\in n\) 表示。
 
 \begin{definition}[Inductive set]
 Set \(X\) 称为 inductive，若
@@ -1632,7 +1736,10 @@ Axiom of Infinity 断言存在 inductive set。定义
   \omega=\{x:x\in X\text{ for every inductive set }X\}.
 \]
 也就是说，\(\omega\) 是所有 inductive sets 的 intersection，因此是 smallest
-inductive set。我们把 \(\omega\) 作为 \(\N\) 的 Von Neumann model。
+inductive set。我们把 \(\omega\) 作为 \(\N\) 的 Von Neumann model。证明它满足
+Peano axioms 时，要分清两种使用方式：Axiom of Infinity 提供至少一个足够大的
+inductive set；intersection construction 则保证没有从 \(0\) 和 successor 生成
+规则以外的多余元素。
 
 \begin{proposition}[Von Neumann model satisfies Peano axioms]
 以 \(0=\emptyset\)、\(S(x)=x\cup\{x\}\) 和 \(N=\omega\) 构成的 triple
@@ -1681,6 +1788,10 @@ Von Neumann ordinals 的设计让 order 与 membership 合一：\(k<n\) 被表�
 \(k\in n\)。Successor \(S(n)=n\cup\{n\}\) 正好把新的最大 predecessor \(n\) 加入
 集合。Axiom of Infinity 提供一个足够大的 inductive set；取所有 inductive sets
 的 intersection 则去掉多余元素，留下由 \(0\) 和 successor 强制生成的最小结构。
+遇到类似 model-verification 题目时，应逐条验证 Peano axioms：membership structure
+处理 \(0\) not successor、no fixed point、injectivity；minimal inductive set
+property 处理 induction。这样 proof 不会把 set-theoretic construction 和 Peano
+axioms 的各个要求混在一起。
 \end{explanation}
 
 \begin{reviewbox}{Chapter checklist}

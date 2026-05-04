@@ -84,3 +84,12 @@
   control, and limit-law pitfalls.
 - Homework 9 Problems 3 and 4 are intentionally excluded from this chapter
   because the requested coverage only names Problems 1 and 2.
+
+## Final-Review Refinement Notes
+
+- Added reusable proof templates for epsilon-delta arguments, nonexistence of
+  limits, limit-law usage, sequential characterization, continuity, rational
+  functions, radical limits, and exponential-over-polynomial sequences.
+- Expanded exercise explanations with method guidance for solving similar
+  problems, while preserving every existing `exerciseblock`, `solution`, and
+  `explanation` environment.
